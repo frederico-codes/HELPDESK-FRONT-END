@@ -1,35 +1,31 @@
-import Defaultogo from "../assets/Defaultogo.svg"
-import list from "../assets/icons/clipboard-list.svg"
-import menu from "../assets/icons/Menu.png"
-import LogoIconLight from "../assets/Logo_IconLight.png"
-import avatar from "../assets/Avatar.svg"
-import clockOpen from "../assets/icons/clock-open.svg"
+import Defaultogo from "../assets/Defaultogo.svg";
+import list from "../assets/icons/clipboard-list.svg";
+import menu from "../assets/icons/Menu.png";
+import LogoIconLight from "../assets/Logo_IconLight.png";
+import avatar from "../assets/Avatar.svg";
+import clockOpen from "../assets/icons/clock-open.svg";
 import { useLocation } from "react-router-dom";
-import { Link } from "react-router-dom"
-import eye from "../assets/icons/eye.svg"
-import currently_assisting from "../assets/icons/currently_assisting.svg"
-import closed from "../assets/icons/closed.svg"
-import plus from "../assets/icons/plus.svg"
-import { ProfileOptionsModal } from "../componentes/ProfileOptionsModal"
-import { ProfileModalCustomer } from "../componentes/ProfileModalCustomer"
-import { useState } from "react"
-import {AlterProfileModalCustomer} from "../componentes/AlterProfileModalCustomer"
+import { Link } from "react-router-dom";
+import eye from "../assets/icons/eye.svg";
+import currently_assisting from "../assets/icons/currently_assisting.svg";
+import closed from "../assets/icons/closed.svg";
+import plus from "../assets/icons/plus.svg";
+import { ProfileOptionsModal } from "../componentes/ProfileOptionsModal";
+import { ProfileModalCustomer } from "../componentes/ProfileModalCustomer";
+import { useState } from "react";
+import { AlterProfileModalCustomer } from "../componentes/AlterProfileModalCustomer";
 
-
-
-
-export function MyCallingsCustomers(){
-const location = useLocation();
- const [open, setOpen] = useState(false);
+export function MyCallingsCustomers() {
+  const location = useLocation();
+  const [open, setOpen] = useState(false);
   const [openProfile, setOpenProfile] = useState(false);
-  const [openAlterProfile, setOpenAlterProfile] = useState(false)
+  const [openAlterProfile, setOpenAlterProfile] = useState(false);
 
-
-  return(
+  return (
     <div className="w-screen h-screen  xl:grid xl:grid-cols-[280px_1fr] relative  bg-gray-100 ">
       <section className="hidden xl:block  bg-gray-100 pt-6 px-6">
         <div className="flex gap-3">
-          <img src={Defaultogo} alt="Logo padrão"/>
+          <img src={Defaultogo} alt="Logo padrão" />
           <div className="flex flex-col">
             <h1 className="text-gray-600 text-xl">HelpDesk</h1>
             <span className="text-xxs text-blue-light uppercase">cliente</span>
@@ -38,39 +34,47 @@ const location = useLocation();
         <div className="flex flex-col justify-between h-screen pb-28">
           <nav className="pt-5 px-4">
             {/* CHAMADOS */}
-              <Link to = "/"
-                className={`
+            <Link
+              to="/"
+              className={`
                   w-[180px] flex items-center gap-2 text-sm p-3 outline-0 rounded-sm
-                  ${location.pathname === "/"
-                    ? "bg-blue-dark text-white"
-                    : "text-gray-400"
+                  ${
+                    location.pathname === "/"
+                      ? "bg-blue-dark text-white"
+                      : "text-gray-400"
                   }
                 `}
-              >
-                <img
-                  src={list}
-                  alt=""
-                  className={location.pathname === "/calls" ? "invert brightness-0" : ""}
-                />
-                Meus chamados
-              </Link>
-              {/* TÉCNICOS */}
-              <Link to="/chamados/novo" 
-                
-                className={`
+            >
+              <img
+                src={list}
+                alt=""
+                className={
+                  location.pathname === "/calls" ? "invert brightness-0" : ""
+                }
+              />
+              Meus chamados
+            </Link>
+            {/* TÉCNICOS */}
+            <Link
+              to="/chamados/novo"
+              className={`
                   w-[180px] flex items-center gap-2 text-sm p-3 outline-0 rounded-sm
-                  ${location.pathname === "/technicians"
-                    ? "bg-blue-dark text-white"
-                    : "text-gray-400"
+                  ${
+                    location.pathname === "/technicians"
+                      ? "bg-blue-dark text-white"
+                      : "text-gray-400"
                   }
                 `}
-              >             
+            >
               <img src={plus} alt="" />
-                Criar chamado
-            </Link>             
+              Criar chamado
+            </Link>
           </nav>
 
-          <div className="flex items-center gap-2  text-white cursor-pointer"  onClick={() => setOpen(true)}>
+          <div
+            className="flex items-center gap-2  text-white cursor-pointer"
+            onClick={() => setOpen(true)}
+          >
             <span className="w-8 h-8 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
               CS
             </span>
@@ -81,29 +85,39 @@ const location = useLocation();
           </div>
         </div>
       </section>
-      <section className="block  xl:hidden w-screen h-screen  absolute  top-0 ">        
+      <section className="block  xl:hidden w-screen h-screen  absolute  top-0 ">
         <div className="flex justify-between items-center  ">
           {/* GRUPO ESQUERDA */}
           <div className="flex justify-center items-center gap-3.5 absolute top-7 left-6">
-            <img src={menu} alt="menu" className=""/>
+            <img src={menu} alt="menu" className="" />
 
             <div className="flex justify-center gap-4 ">
-              <img src= { LogoIconLight } alt="LogoIconLight" className="h-11 w-11"/>
+              <img
+                src={LogoIconLight}
+                alt="LogoIconLight"
+                className="h-11 w-11"
+              />
               <div>
                 <h1 className="text-xl text-gray-600 ">HelpDesk</h1>
-                <span className="text-xxs text-blue-light uppercase">cliente</span>
+                <span className="text-xxs text-blue-light uppercase">
+                  cliente
+                </span>
               </div>
             </div>
           </div>
           {/* GRUPO DIREITA */}
           <div>
-            <img src={avatar} alt="avatar" className="absolute top-8 right-10" />
+            <img
+              src={avatar}
+              alt="avatar"
+              className="absolute top-8 right-10"
+            />
           </div>
-        </div>            
-      </section>     
+        </div>
+      </section>
 
-      <div   className="w-full h-screen flex flex-col px-2 xl:px-6  gap-4 bg-white absolute xl:relative py-0  rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
-        <div className="w-full max-w-6xl px-0 pt-12 xl:px-0 ">       
+      <div className="w-full h-screen flex flex-col px-2 xl:px-6  gap-4 bg-white absolute xl:relative py-0  rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
+        <div className="w-full max-w-6xl px-0 pt-12 xl:px-0 ">
           <h1 className="mb-6 text-xl font-semibold text-blue-700">
             Meus chamados
           </h1>
@@ -164,9 +178,7 @@ const location = useLocation();
                     Instalação de Rede
                   </td>
 
-                  <td className="hidden px-4 py-4 xl:table-cell">
-                    R$ 180,00
-                  </td>
+                  <td className="hidden px-4 py-4 xl:table-cell">R$ 180,00</td>
 
                   <td className="hidden px-4 py-4 xl:table-cell">
                     <div className="flex items-center gap-2 cursor-pointer">
@@ -188,7 +200,7 @@ const location = useLocation();
                         xl:px-3 xl:py-1 xl:gap-1
                       "
                     >
-                      <img src={clockOpen} alt=""/>
+                      <img src={clockOpen} alt="" />
                       <span className="hidden xl:inline text-xs font-medium">
                         Aberto
                       </span>
@@ -224,9 +236,7 @@ const location = useLocation();
                     Manutenção de Hardware
                   </td>
 
-                  <td className="hidden px-4 py-4 xl:table-cell">
-                    R$ 150,00
-                  </td>
+                  <td className="hidden px-4 py-4 xl:table-cell">R$ 150,00</td>
 
                   <td className="hidden px-4 py-4 xl:table-cell">
                     <div className="flex items-center gap-2">
@@ -248,14 +258,14 @@ const location = useLocation();
                         xl:px-3 xl:py-1 xl:gap-1
                       "
                     >
-                      <img src={currently_assisting} alt=""/>
+                      <img src={currently_assisting} alt="" />
                       <span className="hidden xl:inline text-xs font-medium">
                         Em atendimento
                       </span>
                     </span>
                   </td>
 
-                 <td className="px-4 py-4">
+                  <td className="px-4 py-4">
                     <Link
                       to={`/chamados/:id`}
                       className="inline-flex items-center justify-center rounded-md bg-gray-500 p-2 hover:bg-gray-50"
@@ -284,9 +294,7 @@ const location = useLocation();
                     Suporte de Software
                   </td>
 
-                  <td className="hidden px-4 py-4 xl:table-cell">
-                    R$ 200,00
-                  </td>
+                  <td className="hidden px-4 py-4 xl:table-cell">R$ 200,00</td>
 
                   <td className="hidden px-4 py-4 xl:table-cell">
                     <div className="flex items-center gap-2">
@@ -308,7 +316,7 @@ const location = useLocation();
                         xl:px-3 xl:py-1 xl:gap-1
                       "
                     >
-                      <img src={closed} alt=""/>
+                      <img src={closed} alt="" />
                       <span className="hidden xl:inline text-xs font-medium">
                         Encerrado
                       </span>
@@ -329,35 +337,31 @@ const location = useLocation();
           </div>
         </div>
       </div>
-      
-      <ProfileOptionsModal 
-        open={open} 
+
+      <ProfileOptionsModal
+        open={open}
         onClose={() => setOpen(false)}
         onOpenProfile={() => {
-          setOpen(false);        // fecha o modal preto
-          setOpenProfile(true);  // abre o modal de perfil
+          setOpen(false); // fecha o modal preto
+          setOpenProfile(true); // abre o modal de perfil
         }}
       />
 
       {/* MODAL */}
-      <ProfileModalCustomer 
-        open={openProfile} 
-        onClose={() => setOpenProfile(false)} 
+      <ProfileModalCustomer
+        open={openProfile}
+        onClose={() => setOpenProfile(false)}
         onOpenAlterProfile={() => {
-        setOpen(false); // fecha o modal preto
-        setOpenProfile(false); // abre o modal de perfil
-        setOpenAlterProfile(true)
-      }}
-      /> 
-      
+          setOpen(false); // fecha o modal preto
+          setOpenProfile(false); // abre o modal de perfil
+          setOpenAlterProfile(true);
+        }}
+      />
+
       <AlterProfileModalCustomer
         open={openAlterProfile}
-        onClose={() => setOpenAlterProfile(false)}  
-      />      
-    </div>   
-  )
-
+        onClose={() => setOpenAlterProfile(false)}
+      />
+    </div>
+  );
 }
-
-
- 
