@@ -10,16 +10,12 @@ import clockOpen from "../assets/icons/clock-open.svg";
 import pen from "../assets/icons/pen-line.svg";
 import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
-import { ProfileOptionsModal } from "../componentes/ProfileOptionsModal";
-import { ProfileModalCustomer } from "../componentes/ProfileModalCustomer";
+import { CloseOptionsModal } from "../componentes/CloseOptionsModal";
 import { useState } from "react";
-import { AlterProfileModalCustomer } from "../componentes/AlterProfileModalCustomer";
 
 export function Calls() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
-  const [openProfile, setOpenProfile] = useState(false);
-  const [openAlterProfile, setOpenAlterProfile] = useState(false);
 
   return (
     <div className="w-screen h-screen  xl:grid xl:grid-cols-[280px_1fr] relative  bg-gray-100 xl:overflow-hidden ">
@@ -126,7 +122,10 @@ export function Calls() {
             <span className="w-8 h-8 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
               CS
             </span>
-            <div className="flex flex-col cursor-pointer" onClick={() => setOpen(true)}>
+            <div
+              className="flex flex-col cursor-pointer"
+              onClick={() => setOpen(true)}
+            >
               <span className="text-sm">Carlos Silva</span>
               <span className="text-xs text-gray-400">user.adm@test.com</span>
             </div>
@@ -277,29 +276,12 @@ export function Calls() {
           </table>
         </div>
       </div>
-      <ProfileOptionsModal
+      <CloseOptionsModal
         open={open}
         onClose={() => setOpen(false)}
         onOpenProfile={() => {
           setOpen(false); // fecha o modal preto
-          setOpenProfile(true); // abre o modal de perfil
         }}
-      />
-
-      {/* MODAL */}
-      <ProfileModalCustomer
-        open={openProfile}
-        onClose={() => setOpenProfile(false)}
-        onOpenAlterProfile={() => {
-          setOpen(false); // fecha o modal preto
-          setOpenProfile(false); // abre o modal de perfil
-          setOpenAlterProfile(true);
-        }}
-      />
-
-      <AlterProfileModalCustomer
-        open={openAlterProfile}
-        onClose={() => setOpenAlterProfile(false)}
       />
     </div>
   );
