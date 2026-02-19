@@ -59,50 +59,51 @@ export function SignIn(){
         <img src={background_mobile} alt="imagem azul" className="w-screen h-screen object-cover"/>
       </section>      
 
-      <form  action ={ formAction }  className="w-full h-screen flex flex-col xl:px-50  gap-4 bg-white absolute xl:relative py-24  rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-4">
-
-        <div className="flex justify-center gap-2 mb-8">
-          <img src= { Logo } alt="Logo"/>
-          <h1 className="text-2xl --color-blue-dark font-bold">HelpDesk</h1>
-        </div>
-
-        <div className="p-7">
-          <h1 className="text-xl font-bold">Acesse o portal</h1>
-          <span>Entre usando seu e-mail e senha cadastrados</span>
-          <div className="mt-10 flex flex-col gap-4">
-      
-            <Input
-              name = "email"          
-              required
-              legend="E-mail"
-              type="email"
-              placeholder="exemplo@mail.com"              
-            />
-
-            <Input
-              name = "password"
-              required
-              legend="senha"
-              type="password"
-              placeholder="Digite sua senha"                       
-            />
-
-            <p className="text-sm text-red-600 text-center my-4 font-medium">
-              { state?.message }
-            </p>
+      <form  action ={ formAction }  className="w-full h-screen flex flex-col items-center justify-center xl:px-50  gap-4 bg-white absolute xl:relative py-24  rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-4">
+        <div className="max-w-[400px] ">  
+          <div className="flex justify-center gap-2 mb-8">
+            <img src= { Logo } alt="Logo"/>
+            <h1 className="text-2xl --color-blue-dark font-bold">HelpDesk</h1>
           </div>
-        
-          <Button type="submit" isLoading={isLoading}>
-            Entrar
-          </Button>
-        </div>
-      
-        <div className="p-7">
-          <p className="text-base font-semibold">Ainda não tem uma conta?</p>
-          <span className="text-xs">Cadastre agora mesmo</span>
-          <a href="/signup" className="flex justify-center items-center py-1.5 rounded-lg cursor-pointer mt-7 bg-gray-500 hover:bg-gray-600 transition ease-linear text-gray-200">
-          Criar conta
-          </a>
+  
+          <div className="p-7">
+            <h1 className="text-xl font-bold">Acesse o portal</h1>
+            <span>Entre usando seu e-mail e senha cadastrados</span>
+            <div className="mt-10 flex flex-col gap-4">
+  
+              <Input
+                name = "email"
+                required
+                legend="E-mail"
+                type="email"
+                placeholder="exemplo@mail.com"
+              />
+  
+              <Input
+                name = "password"
+                required
+                legend="senha"
+                type="password"
+                placeholder="Digite sua senha"
+              />
+  
+              <p className="text-sm text-red-600 text-center my-4 font-medium">
+                { state?.message }
+              </p>
+            </div>
+  
+            <Button type="submit" isLoading={isLoading}>
+              Entrar
+            </Button>
+          </div>
+  
+          <div className="p-7">
+            <p className="text-base font-semibold">Ainda não tem uma conta?</p>
+            <span className="text-xs">Cadastre agora mesmo</span>
+            <a href="/signup" className="flex justify-center items-center py-1.5 rounded-lg cursor-pointer mt-7 bg-gray-500 hover:bg-gray-600 transition ease-linear text-gray-200">
+            Criar conta
+            </a>
+          </div>
         </div>
       </form>
     </div>
