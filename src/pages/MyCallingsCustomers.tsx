@@ -91,7 +91,7 @@ const location = useLocation();
               <img src= { LogoIconLight } alt="LogoIconLight" className="h-11 w-11"/>
               <div>
                 <h1 className="text-xl text-gray-600 ">HelpDesk</h1>
-                <span className="text-xxs text-blue-light ">Admin</span>
+                <span className="text-xxs text-blue-light uppercase">cliente</span>
               </div>
             </div>
           </div>
@@ -102,7 +102,7 @@ const location = useLocation();
         </div>            
       </section>     
 
-      <form   className="w-full h-screen flex flex-col px-2 xl:px-6  gap-4 bg-white absolute xl:relative py-0  rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
+      <div   className="w-full h-screen flex flex-col px-2 xl:px-6  gap-4 bg-white absolute xl:relative py-0  rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
         <div className="w-full max-w-6xl px-0 pt-12 xl:px-0 ">       
           <h1 className="mb-6 text-xl font-semibold text-blue-700">
             Meus chamados
@@ -328,7 +328,7 @@ const location = useLocation();
             </table>
           </div>
         </div>
-      </form>
+      </div>
       
       <ProfileOptionsModal 
         open={open} 

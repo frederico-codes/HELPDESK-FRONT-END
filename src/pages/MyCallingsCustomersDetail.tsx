@@ -74,7 +74,7 @@ export function MyCallingsCustomersDetail(){
         </div>            
       </section>     
 
-      <form  className="w-full h-screen flex flex-col px-2 xl:px-44  gap-4 bg-white absolute xl:relative rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4 ">  
+      <div  className="w-full h-screen flex flex-col px-2 xl:px-44  gap-4 bg-white absolute xl:relative rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4 ">  
         <div className=" bg-gray-50 px-4 py-6 xl:px-0 mt-6">
           {/* VOLTAR */}
           <Link to="/" className="mb-4 flex items-center gap-2 text-sm text-gray-700 hover:text-gray-500 cursor-pointer">
@@ -221,7 +221,7 @@ export function MyCallingsCustomersDetail(){
             </div>
           </div>
         </div>
-      </form>    
+      </div>    
    
     </div>
   )

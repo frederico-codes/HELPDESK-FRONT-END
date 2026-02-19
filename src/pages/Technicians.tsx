@@ -127,7 +127,7 @@ const location = useLocation();
           </div>            
       </section>     
 
-      <form   className="w-full h-screen flex flex-col px-6 xl:px-16  gap-4 bg-white absolute xl:relative py-24  rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
+      <div   className="w-full h-screen flex flex-col px-6 xl:px-16  gap-4 bg-white absolute xl:relative py-24  rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold">Técnicos</h1>
           <Link to="/detailtechnicians"
@@ -143,7 +143,7 @@ const location = useLocation();
           <table className="w-full text-left">
             
             {/* Cabeçalho */}
-            <thead className="border-b border-gray-200">
+            <thead className="border-b border-gray-500">
               <tr className="text-sm text-gray-400">
                 <th className="py-4 px-6 font-medium">Nome</th>               
                 <th className="py-4 px-6 font-medium  hidden xl:block">E-mail</th>                
@@ -160,7 +160,7 @@ const location = useLocation();
                     <span className="w-7 h-7 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
                       AC
                     </span>
-                    <span className="truncate max-w-[50px] xl:truncate-none xl:max-w-full " >André Costa</span>
+                    <span className="font-bold truncate max-w-[50px] xl:truncate-none xl:max-w-full">André Costa</span>
                   </div>
                 </td>
                 
@@ -191,7 +191,7 @@ const location = useLocation();
             </tbody>
           </table>
         </div>     
-      </form>  
+      </div>  
     </div>
     
   )

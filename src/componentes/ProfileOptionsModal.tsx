@@ -31,7 +31,7 @@ export function ProfileOptionsModal({ open, onClose, onOpenProfile  }: Props) {
         <h3 className="text-xs font-semibold text-gray-400 mb-4">OPÇÕES</h3>
 
         {/* PERFIL */}
-        <button className="w-full flex items-center gap-3 text-sm py-2 hover:text-gray-300"  onClick={() => {
+        <button className="w-full flex items-center gap-3 text-sm py-2 hover:text-gray-300 cursor-pointer"  onClick={() => {
           onClose();        // fecha o modal preto
           onOpenProfile();  // abre o modal de perfil
         }}>
@@ -40,7 +40,7 @@ export function ProfileOptionsModal({ open, onClose, onOpenProfile  }: Props) {
         </button>
 
         {/* SAIR */}
-        <button className="w-full flex items-center gap-3 text-sm py-2 text-red-500 hover:text-red-400" onClick={()=>auth.remove()}>
+        <button className="w-full flex items-center gap-3 text-sm py-2 text-red-500 hover:text-red-400 cursor-pointer" onClick={()=>auth.remove()}>
           <SignOut size={20} />
           Sair
         </button>

@@ -99,7 +99,7 @@ export function MyCallingsTechnicians() {
         </div>
       </section>
 
-      <form className="w-full h-screen flex flex-col px-6 xl:px-6  gap-4 bg-white absolute xl:relative rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
+      <div className="w-full h-screen flex flex-col px-6 xl:px-6  gap-4 bg-white absolute xl:relative rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
         <div className="w-full max-w-6xl px-4 pt-3">
           {/* Título */}
           <h1 className="text-2xl font-semibold text-gray-800 mb-6">
@@ -261,7 +261,7 @@ export function MyCallingsTechnicians() {
             </div>
           </div>
         </div>
-      </form>
+      </div>
       <ProfileOptionsModal
         open={open}
         onClose={() => setOpen(false)}

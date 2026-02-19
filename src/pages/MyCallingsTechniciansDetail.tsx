@@ -25,7 +25,7 @@ export function MyCallingsTechniciansDetail() {
           <img src={Defaultogo} alt="Logo padrão" />
           <div className="flex flex-col">
             <h1 className="text-gray-600 text-xl">HelpDesk</h1>
-            <span className="text-xxs text-blue-light">Técnico</span>
+            <span className="text-xxs text-blue-light uppercase">Técnico</span>
           </div>
         </div>
         <div className="flex flex-col gap-[720px]">
@@ -77,7 +77,7 @@ export function MyCallingsTechniciansDetail() {
               />
               <div>
                 <h1 className="text-xl text-gray-600 ">HelpDesk</h1>
-                <span className="text-xxs text-blue-light ">Admin</span>
+                <span className="text-xxs text-blue-light uppercase">Técnico</span>
               </div>
             </div>
           </div>
@@ -92,7 +92,7 @@ export function MyCallingsTechniciansDetail() {
         </div>
       </section>
 
-      <form className="w-full h-screen flex flex-col px-2 xl:px-6  gap-4 bg-white absolute xl:relative rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4 ">
+      <div className="w-full h-screen flex flex-col px-2 xl:px-6  gap-4 bg-white absolute xl:relative rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4 ">
         <main className="max-w-6xl mx-auto px-4  pt-10">
           {/* Linha de voltar + título + botões */}
           <header className="mb-6 md:mb-8 ">
@@ -294,7 +294,7 @@ export function MyCallingsTechniciansDetail() {
             </div>
           </section>
         </main>
-      </form>
+      </div>
 
       <MyCallingsTechniciansDetailModalAdditionalService
         open={modalOpen}

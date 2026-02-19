@@ -59,7 +59,7 @@ export function SignIn(){
         <img src={background_mobile} alt="imagem azul" className="w-screen h-screen object-cover"/>
       </section>      
 
-      <form  action ={ formAction }  className="w-full flex flex-col xl:px-50  gap-4 bg-white absolute xl:relative py-24  rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-4">
+      <form  action ={ formAction }  className="w-full h-screen flex flex-col xl:px-50  gap-4 bg-white absolute xl:relative py-24  rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-4">
 
         <div className="flex justify-center gap-2 mb-8">
           <img src= { Logo } alt="Logo"/>

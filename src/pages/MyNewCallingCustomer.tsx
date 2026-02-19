@@ -90,7 +90,7 @@ const location = useLocation();
         </div>            
       </section>       
 
-      <form   className="w-full h-screen flex flex-col px-6 xl:px-6  gap-4 bg-white absolute xl:relative pt-2  rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
+      <div   className="w-full h-screen flex flex-col px-6 xl:px-6  gap-4 bg-white absolute xl:relative pt-2  rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
         <div className="min-h-screen px-4 py-6 lg:px-44">
           {/* TÍTULO */}
           <h1 className="text-xl font-semibold text-blue-700 mb-6">
@@ -226,7 +226,7 @@ const location = useLocation();
             </div>
           </div>
         </div>
-      </form>
+      </div>
     
     </div>
   )

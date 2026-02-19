@@ -18,7 +18,7 @@ const location = useLocation();
 
 
   return(
-    <div className="w-screen h-screen  xl:grid xl:grid-cols-[280px_1fr] relative  bg-gray-100 ">
+    <div className="w-screen h-screen  xl:grid xl:grid-cols-[280px_1fr] relative  bg-gray-100 xl:overflow-hidden ">
       <section className=" hidden xl:block  bg-gray-100 p-6 ">
         <div className="flex gap-3">
           <img src={Defaultogo} alt="Logo padrão" />
@@ -27,7 +27,7 @@ const location = useLocation();
             <span className="text-xxs text-blue-light">Admin</span>
           </div>
         </div>
-        <div className="flex flex-col gap-[600px]">
+        <div className="flex flex-col">
           <nav className="pt-5 px-4">
             {/* CHAMADOS */}
               <Link to = "/"
@@ -98,7 +98,7 @@ const location = useLocation();
                 Serviços
               </Link>
           </nav>
-          <div className="flex items-center gap-2  text-white">
+          <div className="flex items-center gap-2  text-white absolute bottom-16">
             <span className="w-8 h-8 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
               CS
             </span>
@@ -109,7 +109,7 @@ const location = useLocation();
           </div>
         </div>
       </section>
-      <section className="block  xl:hidden w-screen h-screen  absolute  top-0 ">        
+      <section className="block  xl:hidden w-screen h-screen absolute">        
         <div className="flex justify-between items-center  ">
           {/* GRUPO ESQUERDA */}
           <div className="flex justify-center items-center gap-3.5 absolute top-7 left-6">
@@ -130,13 +130,14 @@ const location = useLocation();
         </div>            
       </section>     
 
-      <form   className="w-full h-screen flex flex-col px-6 xl:px-6  gap-4 bg-white absolute xl:relative py-24  rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
+      <div   className="w-full h-screen flex flex-col px-6 xl:px-6  gap-4 bg-white absolute xl:relative py-24  rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
         <h1 className="text-2xl font-bold">Chamados</h1>
-        <div className="w-full bg-white rounded-2xl shadow-sm overflow-hidden">
+        <div className="w-full bg-white rounded-2xl shadow-sm xl
+        :overflow-hidden">
           <table className="w-full text-left">
             
             {/* Cabeçalho */}
-            <thead className="border-b border-gray-200">
+            <thead className="border-b border-gray-500">
               <tr className="text-sm text-gray-400">
 
                 <th className="py-4 xl:px-6 font-medium">Atualizado em</th>
@@ -167,7 +168,7 @@ const location = useLocation();
 
                 {/* Título e Serviço */}
                 <td className="py-4 xl:px-6">
-                  <div className="font-semibold text-gray-800 text-sm truncate max-w-[120px]">Backup não está funcionando	</div>
+                  <div className="font-bold text-gray-800 text-sm truncate max-w-[120px]">Backup não está funcionando	</div>
                   <div className="text-gray-400 text-xs truncate max-w-[120px]">Recuperação de Dados	</div>
                 </td>
 
@@ -198,7 +199,16 @@ const location = useLocation();
 
                 {/* Status */}
                 <td className="py-4 xl:px-6">
-                  <span className="hidden xl:inline-flex  items-center bg-red-100 text-red-600 text-xs px-3 py-1 rounded-full ">
+                  <span
+                      className="
+                        inline-flex items-center justify-center
+                        h-8 w-8 rounded-full
+                        bg-pink-100 text-pink-600
+                        xl:h-auto xl:w-auto
+                        xl:rounded-full
+                        xl:px-3 xl:py-1 xl:gap-1
+                      "
+                    >
                     
                     {/* Ícone sempre visível */}
                     <img src={clockOpen} alt="ícone de relógio vermelho" />
@@ -211,18 +221,17 @@ const location = useLocation();
                 {/* Botão Editar */}
                 <td className="py-4 xl:px-6">
                   <div className="h-9 w-9 bg-gray-500 flex justify-center items-center rounded-sm hover:bg-gray-600 transition ease-linear">
-                  <Link to="/detailcalls" className="rounded-lg cursor-pointer">
-                    <img src={pen} alt="" />
-                  </Link>
+                    <Link to="/detailcalls" className="rounded-lg cursor-pointer">
+                      <img src={pen} alt="" />
+                    </Link>
 
                   </div>
                 </td>
-              </tr>
-             
+              </tr>             
             </tbody>
           </table>
         </div>     
-      </form>
+      </div>
     </div>
   )
 

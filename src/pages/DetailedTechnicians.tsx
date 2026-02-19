@@ -19,7 +19,7 @@ const location = useLocation();
           <img src={Defaultogo} alt="Logo padrão" />
           <div className="flex flex-col">
             <h1 className="text-gray-600 text-xl">HelpDesk</h1>
-            <span className="text-xxs text-blue-light">Admin</span>
+            <span className="text-xxs text-blue-light uppercase">Técnico</span>
           </div>
         </div>
         <div className="flex flex-col gap-[600px]">
@@ -114,7 +114,7 @@ const location = useLocation();
                 <img src= { LogoIconLight } alt="LogoIconLight" className="h-11 w-11"/>
                 <div>
                   <h1 className="text-xl text-gray-600 ">HelpDesk</h1>
-                  <span className="text-xxs text-blue-light ">Admin</span>
+                  <span className="text-xxs text-blue-light uppercase">Técnico</span>
                 </div>
               </div>
             </div>
@@ -125,7 +125,7 @@ const location = useLocation();
           </div>            
       </section>     
 
-      <form   className="w-full  flex flex-col   xl:px-14 gap-4 bg-white absolute xl:relative py-24  rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28  xl:mt-4">
+      <div   className="w-full  flex flex-col   xl:px-14 gap-4 bg-white absolute xl:relative py-24  rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28  xl:mt-4">
         <div className="w-full h-full flex flex-col  bg-gray-50 px-6">
               
           {/* VOLTAR */}
@@ -243,7 +243,7 @@ const location = useLocation();
             </div>
           </div>
         </div>
-      </form>  
+      </div>  
     </div>    
   )
 }
