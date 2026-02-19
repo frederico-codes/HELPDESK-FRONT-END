@@ -13,7 +13,8 @@ import disable from "../assets/icons/disable.svg";
 import { useLocation } from "react-router-dom";
 import clock_open from "../assets/icons/clock-open.svg";
 import plus from "../assets/icons/plus.svg";
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
+import { CloseOptionsModal } from "../componentes/CloseOptionsModal";
 
 export type Service = {
   id: number;
@@ -23,10 +24,11 @@ export type Service = {
 };
 
 export function Services() {
-  const [modalOpen, setModalOpen] = useState(false);  
+  const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<"create" | "edit">("create");
   const [selected, setSelected] = useState<Service | null>(null);
   const location = useLocation();
+  const [open, setOpen] = useState(false);
 
   function openCreate() {
     setModalMode("create");
@@ -42,7 +44,7 @@ export function Services() {
 
   return (
     <div className="w-screen h-screen  xl:grid xl:grid-cols-[280px_1fr] relative  bg-gray-100 ">
-   <section className="  hidden xl:block  bg-gray-100 p-6 ">
+      <section className="  hidden xl:block  bg-gray-100 p-6 ">
         <div className="flex gap-3">
           <img src={Defaultogo} alt="Logo padrão" />
           <div className="flex flex-col">
@@ -51,81 +53,104 @@ export function Services() {
           </div>
         </div>
         <div className="flex flex-col gap-[600px]">
-   <nav className="pt-5 px-4">
+          <nav className="pt-5 px-4">
             {/* CHAMADOS */}
-              <Link to = "/"
-                className={`
+            <Link
+              to="/"
+              className={`
                   w-[180px] flex items-center gap-2 text-sm p-3 outline-0 rounded-sm
-                  ${location.pathname === "/"
-                    ? "bg-blue-dark text-white"
-                    : "text-gray-400"
+                  ${
+                    location.pathname === "/"
+                      ? "bg-blue-dark text-white"
+                      : "text-gray-400"
                   }
                 `}
-              >
-                <img
-                  src={list}
-                  alt=""
-                  className={location.pathname === "/calls" ? "invert brightness-0" : ""}
-                />
-                Chamados
-              </Link>
-              {/* TÉCNICOS */}
-              <Link to="/technicians"
-                className={`
+            >
+              <img
+                src={list}
+                alt=""
+                className={
+                  location.pathname === "/calls" ? "invert brightness-0" : ""
+                }
+              />
+              Chamados
+            </Link>
+            {/* TÉCNICOS */}
+            <Link
+              to="/technicians"
+              className={`
                   w-[180px] flex items-center gap-2 text-sm p-3 outline-0 rounded-sm
-                  ${location.pathname === "/technicians"
-                    ? "bg-blue-dark text-white"
-                    : "text-gray-400"
+                  ${
+                    location.pathname === "/technicians"
+                      ? "bg-blue-dark text-white"
+                      : "text-gray-400"
                   }
                 `}
-              >
-                <img
-                  src={tecnicos}
-                  alt=""
-                  className={location.pathname === "/technicians" ? "invert brightness-0" : ""}
-                />
-                Técnicos
-              </Link>
-              {/* CLIENTES */}
-              <Link to="/customers"
-                className={`
+            >
+              <img
+                src={tecnicos}
+                alt=""
+                className={
+                  location.pathname === "/technicians"
+                    ? "invert brightness-0"
+                    : ""
+                }
+              />
+              Técnicos
+            </Link>
+            {/* CLIENTES */}
+            <Link
+              to="/customers"
+              className={`
                   w-[180px] flex items-center gap-2 text-sm p-3 outline-0 rounded-sm
-                  ${location.pathname === "/customers"
-                    ? "bg-blue-dark text-white"
-                    : "text-gray-400"
+                  ${
+                    location.pathname === "/customers"
+                      ? "bg-blue-dark text-white"
+                      : "text-gray-400"
                   }
                 `}
-              >
-                <img
-                  src={briefcase}
-                  alt=""
-                  className={location.pathname === "/customers" ? "invert brightness-0" : ""}
-                />
-                Clientes
-              </Link>
-              {/* SERVIÇOS */}
-              <Link to="/services"
-                className={`
+            >
+              <img
+                src={briefcase}
+                alt=""
+                className={
+                  location.pathname === "/customers"
+                    ? "invert brightness-0"
+                    : ""
+                }
+              />
+              Clientes
+            </Link>
+            {/* SERVIÇOS */}
+            <Link
+              to="/services"
+              className={`
                   w-[180px] flex items-center gap-2 text-sm p-3 outline-0 rounded-sm
-                  ${location.pathname === "/services"
-                    ? "bg-blue-dark text-white"
-                    : "text-gray-400"
+                  ${
+                    location.pathname === "/services"
+                      ? "bg-blue-dark text-white"
+                      : "text-gray-400"
                   }
                 `}
-              >
-                <img
-                  src={wrench}
-                  alt=""
-                  className={location.pathname === "/services" ? "invert brightness-0" : ""}
-                />
-                Serviços
-              </Link>
+            >
+              <img
+                src={wrench}
+                alt=""
+                className={
+                  location.pathname === "/services" ? "invert brightness-0" : ""
+                }
+              />
+              Serviços
+            </Link>
           </nav>
           <div className="flex items-center gap-2  text-white">
             <span className="w-8 h-8 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
               CS
             </span>
-            <div className="flex flex-col">
+            <div
+              className="flex flex-col cursor-pointer"
+              onClick={() => setOpen(true)}
+            >
               <span className="text-sm">Carlos Silva</span>
               <span className="text-xs text-gray-400">user.adm@test.com</span>
             </div>
@@ -216,13 +241,15 @@ export function Services() {
 
                 <td className="py-4 px-6 w-4 xl:px-6 flex gap-1">
                   <div className="h-9 w-9 flex justify-center items-center rounded-sm transition ease-linear">
-                    <a  className="
+                    <a
+                      className="
                         flex items-center justify-center
                         h-8 w-8 rounded-full                      
                         xl:h-auto xl:w-auto
                         xl:rounded-full
                         xl:px-3 xl:py-1 xl:gap-1 
-                      ">
+                      "
+                    >
                       <div className="flex gap-1">
                         <img src={disable} alt="" />
                         <span className="hidden xl:block">Desativar</span>
@@ -231,20 +258,20 @@ export function Services() {
                   </div>
                 </td>
 
-                <td className="py-4 px-1  w-4">                  
-                    <a
-                      onClick={() =>
-                        openEdit({
-                          id: 1,
-                          title: "Backup não está funcionando",
-                          value: 180,
-                          status: "active",
-                        })
-                      }
-                      className="rounded-lg h-9 w-9 bg-gray-500  hover:bg-gray-600 flex justify-center items-center cursor-pointer transition ease-linear"
-                    >
-                      <img src={pen} alt="" />
-                    </a>                  
+                <td className="py-4 px-1  w-4">
+                  <a
+                    onClick={() =>
+                      openEdit({
+                        id: 1,
+                        title: "Backup não está funcionando",
+                        value: 180,
+                        status: "active",
+                      })
+                    }
+                    className="rounded-lg h-9 w-9 bg-gray-500  hover:bg-gray-600 flex justify-center items-center cursor-pointer transition ease-linear"
+                  >
+                    <img src={pen} alt="" />
+                  </a>
                 </td>
               </tr>
             </tbody>
@@ -263,9 +290,17 @@ export function Services() {
         mode={modalMode} // agora está tipado corretamente
         data={
           selected
-          ? { title: selected.title, value: selected.value }
-          : undefined
+            ? { title: selected.title, value: selected.value }
+            : undefined
         }
+      />
+
+      <CloseOptionsModal
+        open={open}
+        onClose={() => setOpen(false)}
+        onOpenProfile={() => {
+          setOpen(false); // fecha o modal preto
+        }}
       />
     </div>
   );
