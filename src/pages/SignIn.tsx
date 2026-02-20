@@ -59,8 +59,8 @@ export function SignIn(){
         <img src={background_mobile} alt="imagem azul" className="w-screen h-screen object-cover"/>
       </section>      
 
-      <form  action ={ formAction }  className="w-full h-screen mt-4  flex flex-col items-center justify-center xl:px-50  gap-4 bg-white absolute xl:relative py-24  rounded-3xl xl:rounded-none xl:rounded-tl-2xl ">
-        <div className="max-w-[400px] ">  
+      <div className="w-full h-screen mt-4  flex flex-col items-center justify-center xl:px-50  gap-4 bg-white absolute xl:relative py-24  rounded-3xl xl:rounded-none xl:rounded-tl-2xl ">
+        <form action ={ formAction } className="max-w-[400px] ">  
           <div className="flex justify-center gap-2 mb-8">
             <img src= { Logo } alt="Logo"/>
             <h1 className="text-2xl --color-blue-dark font-bold">HelpDesk</h1>
@@ -104,8 +104,8 @@ export function SignIn(){
             Criar conta
             </a>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   )
 

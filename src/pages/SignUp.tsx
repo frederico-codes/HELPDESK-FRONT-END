@@ -70,8 +70,8 @@ export function SignUp(){
         <img src={background_mobile} alt="imagem azul" className="w-screen h-screen object-cover"/>
       </section>      
 
-      <form  onSubmit={onSubmit} className="w-full h-screen mt-4  flex flex-col items-center justify-center xl:px-50  gap-4 bg-white absolute xl:relative py-24  rounded-3xl xl:rounded-none xl:rounded-tl-2xl ">
-        <div className="w-[370px] ">
+      <div className="w-full h-screen mt-4  flex flex-col items-center justify-center xl:px-50  gap-4 bg-white absolute xl:relative py-24  rounded-3xl xl:rounded-none xl:rounded-tl-2xl ">
+        <form onSubmit={onSubmit} className="w-[370px] ">
           <div className="flex justify-center gap-2 mb-8">
             <img src= { Logo } alt="Logo"/>
             <h1 className="text-2xl --color-blue-dark font-bold">HelpDesk</h1>
@@ -115,8 +115,8 @@ export function SignUp(){
             Acessar conta
             </a>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   )
 
