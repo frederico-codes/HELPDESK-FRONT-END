@@ -62,7 +62,7 @@ export function SignUp(){
 
 
   return(
-    <div className="w-screen h-screen  xl:grid grid-cols-2 relative ">
+    <div className="w-screen h-screen overflow-hidden  xl:grid grid-cols-2 relative ">
       <section className="hidden xl:block w-screen h-screen">
         <img src={background_desktop} alt="imagem azul" className="w-screen h-screen object-cover"/>
       </section>
@@ -70,12 +70,13 @@ export function SignUp(){
         <img src={background_mobile} alt="imagem azul" className="w-screen h-screen object-cover"/>
       </section>      
 
-      <form  onSubmit={onSubmit} className="w-full h-screen  flex flex-col items-center justify-center  xl:px-50  gap-4 bg-white absolute xl:relative py-14  rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-3">
-        <div className="max-w-[400px] ">
+      <form  onSubmit={onSubmit} className="w-full h-screen mt-4  flex flex-col items-center justify-center xl:px-50  gap-4 bg-white absolute xl:relative py-24  rounded-3xl xl:rounded-none xl:rounded-tl-2xl ">
+        <div className="w-[370px] ">
           <div className="flex justify-center gap-2 mb-8">
             <img src= { Logo } alt="Logo"/>
             <h1 className="text-2xl --color-blue-dark font-bold">HelpDesk</h1>
           </div>
+
           <div className="p-7">
             <h1 className="text-xl font-bold">Crie sua conta</h1>
             <span>Informe seu nome, e-mail e senha</span>
