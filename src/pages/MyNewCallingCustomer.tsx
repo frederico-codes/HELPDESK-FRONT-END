@@ -14,61 +14,63 @@ const location = useLocation();
 
 
   return(
-    <div className="w-screen h-screen  xl:grid xl:grid-cols-[280px_1fr] relative  bg-gray-100 ">
-           <section className="hidden xl:block  bg-gray-100 pt-6 px-6">
-        <div className="flex gap-3">
-          <img src={Defaultogo} alt="Logo padrão"/>
-          <div className="flex flex-col">
-            <h1 className="text-gray-600 text-xl">HelpDesk</h1>
-            <span className="text-xxs text-blue-light uppercase">cliente</span>
+    <div className="w-screen h-screen  xl:grid xl:grid-cols-[280px_1fr] relative  bg-gray-100 xl:overflow-hidden ">
+      <section className="hidden xl:flex xl:flex-col xl:justify-between  bg-gray-100 p-6">
+        <div>
+          <div className="flex gap-3">
+            <img src={Defaultogo} alt="Logo padrão"/>
+            <div className="flex flex-col">
+              <h1 className="text-gray-600 text-xl">HelpDesk</h1>
+              <span className="text-xxs text-blue-light uppercase">cliente</span>
+            </div>
+          </div>
+          <div className="flex flex-col gap-[730px]">
+            <nav className="pt-5 px-4">
+          
+                <Link to = "/"
+                  className={`
+                    w-[180px] flex items-center gap-2 text-sm p-3 outline-0 rounded-sm
+                    ${location.pathname === "/"
+                      ? "bg-blue-dark text-white"
+                      : "text-gray-400"
+                    }
+                  `}
+                >
+                  <img
+                    src={list}
+                    alt=""
+                    className={location.pathname === "/calls" ? "invert brightness-0" : ""}
+                  />
+                  Meus chamados
+                </Link>
+          
+                <Link to="/chamados/novo"
+          
+                  className={`
+                    w-[180px] flex items-center gap-2 text-sm p-3 outline-0 rounded-sm
+                    ${location.pathname === "/chamados/novo"
+                      ? "bg-blue-dark text-white"
+                      : "text-gray-400"
+                    }
+                  `}
+                >
+                <img src={plus} alt="" />
+                  Criar chamado
+              </Link>
+            </nav>
           </div>
         </div>
-        <div className="flex flex-col justify-between h-screen pb-28">
-          <nav className="pt-5 px-4">
-            {/* CHAMADOS */}
-              <Link to = "/"
-                className={`
-                  w-[180px] flex items-center gap-2 text-sm p-3 outline-0 rounded-sm
-                  ${location.pathname === "/"
-                    ? "bg-blue-dark text-white"
-                    : "text-gray-400"
-                  }
-                `}
-              >
-                <img
-                  src={list}
-                  alt=""
-                  className={location.pathname === "/calls" ? "invert brightness-0" : ""}
-                />
-                Meus chamados
-              </Link>
-              {/* TÉCNICOS */}
-              <Link to="/chamados/novo" 
-                
-                className={`
-                  w-[180px] flex items-center gap-2 text-sm p-3 outline-0 rounded-sm
-                  ${location.pathname === "/chamados/novo"
-                    ? "bg-blue-dark text-white"
-                    : "text-gray-400"
-                  }
-                `}
-              >             
-              <img src={plus} alt="" />
-                Criar chamado
-            </Link>             
-          </nav>
-
-          <div className="flex items-center gap-2  text-white">
-            <span className="w-8 h-8 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
-              CS
-            </span>
-            <div className="flex flex-col">
-              <span className="text-sm">Carlos Silva</span>
-              <span className="text-xs text-gray-400">user.adm@test.com</span>
-            </div>
+        <div className="flex items-center gap-2  text-white mb-5">
+          <span className="w-8 h-8 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
+            CS
+          </span>
+          <div className="flex flex-col">
+            <span className="text-sm">Carlos Silva</span>
+            <span className="text-xs text-gray-400">user.adm@test.com</span>
           </div>
         </div>
       </section>
+      
       <section className="block  xl:hidden w-screen h-screen  absolute  top-0 ">        
         <div className="flex justify-between items-center  ">
           {/* GRUPO ESQUERDA */}

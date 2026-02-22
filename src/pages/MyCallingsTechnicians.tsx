@@ -23,53 +23,56 @@ export function MyCallingsTechnicians() {
   const [openAlterProfile, setOpenAlterProfile] = useState(false)
 
   return (
-    <div className="w-screen h-screen  xl:grid xl:grid-cols-[280px_1fr] relative  bg-gray-100 ">
-      <section className="  hidden xl:block  bg-gray-100 p-6 ">
-        <div className="flex gap-3">
-          <img src={Defaultogo} alt="Logo padrão" />
-          <div className="flex flex-col">
-            <h1 className="text-gray-600 text-xl">HelpDesk</h1>
-            <span className="text-xxs text-blue-light">Técnico</span>
+    <div className="w-screen h-screen  xl:grid xl:grid-cols-[280px_1fr] bg-gray-100  xl:overflow-hidden">
+      <section className="hidden xl:flex xl:flex-col xl:justify-between  bg-gray-100 p-6">
+        <div>
+          <div className="flex gap-3">
+            <img src={Defaultogo} alt="Logo padrão" />
+            <div className="flex flex-col">
+              <h1 className="text-gray-600 text-xl">HelpDesk</h1>
+              <span className="text-xxs text-blue-light">Técnico</span>
+            </div>
+          </div>
+          <div className="flex flex-col gap-[730px]">
+            <nav className="pt-5 px-4">
+              {/* CHAMADOS */}
+              <Link
+                to="#"
+                className={`
+                    w-[180px] flex items-center gap-2 text-sm p-3 outline-0 rounded-sm
+                    ${
+                      location.pathname === "/"
+                        ? "bg-blue-dark text-white"
+                        : "text-gray-400"
+                    }
+                  `}
+              >
+                <img
+                  src={list}
+                  alt=""
+                  className={
+                    location.pathname === "/calls" ? "invert brightness-0" : ""
+                  }
+                />
+                Meus chamados
+              </Link>
+            </nav>
           </div>
         </div>
-        <div className="flex flex-col gap-[730px]">
-          <nav className="pt-5 px-4">
-            {/* CHAMADOS */}
-            <Link
-              to="#"
-              className={`
-                  w-[180px] flex items-center gap-2 text-sm p-3 outline-0 rounded-sm
-                  ${
-                    location.pathname === "/"
-                      ? "bg-blue-dark text-white"
-                      : "text-gray-400"
-                  }
-                `}
-            >
-              <img
-                src={list}
-                alt=""
-                className={
-                  location.pathname === "/calls" ? "invert brightness-0" : ""
-                }
-              />
-              Meus chamados
-            </Link>
-          </nav>
-          <div
-            className="flex items-center gap-2  text-white cursor-pointer"
-            onClick={() => setOpen(true)}
-          >
-            <span className="w-8 h-8 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
-              CS
-            </span>
-            <div className="flex flex-col">
-              <span className="text-sm">Carlos Silva</span>
-              <span className="text-xs text-gray-400">user.adm@test.com</span>
-            </div>
+        <div
+          className="flex items-center gap-2  text-white cursor-pointer"
+          onClick={() => setOpen(true)}
+        >
+          <span className="w-8 h-8 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
+            CS
+          </span>
+          <div className="flex flex-col">
+            <span className="text-sm">Carlos Silva</span>
+            <span className="text-xs text-gray-400">user.adm@test.com</span>
           </div>
         </div>
       </section>
+
       <section className="block  xl:hidden w-screen h-screen  absolute  top-0 ">
         <div className="flex justify-between items-center  ">
           {/* GRUPO ESQUERDA */}
@@ -99,7 +102,7 @@ export function MyCallingsTechnicians() {
         </div>
       </section>
 
-      <div className="w-full h-screen flex flex-col px-6 xl:px-6  gap-4 bg-white absolute xl:relative rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
+      <div className="w-full  px-6 xl:px-6  gap-4 bg-white absolute xl:relative rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4 overflow-y-auto">
         <div className="w-full max-w-6xl px-4 pt-3">
           {/* Título */}
           <h1 className="text-2xl font-semibold text-gray-800 mb-6">
@@ -262,6 +265,8 @@ export function MyCallingsTechnicians() {
           </div>
         </div>
       </div>
+
+
       <ProfileOptionsModal
         open={open}
         onClose={() => setOpen(false)}

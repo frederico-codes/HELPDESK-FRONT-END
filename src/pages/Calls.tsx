@@ -121,7 +121,7 @@ export function Calls() {
             </nav>
           </div>
         </div>
-        <div className="flex items-center gap-2  text-white mb-3">
+        <div className="flex items-center gap-2  text-white mb-5">
           <span className="w-8 h-8 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
             CS
           </span>
