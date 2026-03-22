@@ -2,12 +2,13 @@ import { Input } from "../componentes/Input"
 import { Button } from "../componentes/Button"
 import background_desktop from "../assets/Login_Background_Desktop.svg";
 import background_mobile from "../assets/Login_Background_Mobile.png";
-import Logo from "../assets/Logo.svg"
+
 import { AxiosError } from "axios";
 import { useActionState } from "react";
 import { api } from "../services/api"
 import { z, ZodError} from "zod"
 import { useAuth } from "../hooks/useAuth"
+import LogoIconDark from "../assets/icons/Logo_IconDark.svg";
 
 
 const signInScheme = z.object({
@@ -62,7 +63,7 @@ export function SignIn(){
       <div className="w-full h-screen mt-4  flex flex-col items-center justify-center xl:px-50  gap-4 bg-white absolute xl:relative py-24  rounded-3xl xl:rounded-none xl:rounded-tl-2xl ">
         <form action ={ formAction } className="max-w-[400px] ">  
           <div className="flex justify-center gap-2 mb-8">
-            <img src= { Logo } alt="Logo"/>
+            <img src= { LogoIconDark } alt="Logo"/>
             <h1 className="text-2xl --color-blue-dark font-bold">HelpDesk</h1>
           </div>
   

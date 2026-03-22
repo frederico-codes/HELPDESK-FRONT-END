@@ -1,4 +1,4 @@
-import Defaultogo from "../assets/Defaultogo.svg";
+import Logo_IconLight from "../assets/icons/Logo_IconLight.svg";
 import list from "../assets/icons/clipboard-list.svg";
 import menu from "../assets/icons/Menu.png";
 import LogoIconLight from "../assets/Logo_IconLight.png";
@@ -22,10 +22,10 @@ export function MyCallingsTechniciansDetail() {
   
   return (
      <div className="w-screen h-screen  xl:grid xl:grid-cols-[280px_1fr] bg-gray-100  xl:overflow-hidden">
-      <section className="hidden xl:flex xl:flex-col xl:justify-between  bg-gray-100 p-6">
+      <section className="hidden xl:flex xl:flex-col xl:justify-between  bg-gray-100 pl-6 pt-10 pb-6">
         <div>
           <div className="flex gap-3">
-            <img src={Defaultogo} alt="Logo padrão" />
+            <img src={Logo_IconLight} alt="Logo padrão" />
             <div className="flex flex-col">
               <h1 className="text-gray-600 text-xl">HelpDesk</h1>
               <span className="text-xxs text-blue-light">Técnico</span>

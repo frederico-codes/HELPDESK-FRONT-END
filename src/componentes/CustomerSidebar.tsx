@@ -1,4 +1,4 @@
-import Defaultogo from "../assets/Defaultogo.svg";
+import Logo_IconLight from "../assets/icons/Logo_IconLight.svg";
 import tecnicos from "../assets/icons/tecnicos.svg";
 import briefcase from "../assets/icons/briefcase.svg";
 import wrench from "../assets/icons/wrench.svg";
@@ -25,7 +25,7 @@ export function CustomerSidebar() {
       <section className="h-screen hidden xl:flex xl:flex-col xl:justify-between  bg-gray-100 pl-6 pb-1 pt-12 ">
         <div>
           <div className="flex gap-3">
-            <img src={Defaultogo} alt="Logo padrão" />
+            <img src={Logo_IconLight} alt="Logo padrão" />
             <div className="flex flex-col">
               <h1 className="text-gray-600 text-xl">HelpDesk</h1>
               <span className="text-xxs text-blue-light">Admin</span>

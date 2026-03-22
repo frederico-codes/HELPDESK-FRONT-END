@@ -4,7 +4,7 @@ import { useState } from "react"
 import background_desktop from "../assets/Login_Background_Desktop.svg";
 import background_mobile from "../assets/Login_Background_Mobile.png";
 import { z, ZodError } from "zod";
-import Logo from "../assets/Logo.svg"
+import Logo_IconDark from "../assets/icons/Logo_IconDark.svg";
 import { api } from "../services/api";
 import { useNavigate } from "react-router";
 import { AxiosError } from "axios";
@@ -73,7 +73,7 @@ export function SignUp(){
       <div className="w-full h-screen mt-4  flex flex-col items-center justify-center xl:px-50  gap-4 bg-white absolute xl:relative py-24  rounded-3xl xl:rounded-none xl:rounded-tl-2xl ">
         <form onSubmit={onSubmit} className="w-[370px] ">
           <div className="flex justify-center gap-2 mb-8">
-            <img src= { Logo } alt="Logo"/>
+            <img src= { Logo_IconDark } alt="Logo"/>
             <h1 className="text-2xl --color-blue-dark font-bold">HelpDesk</h1>
           </div>
 
