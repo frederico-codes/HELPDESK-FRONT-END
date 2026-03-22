@@ -8,7 +8,7 @@ export function Calls() {
 
   return (
     <div className="w-screen h-screen  xl:grid xl:grid-cols-[280px_1fr] bg-gray-100 xl:overflow-hidden ">
-      
+
       <Sidebar />
 
       <div className="w-full h-screen flex flex-col px-6 xl:px-6  gap-4 bg-white absolute xl:relative py-24  rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
@@ -125,9 +125,7 @@ export function Calls() {
             </tbody>
           </table>
         </div>
-      </div>
-
-     
+      </div>     
     </div>
   );
 }

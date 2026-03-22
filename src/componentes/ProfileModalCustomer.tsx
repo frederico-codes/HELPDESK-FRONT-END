@@ -146,8 +146,7 @@ export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile }: Prop
             Salvar
           </button>
         </div>
-      </div>
-      
+      </div>      
     </div>
   );
 }

@@ -6,7 +6,7 @@ import { useState } from "react";
 import { CustomerModal } from "../componentes/CustomerModal"; // importar modal
 import { DeleteCustomerModal } from "../componentes/DeleteCustomerModal";
 import { Trash2 } from "lucide-react";
-import { Sidebar } from "../componentes/Sidebar";
+import { CustomerSidebar } from "../componentes/CustomerSidebar";
 
 export function Customers() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -21,7 +21,7 @@ export function Customers() {
   return (
     <div className="w-screen h-screen  xl:grid xl:grid-cols-[280px_1fr] relative  bg-gray-100 xl:overflow-hidden">
       
-      <Sidebar />
+      <CustomerSidebar />
 
       <section className="block  xl:hidden w-screen h-screen absolute top-0 ">
         <div className="flex justify-between items-center  ">

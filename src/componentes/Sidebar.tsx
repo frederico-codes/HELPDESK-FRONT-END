@@ -118,8 +118,8 @@ export function Sidebar() {
                 </Link>
               </nav>
             </div>
-                    </div>
-                    <div className="flex items-center gap-2  text-white mb-5">
+          </div>
+          <div className="flex items-center gap-2  text-white mb-5">
             <span className="w-8 h-8 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
               CS
             </span>
@@ -161,13 +161,14 @@ export function Sidebar() {
           </div>
         </section>
 
-            <CloseOptionsModal
-              open={open}
-              onClose={() => setOpen(false)}
-              onOpenProfile={() => {
-              setOpen(false); // fecha o modal preto
-              }}
-            />
+        <CloseOptionsModal
+          open={open}
+          onClose={() => setOpen(false)}
+          onOpenProfile={() => {
+          setOpen(false); // fecha o modal preto
+          }}
+        />
+        
       </div>
   );
 }
