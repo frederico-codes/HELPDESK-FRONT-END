@@ -1,12 +1,15 @@
 import { Routes, Route } from "react-router-dom";
 import { MyCallingsTechnicians } from "../pages/MyCallingsTechnicians";
 import {MyCallingsTechniciansDetail} from "../pages/MyCallingsTechniciansDetail"
+import { NotFound } from "../pages/NotFound";
 
 export function TechniciansRoutes() {
   return (
     <Routes>     
       <Route path="/" element={<MyCallingsTechnicians />} />
       <Route path="/mycallingstecdetail" element={<MyCallingsTechniciansDetail />} />
+
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
