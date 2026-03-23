@@ -2,7 +2,6 @@ import { Input } from "../componentes/Input"
 import { Button } from "../componentes/Button"
 import background_desktop from "../assets/Login_Background_Desktop.svg";
 import background_mobile from "../assets/Login_Background_Mobile.png";
-
 import { AxiosError } from "axios";
 import { useActionState } from "react";
 import { api } from "../services/api"

@@ -27,7 +27,7 @@ export function ProfileTechnicianModal({ open, onClose, onOpenAlterProfile }: Pr
         onClick={(e) => e.stopPropagation()}
         className="
           bg-white rounded-2xl shadow-lg animate-fade
-          w-full max-w-xl
+          w-full max-w-[440px]
         "
       >
         {/* HEADER */}

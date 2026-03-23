@@ -1,6 +1,7 @@
 import { X } from "phosphor-react";
 import bin from "../assets/icons/bin.svg"
 import uiface from "../assets/uifaces-popular-avatar (2).jpg"
+import { Input } from "../componentes/Input"
 
 interface Props {
   open: boolean
@@ -26,20 +27,22 @@ export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile }: Prop
         onClick={(e) => e.stopPropagation()}
         className="
           bg-white rounded-2xl shadow-lg animate-fade
-          w-full max-w-xl
+          w-full max-w-[440px]
         "
       >
         {/* HEADER */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-500">
           <h2 className="text-lg font-semibold text-gray-900">Perfil</h2>
           <button onClick={onClose}>
-            <X size={22} className="text-gray-700 hover:text-gray-500 cursor-pointer" />
+            <X
+              size={22}
+              className="text-gray-700 hover:text-gray-500 cursor-pointer"
+            />
           </button>
         </div>
 
         {/* CONTEÚDO */}
         <div className="px-6 py-5 space-y-6">
-
           {/* FOTO + BOTÕES */}
           <div className="flex items-center gap-4">
             <img
@@ -49,13 +52,13 @@ export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile }: Prop
             />
 
             <div className="flex items-center gap-2">
-             
               <div className="flex items-center gap-2">
-                <label className="flex items-center gap-2 px-3 py-2 
+                <label
+                  className="flex items-center gap-2 px-3 py-2 
                 bg-gray-500 rounded-lg cursor-pointer
                 text-sm font-medium text-gray-800
-                hover:bg-gray-50 transition">
-
+                hover:bg-gray-50 transition"
+                >
                   {/* Ícone upload (SVG inline ou componente) */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -71,11 +74,7 @@ export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile }: Prop
                     <path d="M20 16v4H4v-4" />
                   </svg>
                   Nova imagem
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                  />
+                  <input type="file" accept="image/*" className="hidden" />
                 </label>
               </div>
 
@@ -87,28 +86,24 @@ export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile }: Prop
 
           {/* NOME */}
           <div>
-            <label className="text-xs font-semibold">NOME</label>
-            <input
+            <Input
+              name="Nome"
+              required
+              legend="Nome"
               type="text"
               placeholder="Carlos Silva"
-              className="
-                w-full border-b border-gray-500 focus:border-blue-600
-                outline-none py-2 text-gray-700
-              "
             />
           </div>
 
           {/* EMAIL */}
           <div>
-            <label className="text-xs font-semibold">E-MAIL</label>
-            <input
+            <Input
+              name="email"
+              required
+              legend="E-mail"
               type="email"
-              placeholder="carlos.silva@test.com"
-              className="
-                w-full border-b border-gray-500 focus:border-blue-600
-                outline-none py-2 text-gray-700
-              "
-            />            
+              placeholder="exemplo@mail.com"
+            />
           </div>
 
           {/* SENHA */}
@@ -124,15 +119,17 @@ export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile }: Prop
                 "
               />
 
-              <button className="px-3 py-1.5 rounded-md bg-gray-500 text-gray-700
-               hover:bg-gray-50 text-sm cursor-pointer" onClick={() => {
-                onClose();        // fecha o modal preto
-                onOpenAlterProfile();  // abre o modal de perfil
-              }}>
+              <button
+                className="px-3 py-1.5 rounded-md bg-gray-500 text-gray-700 hover:bg-gray-50 text-sm cursor-pointer"
+                onClick={() => {
+                  onClose(); // fecha o modal preto
+                  onOpenAlterProfile(); // abre o modal de perfil
+                }}
+              >
                 Alterar
               </button>
             </div>
-          </div>       
+          </div>
         </div>
 
         {/* BOTÃO SALVAR */}
@@ -146,7 +143,7 @@ export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile }: Prop
             Salvar
           </button>
         </div>
-      </div>      
+      </div>
     </div>
   );
 }

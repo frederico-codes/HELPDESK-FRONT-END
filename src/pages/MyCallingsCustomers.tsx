@@ -13,7 +13,7 @@ import plus from "../assets/icons/plus.svg";
 import { ProfileModalCustomer } from "../componentes/ProfileModalCustomer";
 import { useState } from "react";
 import { AlterProfileModalCustomer } from "../componentes/AlterProfileModalCustomer";
-import { CloseOptionsModal } from "../componentes/CloseOptionsModal";
+import { ProfileOptionsModal } from "../componentes/ProfileOptionsModal";
 
 export function MyCallingsCustomers() {
   const location = useLocation();
@@ -55,9 +55,9 @@ export function MyCallingsCustomers() {
                 />
                 Meus chamados
               </Link>
-               <Link
-                  to="/chamados/novo"
-                  className={`
+              <Link
+                to="/chamados/novo"
+                className={`
                       w-[180px] flex items-center gap-2 text-sm p-3 outline-0 rounded-sm
                       ${
                         location.pathname === "/technicians"
@@ -65,10 +65,10 @@ export function MyCallingsCustomers() {
                           : "text-gray-400"
                       }
                     `}
-                >
-                  <img src={plus} alt="" />
-                  Criar chamado
-                </Link>
+              >
+                <img src={plus} alt="" />
+                Criar chamado
+              </Link>
             </nav>
           </div>
         </div>
@@ -84,7 +84,7 @@ export function MyCallingsCustomers() {
             <span className="text-xs text-gray-400">user.adm@test.com</span>
           </div>
         </div>
-      </section>      
+      </section>
 
       <section className="block  xl:hidden w-screen h-screen  absolute  top-0 ">
         <div className="flex justify-between items-center  ">
@@ -339,11 +339,12 @@ export function MyCallingsCustomers() {
         </div>
       </div>
 
-      <CloseOptionsModal
+      <ProfileOptionsModal
         open={open}
         onClose={() => setOpen(false)}
         onOpenProfile={() => {
-        setOpen(false); // fecha o modal preto
+          setOpen(false); // fecha o modal preto
+          setOpenProfile(true); // abre o modal de perfil
         }}
       />
 
@@ -352,9 +353,9 @@ export function MyCallingsCustomers() {
         open={openProfile}
         onClose={() => setOpenProfile(false)}
         onOpenAlterProfile={() => {
-        setOpen(false); // fecha o modal preto
-        setOpenProfile(false); // abre o modal de perfil
-        setOpenAlterProfile(true);
+          setOpen(false); // fecha o modal preto
+          setOpenProfile(false); // abre o modal de perfil
+          setOpenAlterProfile(true);
         }}
       />
 
