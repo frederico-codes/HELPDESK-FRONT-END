@@ -1,3 +1,5 @@
+import { Input } from "../componentes/Input"
+
 export type ServiceModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -7,7 +9,7 @@ export type ServiceModalProps = {
 };
 
 
-export function ServiceModal({ isOpen, onClose, onSubmit, mode, data }: ServiceModalProps) {
+export function ServiceModal({ isOpen, onClose, onSubmit, mode }: ServiceModalProps) {
   if (!isOpen) return null;
 
   const isEdit = mode === "edit";
@@ -34,38 +36,25 @@ export function ServiceModal({ isOpen, onClose, onSubmit, mode, data }: ServiceM
         >
           {/* Campo Título */}
           <div className="flex flex-col gap-2">
-            <label className="text-xxs font-bold text-gray-300 uppercase">
-              Título
-            </label>
-
-            <input
-              name="title"
-              defaultValue={data?.title || ""}
-              className="border-b border-gray-500 focus:border-blue-500 outline-none py-2"
-              placeholder="Nome do serviço"
-              required
-            />
+              <Input
+                name = "titulo"
+                required
+                legend="TÍTULO"
+                type="text"
+                placeholder="Nome do serviço"
+              />
           </div>
 
           {/* Campo Valor */}
-          <div className="flex flex-col gap-2">
-            <label className="text-xxs font-bold text-gray-300 uppercase">
-              Valor
-            </label>
-
-            <div className="flex items-center gap-2 border-b border-gray-500 py-2">
-              <span className="text-gray-300 ">R$</span>
-              <input
-                name="value"
-                type="number"
-                step="0.01"
-                defaultValue={data?.value || ""}
-                placeholder="0,00"
-                className="w-full outline-none"
+          <div className="flex flex-col gap-2">              
+               <Input
+                name = "valor"
                 required
+                legend="VALOR"
+                type="number"
+                placeholder="R$ 0,00"
               />
-            </div>
-          </div>
+          </div>         
 
           {/* Botão Salvar */}
           <button

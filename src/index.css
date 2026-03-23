@@ -60,3 +60,11 @@ html, body, #root {
 .animate-fade {
   animation: fade .2s ease-out;
 }
+
+select {
+  appearance: none;
+  background-image: url("./assets/icons/chevron-down.svg");
+  background-repeat: no-repeat;
+  background-position: right .7rem top 50%;
+  background-size: 1.25rem auto;
+}

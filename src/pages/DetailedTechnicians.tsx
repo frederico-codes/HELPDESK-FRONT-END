@@ -3,6 +3,7 @@ import LogoIconLight from "../assets/Logo_IconLight.png"
 import avatar from "../assets/Avatar.svg"
 import { Link } from "react-router-dom"
 import { Sidebar } from "../componentes/Sidebar";
+import { Input } from "../componentes/Input"
 
 export function DetailedTechnicians(){
 
@@ -73,32 +74,37 @@ export function DetailedTechnicians(){
               </p>
 
               {/* Nome */}
-              <label className="block text-xs font-semibold  mb-1">
-                NOME
-              </label>
-              <input
-                className="w-full border-b border-gray-300 py-2 mb-6 outline-none text-base"
-                placeholder="Nome completo"
+            <div className="flex flex-col gap-2">
+              <Input
+                name = "titulo"
+                required
+                legend="TÍTULO"
+                type="text"
+                placeholder="Nome do serviço"
               />
+            </div>
 
               {/* Email */}
-              <label className="block text-xs font-semibold mb-1">
-                E-MAIL
-              </label>
-              <input
-                className="w-full border-b border-gray-300 py-2 mb-6 outline-none"
+            <div className="flex flex-col gap-2 mt-4">
+              <Input
+                name = "email"
+                required
+                legend="E-mail"
+                type="email"
                 placeholder="exemplo@mail.com"
               />
+            </div>
 
               {/* Senha */}
-              <label className="block text-xs font-semibold mb-1">
-                SENHA
-              </label>
-              <input
+            <div className="flex flex-col gap-2 mt-4">
+              <Input
+                name = "senha"
+                required
+                legend="SENHA"
                 type="password"
-                className="w-full border-b border-gray-300 py-2 outline-none"
-                placeholder="Defina a senha de acesso"
+                placeholder="123456"
               />
+            </div>
 
               <p className="text-xs text-gray-400 mt-2">Mínimo de 6 dígitos</p>
             </div>

@@ -1,6 +1,5 @@
-// CustomerModal.jsx
 import { X } from "lucide-react";
-
+import { Input } from "../componentes/Input"
 
 interface CustomerModalProps {
   open: boolean;
@@ -40,16 +39,22 @@ export function CustomerModal({ open, onClose, customer }: CustomerModalProps) {
           </div>
 
           {/* Nome */}
-          <div className="flex flex-col">
-            <label className="text-xxs text-gray-300 ">NOME</label>
-            <span className=" text-base pb-1 border-b border-b-gray-500">{customer.name}</span>
-          </div>
+             <Input
+                name = "nome"
+                required
+                legend="Nome"
+                type="text"
+                placeholder="Nome completo"
+              />
 
           {/* Email */}
-          <div className="flex flex-col">
-            <label className="text-xs text-gray-300">E-MAIL</label>
-            <span className= "text-base text-gray-200 pb-1 border-b border-b-gray-500">{customer.email}</span>
-          </div>
+            <Input
+                name = "email"
+                required
+                legend="E-mail"
+                type="email"
+                placeholder="exemplo@mail.com"
+              />
         </div>
 
         {/* FOOTER */}

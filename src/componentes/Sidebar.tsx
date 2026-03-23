@@ -131,11 +131,11 @@ export function Sidebar() {
                 <span className="text-sm">Carlos Silva</span>
                 <span className="text-xs text-gray-400">user.adm@test.com</span>
             </div>
-                    </div>
-                  </section>
+          </div>
+        </section>
             
-                  <section className="block  xl:hidden w-screen h-screen absolute">
-                    <div className="flex justify-between items-center  ">
+        <section className="block  xl:hidden w-screen h-screen absolute">
+          <div className="flex justify-between items-center  ">
             {/* GRUPO ESQUERDA */}
             <div className="flex justify-center items-center gap-3.5 absolute top-7 left-6">
               <img src={menu} alt="menu" className="" />
