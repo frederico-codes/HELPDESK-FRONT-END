@@ -1,6 +1,7 @@
 import { X } from "phosphor-react";
 import { Input } from "../componentes/Input"
 import { Upload } from "./Upload";
+import { useState } from "react";
 
 interface Props {
   open: boolean
@@ -10,6 +11,18 @@ interface Props {
 
 
 export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile }: Props) {
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
+   async function onSubmit(e: React.FormEvent){
+        e.preventDefault()
+
+
+        console.log({name, email, password})
+   }
+
+
   if (!open) return null;
 
   return (
@@ -22,7 +35,8 @@ export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile }: Prop
       onClick={onClose}
     >
       {/* MODAL */}
-      <div
+      <form
+        onSubmit={onSubmit}
         onClick={(e) => e.stopPropagation()}
         className="
           bg-white rounded-2xl shadow-lg animate-fade
@@ -52,6 +66,8 @@ export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile }: Prop
               legend="Nome"
               type="text"
               placeholder="Carlos Silva"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
 
@@ -63,6 +79,8 @@ export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile }: Prop
               legend="E-mail"
               type="email"
               placeholder="exemplo@mail.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}              
             />
           </div>
 
@@ -76,6 +94,8 @@ export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile }: Prop
                 legend="SENHA"
                 type="password"
                 placeholder="Digite sua senha"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
 
               <button
@@ -93,7 +113,8 @@ export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile }: Prop
         {/* BOTÃO SALVAR */}
         <div className="px-6 pb-6">
           <button
-            className="
+          type="submit"
+          className="
           w-full bg-gray-900 text-white py-3 rounded-md
           font-medium text-sm hover:bg-gray-500 transition cursor-pointer hover:text-gray-200
           "
@@ -101,7 +122,7 @@ export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile }: Prop
             Salvar
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

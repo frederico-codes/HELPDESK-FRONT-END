@@ -1,10 +1,19 @@
+import { useState } from "react";
+
+
 interface Props {
   open: boolean
   onClose: () => void 
 }
 
 export function AlterProfileModalTechnicians({ open, onClose }: Props) {
+  const [password, setPassword] = useState("")
+  const [newPassword, setNewPassword] = useState("")
 
+  function onSubmit(e: React.FormEvent){
+    e.preventDefault()  
+    console.log({password, newPassword})
+  }
 
   if (!open) return null;
 
@@ -13,7 +22,8 @@ export function AlterProfileModalTechnicians({ open, onClose }: Props) {
       className="fixed inset-0 bg-black/50 flex items-center justify-center p-4"
       onClick={onClose}
     >
-      <div
+      <form
+        onSubmit={onSubmit}
         onClick={(e) => e.stopPropagation()}
         className="bg-white w-full max-w-[360px] rounded-2xl shadow-lg p-5"
       >
@@ -31,6 +41,8 @@ export function AlterProfileModalTechnicians({ open, onClose }: Props) {
             type="password"
             placeholder="Digite sua senha atual"
             className="w-full border-b border-gray-300 focus:border-blue-600 outline-none text-sm py-1"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
 
@@ -40,15 +52,16 @@ export function AlterProfileModalTechnicians({ open, onClose }: Props) {
             type="password"
             placeholder="Digite sua nova senha"
             className="w-full border-b border-gray-300 focus:border-blue-600 outline-none text-sm py-1"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
           />
           <p className=" text-gray-400 mt-1">Mínimo de 6 dígitos</p>
         </div>
 
-        <button className="w-full bg-gray-800 text-white text-sm font-medium py-3 rounded-xl hover:bg-gray-900 transition cursor-pointer">
+        <button type="submit" className="w-full bg-gray-800 text-white text-sm font-medium py-3 rounded-xl hover:bg-gray-900 transition cursor-pointer">
           Salvar
         </button>
-
-      </div>
+      </form>
     </div>
   );
 }

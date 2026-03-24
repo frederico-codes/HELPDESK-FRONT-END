@@ -10,6 +10,10 @@ interface Props {
 
 
 export function ProfileOptionsModal({ open, onClose, onOpenProfile  }: Props) {
+  
+
+
+
   if (!open) return null
   const auth = useAuth()
 

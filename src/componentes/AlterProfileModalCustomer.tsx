@@ -1,4 +1,5 @@
 import { X } from "phosphor-react"
+import { Input } from "./Input";
 
 interface Props {
   open: boolean
@@ -9,10 +10,11 @@ export function AlterProfileModalCustomer({ open, onClose }: Props) {
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4"
+    <div
+      className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4"
       onClick={onClose}
     >
-         {/* MODAL */}
+      {/* MODAL */}
       <div
         onClick={(e) => e.stopPropagation()}
         className="
@@ -31,16 +33,14 @@ export function AlterProfileModalCustomer({ open, onClose }: Props) {
               ←
             </button>
 
-            <h2 className="text-base font-semibold">
-              Alterar senha
-            </h2>
+            <h2 className="text-base font-semibold">Alterar senha</h2>
           </div>
 
           <button
             onClick={onClose}
             className="text-gray-700 hover:text-gray-500 cursor-pointer"
           >
-           <X size={18} />
+            <X size={18} />
           </button>
         </div>
 
@@ -48,35 +48,23 @@ export function AlterProfileModalCustomer({ open, onClose }: Props) {
         <div className="px-6 py-6 space-y-6">
           {/* SENHA ATUAL */}
           <div>
-            <label className="block text-xs font-semibold text-gray-400 mb-1">
-              SENHA ATUAL
-            </label>
-            <input
+            <Input
+              name="password"
+              required
+              legend="SENHA"
               type="password"
-              placeholder="Digite sua senha atual"
-              className="
-                w-full border-b border-gray-500
-                py-2 text-sm text-gray-800
-                outline-none
-                focus:border-blue-600
-              "
+              placeholder="Digite sua senha"
             />
           </div>
 
           {/* NOVA SENHA */}
           <div>
-            <label className="block text-xs font-semibold text-gray-400 mb-1">
-              NOVA SENHA
-            </label>
-            <input
+            <Input
+              name="password"
+              required
+              legend="NOVA SENHA"
               type="password"
               placeholder="Digite sua nova senha"
-              className="
-                w-full border-b border-gray-500
-                py-2 text-sm text-gray-800
-                outline-none
-                focus:border-blue-600
-              "
             />
             <span className="mt-1 block text-xs text-gray-400">
               Mínimo de 6 dígitos
@@ -98,7 +86,6 @@ export function AlterProfileModalCustomer({ open, onClose }: Props) {
           </button>
         </div>
       </div>
-   
     </div>
-  )
+  );
 }
