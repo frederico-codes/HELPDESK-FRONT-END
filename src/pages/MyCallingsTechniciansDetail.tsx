@@ -11,17 +11,19 @@ import clock_2 from "../assets/icons/clock_2.svg";
 import bin from "../assets/icons/bin.svg";
 import { useState } from "react";
 import { MyCallingsTechniciansDetailModalAdditionalService } from "../componentes/MyCallingsTechniciansDetailModalAdditionalService";
+import { CloseOptionsModal } from "../componentes/CloseOptionsModal";
 
 
 
 export function MyCallingsTechniciansDetail() {
   const location = useLocation();
+  const [open, setOpen] = useState(false)
   const [modalOpen, setModalOpen] = useState(false);
   
   
   
   return (
-     <div className="w-screen h-screen  xl:grid xl:grid-cols-[280px_1fr] bg-gray-100  xl:overflow-hidden">
+    <div className="w-screen h-screen  xl:grid xl:grid-cols-[280px_1fr] bg-gray-100  xl:overflow-hidden">
       <section className="hidden xl:flex xl:flex-col xl:justify-between  bg-gray-100 pl-6 pt-10 pb-6">
         <div>
           <div className="flex gap-3">
@@ -57,20 +59,20 @@ export function MyCallingsTechniciansDetail() {
             </nav>
           </div>
         </div>
-          <div
-            className="flex items-center gap-2  text-white cursor-pointer"
-            onClick={() => setModalOpen(true)}
-          >
-            <span className="w-8 h-8 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
-              CS
-            </span>
-            <div className="flex flex-col">
-              <span className="text-sm">Carlos Silva</span>
-              <span className="text-xs text-gray-400">user.adm@test.com</span>
-            </div>
+        <div
+          className="flex items-center gap-2  text-white cursor-pointer"
+          onClick={() => setOpen(true)}
+        >
+          <span className="w-8 h-8 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
+            CS
+          </span>
+          <div className="flex flex-col">
+            <span className="text-sm">Carlos Silva</span>
+            <span className="text-xs text-gray-400">user.adm@test.com</span>
           </div>
+        </div>
       </section>
-      
+
       <section className="block  xl:hidden w-screen h-screen  absolute ">
         <div className="flex justify-between items-center  ">
           {/* GRUPO ESQUERDA */}
@@ -85,7 +87,9 @@ export function MyCallingsTechniciansDetail() {
               />
               <div>
                 <h1 className="text-xl text-gray-600 ">HelpDesk</h1>
-                <span className="text-xxs text-blue-light uppercase">Técnico</span>
+                <span className="text-xxs text-blue-light uppercase">
+                  Técnico
+                </span>
               </div>
             </div>
           </div>
@@ -303,6 +307,14 @@ export function MyCallingsTechniciansDetail() {
           </section>
         </main>
       </div>
+
+      <CloseOptionsModal
+        open={open}
+        onClose={() => setOpen(false)}
+        onOpenProfile={() => {
+          setOpen(false); // fecha o modal preto
+        }}
+      />
 
       <MyCallingsTechniciansDetailModalAdditionalService
         open={modalOpen}

@@ -1,5 +1,6 @@
 import { X } from "lucide-react";
 import { Input } from "../componentes/Input"
+import { useState } from "react";
 
 interface CustomerModalProps {
   open: boolean;
@@ -13,12 +14,21 @@ interface CustomerModalProps {
 
 
 export function CustomerModal({ open, onClose, customer }: CustomerModalProps) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  
+
+    function onSubmit(e: React.FormEvent){
+    e.preventDefault()
+  
+    console.log({name, email})
+  }
+
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4">
+    <form onSubmit={onSubmit} className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4">
       <div className="bg-white rounded-2xl w-full max-w-md shadow-lg animate-fade">
-        
         {/* HEADER */}
         <div className="flex justify-between items-center px-6 py-4 border-b border-b-gray-500">
           <h2 className="text-base text-gray-700">Cliente</h2>
@@ -30,7 +40,6 @@ export function CustomerModal({ open, onClose, customer }: CustomerModalProps) {
 
         {/* BODY */}
         <div className="px-6 py-6 flex flex-col gap-6">
-
           {/* Avatar + iniciais */}
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-full bg-blue-700 text-white flex items-center justify-center text-lg font-medium">
@@ -39,31 +48,35 @@ export function CustomerModal({ open, onClose, customer }: CustomerModalProps) {
           </div>
 
           {/* Nome */}
-             <Input
-                name = "nome"
-                required
-                legend="Nome"
-                type="text"
-                placeholder="Nome completo"
-              />
+          <Input
+            name="nome"
+            required
+            legend="Nome"
+            type="text"
+            placeholder="Nome completo"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
 
           {/* Email */}
-            <Input
-                name = "email"
-                required
-                legend="E-mail"
-                type="email"
-                placeholder="exemplo@mail.com"
-              />
+          <Input
+            name="email"
+            required
+            legend="E-mail"
+            type="email"
+            placeholder="exemplo@mail.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </div>
 
         {/* FOOTER */}
         <div className="px-6 py-4 border-t border-t-gray-500">
-          <button className="w-full bg-gray-900 text-sm text-gray-600 py-2.5 rounded-md hover:bg-gray-800">
+          <button type="submit" className="w-full bg-gray-900 text-sm text-gray-600 py-2.5 rounded-md hover:bg-gray-800">
             Salvar
           </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 }

@@ -1,5 +1,6 @@
 import { X } from "phosphor-react"
 import { Input } from "./Input";
+import { useState } from "react";
 
 interface Props {
   open: boolean
@@ -7,10 +8,22 @@ interface Props {
 }
 
 export function AlterProfileModalCustomer({ open, onClose }: Props) {
+  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+
+
+  function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    console.log({ password, newPassword });
+  }
+
+
   if (!open) return null
 
   return (
-    <div
+    <form
+      onSubmit={onSubmit}
       className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4"
       onClick={onClose}
     >
@@ -54,6 +67,8 @@ export function AlterProfileModalCustomer({ open, onClose }: Props) {
               legend="SENHA"
               type="password"
               placeholder="Digite sua senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
@@ -65,6 +80,8 @@ export function AlterProfileModalCustomer({ open, onClose }: Props) {
               legend="NOVA SENHA"
               type="password"
               placeholder="Digite sua nova senha"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
             />
             <span className="mt-1 block text-xs text-gray-400">
               Mínimo de 6 dígitos
@@ -75,6 +92,7 @@ export function AlterProfileModalCustomer({ open, onClose }: Props) {
         {/* FOOTER */}
         <div className="px-6 pb-6">
           <button
+            type="submit"
             className="
               w-full rounded-md
               bg-gray-900 py-3
@@ -86,6 +104,6 @@ export function AlterProfileModalCustomer({ open, onClose }: Props) {
           </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 }

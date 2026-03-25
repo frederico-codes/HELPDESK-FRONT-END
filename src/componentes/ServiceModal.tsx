@@ -1,4 +1,5 @@
 import { Input } from "../componentes/Input"
+import { useState } from "react";
 
 export type ServiceModalProps = {
   isOpen: boolean;
@@ -9,7 +10,17 @@ export type ServiceModalProps = {
 };
 
 
-export function ServiceModal({ isOpen, onClose, onSubmit, mode }: ServiceModalProps) {
+export function ServiceModal({ isOpen, onClose, mode }: ServiceModalProps) {
+  const [service, setService] = useState("");
+  const [value, setValue] = useState("");
+
+  function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    
+    console.log({service, value})
+  }
+ 
+
   if (!isOpen) return null;
 
   const isEdit = mode === "edit";
@@ -42,6 +53,9 @@ export function ServiceModal({ isOpen, onClose, onSubmit, mode }: ServiceModalPr
                 legend="TÍTULO"
                 type="text"
                 placeholder="Nome do serviço"
+                value={service}
+                onChange={(e) => setService(e.target.value)}
+
               />
           </div>
 
@@ -53,6 +67,8 @@ export function ServiceModal({ isOpen, onClose, onSubmit, mode }: ServiceModalPr
                 legend="VALOR"
                 type="number"
                 placeholder="R$ 0,00"
+                value={value}
+                onChange={(e) => setValue(e.target.value)}        
               />
           </div>         
 
