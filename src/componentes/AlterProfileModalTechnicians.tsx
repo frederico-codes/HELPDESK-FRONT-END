@@ -3,7 +3,7 @@ import { useState } from "react";
 
 interface Props {
   open: boolean
-  onClose: () => void 
+  onClose: () => void
 }
 
 export function AlterProfileModalTechnicians({ open, onClose }: Props) {

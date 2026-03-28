@@ -1,31 +1,88 @@
-
 import clockOpen from "../assets/icons/clock-open.svg";
 import pen from "../assets/icons/pen-line.svg";
 import { Link } from "react-router-dom";
 import { Sidebar } from "../componentes/Sidebar";
 
-export function Calls() {  
+const calls = [
+  {
+    id: "00003",
+    updatedAt: "13/04/25 20:56",
+    title: "Backup não está funcionando",
+    service: "Recuperação de Dados",
+    totalValue: "R$ 180,00",
+    client: {
+      initials: "AC",
+      name: "André Costa",
+    },
+    technician: {
+      initials: "CS",
+      name: "Carlos Silva",
+    },
+    status: "Aberto",
+    statusIcon: clockOpen,
+    statusAlt: "ícone de relógio vermelho",
+  },
+];
 
+function AvatarBadge({
+  initials,
+  name,
+}: {
+  initials: string;
+  name: string;
+}) {
   return (
-    <div className="w-screen h-screen  xl:grid xl:grid-cols-[280px_1fr] bg-gray-100 xl:overflow-hidden ">
+    <div className="flex items-center gap-2">
+      <span className="w-7 h-7 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
+        {initials}
+      </span>
+      {name}
+    </div>
+  );
+}
 
+function StatusBadge({
+  label,
+  icon,
+  alt,
+}: {
+  label: string;
+  icon: string;
+  alt: string;
+}) {
+  return (
+    <span
+      className="
+        inline-flex items-center justify-center
+        h-8 w-8 rounded-full
+        bg-pink-100 text-pink-600
+        xl:h-auto xl:w-auto
+        xl:px-3 xl:py-1 xl:gap-1
+      "
+    >
+      <img src={icon} alt={alt} />
+      <span className="hidden xl:inline">{label}</span>
+    </span>
+  );
+}
+
+export function Calls() {
+  return (
+    <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] bg-gray-100 xl:overflow-hidden">
       <Sidebar />
 
-      <div className="w-full h-screen flex flex-col px-6 xl:px-6  gap-4 bg-white absolute xl:relative py-24  rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
+      <div className="w-full h-screen flex flex-col px-6 xl:px-6 gap-4 bg-white absolute xl:relative py-24 rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
         <h1 className="text-2xl font-bold">Chamados</h1>
-        <div
-          className="w-full bg-white rounded-2xl shadow-sm xl
-        :overflow-hidden"
-        >
+
+        <div className="w-full bg-white rounded-2xl shadow-sm overflow-hidden">
           <table className="w-full text-left">
-            {/* Cabeçalho */}
             <thead className="border-b border-gray-500">
               <tr className="text-sm text-gray-400">
                 <th className="py-4 xl:px-6 font-medium">Atualizado em</th>
                 <th className="py-4 px-6 font-medium hidden xl:table-cell">
                   Id
                 </th>
-                <th className="xl:py-4 xl:px-6 font-medium truncate max-w-[120px]">
+                <th className="py-4 xl:px-6 font-medium">
                   Título e Serviço
                 </th>
                 <th className="py-4 px-6 font-medium hidden xl:table-cell">
@@ -42,90 +99,74 @@ export function Calls() {
               </tr>
             </thead>
 
-            {/* Primeira linha */}
             <tbody>
-              <tr className="border-b last:border-none">
-                {/* Atualizado em */}
-                <td className="py-4 xl:px-6 text-xs text-gray-700">
-                  13/04/25 20:56
-                </td>
+              {calls.map((call) => (
+                <tr key={call.id} className="border-b last:border-none">
+                  <td className="py-4 xl:px-6 text-xs text-gray-700">
+                    {call.updatedAt}
+                  </td>
 
-                {/* ID */}
-                <td className="py-4 px-6 font-semibold text-xs text-gray-800 hidden xl:table-cell">
-                  00003
-                </td>
+                  <td className="py-4 px-6 font-semibold text-xs text-gray-800 hidden xl:table-cell">
+                    {call.id}
+                  </td>
 
-                {/* Título e Serviço */}
-                <td className="py-4 xl:px-6">
-                  <div className="font-bold text-gray-800 text-sm truncate max-w-[120px]">
-                    Backup não está funcionando{" "}
-                  </div>
-                  <div className="text-gray-400 text-xs truncate max-w-[120px]">
-                    Recuperação de Dados{" "}
-                  </div>
-                </td>
+                  <td className="py-4 xl:px-6">
+                    <div className="font-bold text-gray-800 text-sm truncate max-w-[120px] xl:max-w-[220px]">
+                      {call.title}
+                    </div>
+                    <div className="text-gray-400 text-xs truncate max-w-[120px] xl:max-w-[220px]">
+                      {call.service}
+                    </div>
+                  </td>
 
-                {/* Valor total */}
-                <td className="py-4 px-6 text-sm text-gray-700 hidden xl:table-cell">
-                  R$ 180,00
-                </td>
+                  <td className="py-4 px-6 text-sm text-gray-700 hidden xl:table-cell">
+                    {call.totalValue}
+                  </td>
 
-                {/* Cliente */}
-                <td className="py-4 px-6 text-sm hidden xl:table-cell ">
-                  <div className="flex items-center gap-2">
-                    <span className="w-7 h-7 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
-                      AC
-                    </span>
-                    André Costa
-                  </div>
-                </td>
+                  <td className="py-4 px-6 text-sm hidden xl:table-cell">
+                    <AvatarBadge
+                      initials={call.client.initials}
+                      name={call.client.name}
+                    />
+                  </td>
 
-                {/* Técnico */}
-                <td className="py-4 px-6 text-sm hidden xl:table-cell">
-                  <div className="flex items-center gap-2">
-                    <span className="w-7 h-7 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
-                      CS
-                    </span>
-                    Carlos Silva
-                  </div>
-                </td>
+                  <td className="py-4 px-6 text-sm hidden xl:table-cell">
+                    <AvatarBadge
+                      initials={call.technician.initials}
+                      name={call.technician.name}
+                    />
+                  </td>
 
-                {/* Status */}
-                <td className="py-4 xl:px-6">
-                  <span
-                    className="
-                        inline-flex items-center justify-center
-                        h-8 w-8 rounded-full
-                        bg-pink-100 text-pink-600
-                        xl:h-auto xl:w-auto
-                        xl:rounded-full
-                        xl:px-3 xl:py-1 xl:gap-1
-                      "
-                  >
-                    {/* Ícone sempre visível */}
-                    <img src={clockOpen} alt="ícone de relógio vermelho" />
+                  <td className="py-4 xl:px-6">
+                    <StatusBadge
+                      label={call.status}
+                      icon={call.statusIcon}
+                      alt={call.statusAlt}
+                    />
+                  </td>
 
-                    {/* Texto só no XL */}
-                    <span className="hidden xl:inline">Aberto</span>
-                  </span>
-                </td>
-
-                {/* Botão Editar */}
-                <td className="py-4 xl:px-6">
-                  <div className="h-9 w-9 bg-gray-500 flex justify-center items-center rounded-sm hover:bg-gray-600 transition ease-linear">
-                    <Link
-                      to="/detailcalls"
-                      className="rounded-lg cursor-pointer"
-                    >
-                      <img src={pen} alt="" />
-                    </Link>
-                  </div>
-                </td>
-              </tr>
+                  <td className="py-4 xl:px-6">
+                    <div className="h-9 w-9 bg-gray-500 flex justify-center items-center rounded-sm hover:bg-gray-600 transition ease-linear">
+                      <Link
+                        to="/detailcalls"
+                        className="rounded-lg cursor-pointer"
+                      >
+                        <img src={pen} alt="Editar chamado" />
+                      </Link>
+                    </div>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
+
+          {calls.length === 0 && (
+            <div className="px-6 py-8 text-sm text-gray-400">
+              Nenhum chamado encontrado.
+            </div>
+          )}
         </div>
-      </div>     
+      </div>
     </div>
   );
 }

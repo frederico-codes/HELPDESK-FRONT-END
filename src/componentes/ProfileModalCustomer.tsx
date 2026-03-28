@@ -86,7 +86,6 @@ export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile }: Prop
 
           {/* SENHA */}
           <div>
-            <label className="text-xs font-semibold">SENHA</label>
             <div className="flex items-center justify-between gap-3">
               <Input
                 name="password"
