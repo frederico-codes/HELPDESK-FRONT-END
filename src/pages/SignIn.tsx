@@ -72,13 +72,7 @@ export function SignIn(){
             <span>Entre usando seu e-mail e senha cadastrados</span>
             <div className="mt-10 flex flex-col gap-4">
   
-              <Input
-                name = "email"
-                required
-                legend="E-mail"
-                type="email"
-                placeholder="exemplo@mail.com"
-              />
+              
   
               <Input
                 name = "password"
