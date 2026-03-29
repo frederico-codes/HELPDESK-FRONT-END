@@ -8,7 +8,7 @@ import clockOpen from "../assets/icons/clock-open.svg";
 import currentlyAssisting from "../assets/icons/currently_assisting.svg";
 import closed from "../assets/icons/closed.svg";
 
-type CallStatus = "open" | "in_progress" | "closed";
+type CallStatus = "aberto" | "em_atendimento" | "encerrado";
 
 interface CallItem {
   id: string;
@@ -17,7 +17,6 @@ interface CallItem {
   service: string;
   totalValue: string;
   technician: {
-    initials: string;
     name: string;
     colorClass: string;
   };
@@ -32,11 +31,10 @@ const calls: CallItem[] = [
     service: "Instalação de Rede",
     totalValue: "R$ 180,00",
     technician: {
-      initials: "CS",
       name: "Carlos Silva",
       colorClass: "bg-blue-600",
     },
-    status: "open",
+    status: "aberto",
   },
   {
     id: "00001",
@@ -45,11 +43,10 @@ const calls: CallItem[] = [
     service: "Manutenção de Hardware",
     totalValue: "R$ 150,00",
     technician: {
-      initials: "CS",
       name: "Carlos Silva",
       colorClass: "bg-blue-600",
     },
-    status: "in_progress",
+    status: "em_atendimento",
   },
   {
     id: "00002",
@@ -58,29 +55,37 @@ const calls: CallItem[] = [
     service: "Suporte de Software",
     totalValue: "R$ 200,00",
     technician: {
-      initials: "AO",
       name: "Ana Oliveira",
       colorClass: "bg-indigo-600",
     },
-    status: "closed",
+    status: "encerrado",
   },
 ];
 
+function getInitials(name: string) {
+  const parts = name.trim().split(" ").filter(Boolean);
+
+  if (parts.length === 0) return "";
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+
+  return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+}
+
 function getStatusConfig(status: CallStatus) {
   switch (status) {
-    case "open":
+    case "aberto":
       return {
         label: "Aberto",
         icon: clockOpen,
         wrapperClass: "bg-pink-100 text-pink-600",
       };
-    case "in_progress":
+    case "em_atendimento":
       return {
         label: "Em atendimento",
         icon: currentlyAssisting,
         wrapperClass: "bg-blue-100 text-blue-600",
       };
-    case "closed":
+    case "encerrado":
       return {
         label: "Encerrado",
         icon: closed,
@@ -88,6 +93,9 @@ function getStatusConfig(status: CallStatus) {
       };
   }
 }
+
+
+
 
 export function MyCallingsCustomersDetail() {
   const location = useLocation();
@@ -151,7 +159,7 @@ export function MyCallingsCustomersDetail() {
 
         <div className="flex items-center gap-2 text-white mb-11">
           <span className="w-8 h-8 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
-            {call.technician.initials}
+            {getInitials(call.technician.name)}
           </span>
           <div className="flex flex-col">
             <span className="text-sm">{call.technician.name}</span>
@@ -261,7 +269,7 @@ export function MyCallingsCustomersDetail() {
                   <span
                     className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-medium text-white ${call.technician.colorClass}`}
                   >
-                    {call.technician.initials}
+                    {getInitials(call.technician.name)}
                   </span>
 
                   <div>

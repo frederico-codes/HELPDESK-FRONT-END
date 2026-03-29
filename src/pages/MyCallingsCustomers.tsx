@@ -15,7 +15,7 @@ import { AlterProfileModalCustomer } from "../componentes/AlterProfileModalCusto
 import { ProfileOptionsModal } from "../componentes/ProfileOptionsModal";
 import { useNavigate } from "react-router-dom";
 
-type CallStatus = "open" | "in_progress" | "closed";
+type CallStatus = "aberto" | "em_atendimento" | "encerrado";
 
 interface CallItem {
   id: string;
@@ -23,8 +23,7 @@ interface CallItem {
   title: string;
   service: string;
   totalValue: string;
-  technician: {
-    initials: string;
+   technician: {
     name: string;
     colorClass: string;
   };
@@ -39,11 +38,10 @@ const calls: CallItem[] = [
     service: "Instalação de Rede",
     totalValue: "R$ 180,00",
     technician: {
-      initials: "CS",
       name: "Carlos Silva",
       colorClass: "bg-blue-600",
     },
-    status: "open",
+    status: "aberto",
   },
   {
     id: "00001",
@@ -52,11 +50,10 @@ const calls: CallItem[] = [
     service: "Manutenção de Hardware",
     totalValue: "R$ 150,00",
     technician: {
-      initials: "CS",
       name: "Carlos Silva",
       colorClass: "bg-blue-600",
     },
-    status: "in_progress",
+    status: "em_atendimento",
   },
   {
     id: "00002",
@@ -65,29 +62,37 @@ const calls: CallItem[] = [
     service: "Suporte de Software",
     totalValue: "R$ 200,00",
     technician: {
-      initials: "AO",
       name: "Ana Oliveira",
       colorClass: "bg-indigo-600",
     },
-    status: "closed",
+    status: "encerrado",
   },
 ];
 
+function getInitials(name: string) {
+  const parts = name.trim().split(" ").filter(Boolean);
+
+  if (parts.length === 0) return "";
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+
+  return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+}
+
 function getStatusConfig(status: CallStatus) {
   switch (status) {
-    case "open":
+    case "aberto":
       return {
         label: "Aberto",
         icon: clockOpen,
         wrapperClass: "bg-pink-100 text-pink-600",
       };
-    case "in_progress":
+    case "em_atendimento":
       return {
         label: "Em atendimento",
         icon: currentlyAssisting,
         wrapperClass: "bg-blue-100 text-blue-600",
       };
-    case "closed":
+    case "encerrado":
       return {
         label: "Encerrado",
         icon: closed,
@@ -117,14 +122,14 @@ function StatusBadge({ status }: { status: CallStatus }) {
 }
 
 function TechnicianBadge({
-  initials,
   name,
   colorClass,
 }: {
-  initials: string;
   name: string;
   colorClass: string;
 }) {
+  const initials = getInitials(name);
+
   return (
     <div className="flex items-center gap-2">
       <span
@@ -142,6 +147,13 @@ export function MyCallingsCustomers() {
   const [open, setOpen] = useState(false);
   const [openProfile, setOpenProfile] = useState(false);
   const [openAlterProfile, setOpenAlterProfile] = useState(false);
+
+  const [user, setUser] = useState({
+    name: "Usuário Cliente",
+    email: "user.client@test.com",
+  });
+
+   const userInitials = getInitials(user.name);
 
   const navigate = useNavigate();
 
@@ -207,11 +219,11 @@ export function MyCallingsCustomers() {
           onClick={() => setOpen(true)}
         >
           <span className="w-8 h-8 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
-            UC
+            {userInitials}
           </span>
           <div className="flex flex-col">
-            <span className="text-sm">Usuário Cliente</span>
-            <span className="text-xs text-gray-400">user.client@test.com</span>
+            <span className="text-sm">{user.name}</span>
+            <span className="text-xs text-gray-400">{user.email}</span>
           </div>
         </div>
       </section>
@@ -287,10 +299,8 @@ export function MyCallingsCustomers() {
                       className="cursor-pointer hover:bg-gray-50 transition"
                     >
                       <td className="flex gap-3 items-center px-4 py-6 text-gray-700">
-                       
-                          <div>{date}</div>
-                          <div >{time}</div>
-                        
+                        <div>{date}</div>
+                        <div>{time}</div>
                       </td>
 
                       <td className="hidden px-4 py-4 font-semibold xl:table-cell">
@@ -306,32 +316,23 @@ export function MyCallingsCustomers() {
                       </td>
 
                       <td className="hidden px-4 py-4 xl:table-cell">
-                        
-                          {call.totalValue}
-                        
+                        {call.totalValue}
                       </td>
 
                       <td className="hidden px-4 py-4 xl:table-cell">
-                        
-                          <TechnicianBadge
-                            initials={call.technician.initials}
-                            name={call.technician.name}
-                            colorClass={call.technician.colorClass}
-                          />
-                       
+                        <TechnicianBadge
+                          name={call.technician.name}
+                          colorClass={call.technician.colorClass}
+                        />
                       </td>
 
                       <td className="px-4 py-4">
-                        
-                          <StatusBadge status={call.status} />
-                        
+                        <StatusBadge status={call.status} />
                       </td>
 
                       {/* botão continua opcional */}
                       <td className="px-4 py-4">
-                   
-                          <img src={eye} alt="Ver chamado" />
-                        
+                        <img src={eye} alt="Ver chamado" />
                       </td>
                     </tr>
                   );
@@ -359,6 +360,11 @@ export function MyCallingsCustomers() {
           setOpenProfile(false);
           setOpenAlterProfile(true);
         }}
+        onSave={(data) => {
+          setUser(data);
+        }}
+        initialName={user.name}
+        initialEmail={user.email}
       />
 
       <AlterProfileModalCustomer

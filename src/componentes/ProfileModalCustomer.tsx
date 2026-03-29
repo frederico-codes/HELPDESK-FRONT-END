@@ -4,22 +4,27 @@ import { Upload } from "./Upload";
 import { useState } from "react";
 
 interface Props {
-  open: boolean
-  onClose: () => void  
-  onOpenAlterProfile:() => void   
+  open: boolean;
+  onClose: () => void;
+  onOpenAlterProfile: () => void;
+  onSave: (data: { name: string; email: string }) => void;
+  initialName?: string;
+  initialEmail?: string;
 }
 
 
-export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile }: Props) {
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
+
+export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile, onSave, initialName, initialEmail }: Props) {
+  const [name, setName] = useState(initialName || "")
+  const [email, setEmail] = useState(initialEmail || "")
   const [password, setPassword] = useState("")
+  
 
-   async function onSubmit(e: React.FormEvent){
-        e.preventDefault()
+   async function onSubmit(e: React.FormEvent) {
+     e.preventDefault();
 
-
-        console.log({name, email, password})
+    onSave({ name, email });
+    onClose();
    }
 
 
