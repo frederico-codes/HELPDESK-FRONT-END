@@ -10,10 +10,13 @@ import { Input } from "../componentes/Input";
 import { Select } from "../componentes/Select";
 import { CATEGORIES, CATEGORIES_KEYS } from "../utils/categories";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function MyNewCallingCustomer() {
   const location = useLocation();
   const [category, setCategory] = useState("");
+
+  const navigate = useNavigate();
 
   return (
     <div className="w-screen h-screen  xl:grid xl:grid-cols-[280px_1fr] relative  bg-gray-100 xl:overflow-hidden ">
@@ -208,6 +211,7 @@ export function MyNewCallingCustomer() {
               <button
                 className="mt-6 w-full rounded-lg bg-gray-900 py-3 text-sm text-gray-50 font-medium
                           hover:bg-gray-500 hover:text-gray-200 ease-linear transition cursor-pointer"
+                          onClick={() => navigate(`/chamados/${call.id}/edit`)}
               >
                 Criar chamado
               </button>

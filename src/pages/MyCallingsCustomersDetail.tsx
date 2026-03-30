@@ -7,6 +7,7 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import clockOpen from "../assets/icons/clock-open.svg";
 import currentlyAssisting from "../assets/icons/currently_assisting.svg";
 import closed from "../assets/icons/closed.svg";
+import { useUser } from "../contexts/UserContext";
 
 type CallStatus = "aberto" | "em_atendimento" | "encerrado";
 
@@ -99,7 +100,12 @@ function getStatusConfig(status: CallStatus) {
 
 export function MyCallingsCustomersDetail() {
   const location = useLocation();
-  const { id } = useParams();
+  const { id } = useParams(); 
+
+
+  const { user } = useUser(); // ✅ AGORA VEM DO CONTEXT
+
+  const userInitials = getInitials(user.name);
 
   const call = calls.find((item) => item.id === id);
 
@@ -159,11 +165,11 @@ export function MyCallingsCustomersDetail() {
 
         <div className="flex items-center gap-2 text-white mb-11">
           <span className="w-8 h-8 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
-            {getInitials(call.technician.name)}
+            {userInitials}
           </span>
           <div className="flex flex-col">
-            <span className="text-sm">{call.technician.name}</span>
-            <span className="text-xs text-gray-400">user.adm@test.com</span>
+            <span className="text-sm">{user.name}</span>
+            <span className="text-xs text-gray-400">{user.email}</span>
           </div>
         </div>
       </section>
@@ -301,7 +307,8 @@ export function MyCallingsCustomersDetail() {
             </div>
           </div>
         </div>
-      </div>    
+      </div> 
+         
     </div>
   );
 }

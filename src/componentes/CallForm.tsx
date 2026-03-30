@@ -3,14 +3,14 @@ import list from "../assets/icons/clipboard-list.svg";
 import menu from "../assets/icons/Menu.png";
 import LogoIconLight from "../assets/Logo_IconLight.png";
 import avatar from "../assets/Avatar.svg";
-import { useLocation, useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import plus from "../assets/icons/plus.svg";
 import { Input } from "../componentes/Input";
 import { Select } from "../componentes/Select";
 import { CATEGORIES, CATEGORIES_KEYS } from "../utils/categories";
 import { useState } from "react";
 import { useEffect} from "react";
+import { useUser } from "../contexts/UserContext";
 
 const callsMock = [
   {
@@ -40,30 +40,59 @@ const callsMock = [
   },
 ];
 
+function getInitials(name: string) {
+  const parts = name.trim().split(" ").filter(Boolean);
+
+  if (parts.length === 0) return "";
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+
+  return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+}
+
+
+
 export function CallForm() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { id } = useParams();
+  const { user } = useUser(); // ✅ AGORA VEM DO CONTEXT
+
+  const userInitials = getInitials(user.name);
   const isEditMode = !!id;
-
   
-   const [title, setTitle] = useState("");
-   const [description, setDescription] = useState("");
-   const [category, setCategory] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
 
-   const categoryLabel = category
-  ? CATEGORIES[category as keyof typeof CATEGORIES]?.name
-  : "Selecione a categoria de atendimento";
+  const categoryLabel = category
+? CATEGORIES[category as keyof typeof CATEGORIES]?.name
+: "Selecione a categoria de atendimento";
 
-    useEffect(() => {
-      if (!id) return;
+useEffect(() => {
+  const stateData = location.state as
+    | {
+        title?: string;
+        description?: string;
+        category?: string;
+      }
+    | undefined;
 
-      const call = callsMock.find((item) => item.id === id);
-      if (!call) return;
+  if (stateData) {
+    setTitle(stateData.title || "");
+    setDescription(stateData.description || "");
+    setCategory(stateData.category || "");
+    return;
+  }
 
-      setTitle(call.title);
-      setDescription(call.description);
-      setCategory(call.category);
-    }, [id]);
+  if (!id) return;
+
+  const call = callsMock.find((item) => item.id === id);
+  if (!call) return;
+
+  setTitle(call.title);
+  setDescription(call.description);
+  setCategory(call.category);
+}, [id, location.state]);
 
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -75,12 +104,23 @@ export function CallForm() {
       category,
     };
 
-    if (isEditMode) {
-      console.log("Atualizar chamado:", id, payload);
-      return;
-    }
 
-    console.log("Criar chamado:", payload);
+  if (isEditMode) {
+    console.log("Atualizar chamado:", id, payload);
+
+    setTitle("");
+    setDescription("");
+    setCategory("");
+
+    navigate("/chamados/novo");
+    return;
+  }
+
+    const fakeNewId = "00005";
+
+      navigate(`/chamados/${fakeNewId}/edit`, {
+      state: payload,
+    });
   }
 
   return (
@@ -138,11 +178,11 @@ export function CallForm() {
         </div>
         <div className="flex items-center gap-2  text-white mb-5">
           <span className="w-8 h-8 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
-            CS
+            {userInitials}
           </span>
           <div className="flex flex-col">
-            <span className="text-sm">Carlos Silva</span>
-            <span className="text-xs text-gray-400">user.adm@test.com</span>
+            <span className="text-sm">{user.name}</span>
+            <span className="text-xs text-gray-400">{user.email}</span>
           </div>
         </div>
       </section>

@@ -14,6 +14,7 @@ import { ProfileModalCustomer } from "../componentes/ProfileModalCustomer";
 import { AlterProfileModalCustomer } from "../componentes/AlterProfileModalCustomer";
 import { ProfileOptionsModal } from "../componentes/ProfileOptionsModal";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../contexts/UserContext";
 
 type CallStatus = "aberto" | "em_atendimento" | "encerrado";
 
@@ -148,12 +149,10 @@ export function MyCallingsCustomers() {
   const [openProfile, setOpenProfile] = useState(false);
   const [openAlterProfile, setOpenAlterProfile] = useState(false);
 
-  const [user, setUser] = useState({
-    name: "Usuário Cliente",
-    email: "user.client@test.com",
-  });
+ 
 
-   const userInitials = getInitials(user.name);
+  const { user, setUser } = useUser();
+  const userInitials = getInitials(user.name);
 
   const navigate = useNavigate();
 
@@ -294,8 +293,7 @@ export function MyCallingsCustomers() {
 
                   return (
                     <tr
-                      key={call.id}
-                      onClick={() => navigate(`/chamados/${call.id}`)}
+                      key={call.id}                      
                       className="cursor-pointer hover:bg-gray-50 transition"
                     >
                       <td className="flex gap-3 items-center px-4 py-6 text-gray-700">
@@ -332,7 +330,7 @@ export function MyCallingsCustomers() {
 
                       {/* botão continua opcional */}
                       <td className="px-4 py-4">
-                        <img src={eye} alt="Ver chamado" />
+                        <img src={eye} alt="Ver chamado" onClick={() => navigate(`/chamados/${call.id}`)}/>
                       </td>
                     </tr>
                   );
