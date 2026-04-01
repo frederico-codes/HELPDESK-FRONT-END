@@ -1,9 +1,9 @@
 import { createContext, useEffect, useState } from "react"
 import type { ReactNode } from "react"
-
 import type { UserApiResponse, Session } from "../dtos/user"
 
 type AuthContextType = {
+  isLoading:boolean
   session: Session | null
   save: (data: UserApiResponse) => void
   remove:() => void
@@ -15,6 +15,7 @@ export const AuthContext = createContext({} as AuthContextType)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   function save(data: UserApiResponse) {
     localStorage.setItem(`${LOCAL_STORAGE_KEY}:user`, JSON.stringify(data.userWithoutPassword))
@@ -47,7 +48,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user:JSON.parse(user)
       })
     }
+
+    setIsLoading(false)
   }
+
+  
 
   useEffect(() => {
     loadUser()
@@ -55,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 
   return (
-    <AuthContext.Provider value={{ session, save, remove }}>
+    <AuthContext.Provider value={{ session, save, remove, isLoading }}>
       {children}
     </AuthContext.Provider>
   )

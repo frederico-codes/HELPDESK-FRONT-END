@@ -2,27 +2,28 @@ import clockOpen from "../assets/icons/clock-open.svg";
 import pen from "../assets/icons/pen-line.svg";
 import { Link } from "react-router-dom";
 import { Sidebar } from "../componentes/Sidebar";
+import { useEffect, useState } from "react";
+import { api } from "../services/api";
 
-const calls = [
-  {
-    id: "00003",
-    updatedAt: "13/04/25 20:56",
-    title: "Backup não está funcionando",
-    service: "Recuperação de Dados",
-    totalValue: "R$ 180,00",
-    client: {
-      initials: "AC",
-      name: "André Costa",
-    },
-    technician: {
-      initials: "CS",
-      name: "Carlos Silva",
-    },
-    status: "Aberto",
-    statusIcon: clockOpen,
-    statusAlt: "ícone de relógio vermelho",
-  },
-];
+
+type Call = {
+  id: string;
+  updatedAt: string;
+  title: string;
+  service: string;
+  totalValue: string;
+  client: {
+    initials: string;
+    name: string;
+  };
+  technician: {
+    initials: string;
+    name: string;
+  };
+  status: string;
+  statusIcon: string;
+  statusAlt: string;
+};
 
 function AvatarBadge({
   initials,
@@ -67,6 +68,44 @@ function StatusBadge({
 }
 
 export function Calls() {
+  const [calls, setCalls] = useState<Call[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchCalls() {
+      try {
+        const response = await api.get("/calls");
+
+        const formattedCalls = response.data.map((call: any) => ({
+          id: String(call.id),
+          updatedAt: call.updatedAt,
+          title: call.title,
+          service: call.service,
+          totalValue: call.totalValue,
+          client: {
+            initials: call.client.initials,
+            name: call.client.name,
+          },
+          technician: {
+            initials: call.technician.initials,
+            name: call.technician.name,
+          },
+          status: call.status,
+          statusIcon: clockOpen,
+          statusAlt: "ícone de relógio vermelho",
+        }));
+
+        setCalls(formattedCalls);
+      } catch (error) {
+        console.error("Erro ao buscar chamados", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchCalls();
+  }, []);
+
   return (
     <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] bg-gray-100 xl:overflow-hidden">
       <Sidebar />

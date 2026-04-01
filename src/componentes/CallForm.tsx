@@ -10,7 +10,7 @@ import { Select } from "../componentes/Select";
 import { CATEGORIES, CATEGORIES_KEYS } from "../utils/categories";
 import { useState } from "react";
 import { useEffect} from "react";
-import { useUser } from "../contexts/UserContext";
+import { useUser } from "../hooks/useUser";
 
 const callsMock = [
   {

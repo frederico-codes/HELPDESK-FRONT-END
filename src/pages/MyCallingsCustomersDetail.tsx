@@ -7,7 +7,7 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import clockOpen from "../assets/icons/clock-open.svg";
 import currentlyAssisting from "../assets/icons/currently_assisting.svg";
 import closed from "../assets/icons/closed.svg";
-import { useUser } from "../contexts/UserContext";
+import { useUser } from "../hooks/useUser";
 
 type CallStatus = "aberto" | "em_atendimento" | "encerrado";
 

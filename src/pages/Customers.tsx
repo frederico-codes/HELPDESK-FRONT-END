@@ -7,16 +7,33 @@ import { CustomerModal } from "../componentes/CustomerModal"; // importar modal
 import { DeleteCustomerModal } from "../componentes/DeleteCustomerModal";
 import { Trash2 } from "lucide-react";
 import { Sidebar } from "../componentes/Sidebar";
+import { useUser } from "../hooks/useUser";
+
+function getInitials(name: string) {
+  const parts = name.trim().split(" ").filter(Boolean);
+
+  if (parts.length === 0) return "";
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+
+  return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+}
 
 export function Customers() {
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [selectedCustomer, setSelectedCustomer] = useState({ name: "" });
+  
+  const { user } = useUser();
+
   const customerExample = {
-    initials: "AC",
-    name: "André Costa",
-    email: "andre.costa@client.com",
+    initials: getInitials(user.name),
+    name: user.name,
+    email: user.email,
   };
+  
+  const [selectedCustomer, setSelectedCustomer] = useState({
+    name: customerExample.name,
+  });
+  
 
   return (
     <div className="w-screen h-screen  xl:grid xl:grid-cols-[280px_1fr] relative  bg-gray-100 xl:overflow-hidden">
@@ -90,7 +107,7 @@ export function Customers() {
                   <div className="h-9 w-9 bg-gray-500 hover:bg-gray-600 flex justify-center items-center rounded-sm transition ease-linear cursor-pointer">
                     <a
                       onClick={() => {
-                        setSelectedCustomer({ name: "André Costa" });
+                        setSelectedCustomer({ name: customerExample.name });
                         setDeleteModalOpen(true);
                       }}
                       className=" rounded-lg cursor-pointer"
@@ -121,12 +138,7 @@ export function Customers() {
         onClose={() => setDeleteModalOpen(false)}
         customer={selectedCustomer}
         onConfirm={() => {
-          console.log("Excluir cliente:", selectedCustomer.name);
-
-          // Aqui você coloca o DELETE para API
-          // await api.delete(`/customers/${id}`)
-
-          setDeleteModalOpen(false);
+        setDeleteModalOpen(false);
         }}
       />
 
