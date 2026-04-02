@@ -4,64 +4,50 @@ import menu from "../assets/icons/Menu.png";
 import LogoIconLight from "../assets/Logo_IconLight.png";
 import avatar from "../assets/Avatar.svg";
 import { Link, useLocation, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { AxiosError } from "axios";
+import { api } from "../services/api";
 import clockOpen from "../assets/icons/clock-open.svg";
 import currentlyAssisting from "../assets/icons/currently_assisting.svg";
 import closed from "../assets/icons/closed.svg";
 import { useUser } from "../hooks/useUser";
+import { useAuth } from "../hooks/useAuth";
 
 type CallStatus = "aberto" | "em_atendimento" | "encerrado";
+
+type CallApiResponse = {
+  id: string;
+  title: string;
+  description: string;
+  status: "open" | "in_progress" | "closed";
+  createdAt: string;
+  updatedAt?: string | null;
+  technician: {
+    id: string;
+    name: string;
+    email?: string;
+  };
+  service: {
+    id: string;
+    name: string;
+    basePrice: number;
+  };
+};
 
 interface CallItem {
   id: string;
   updatedAt: string;
   title: string;
+  description: string;
   service: string;
   totalValue: string;
   technician: {
     name: string;
+    email: string;
     colorClass: string;
   };
   status: CallStatus;
 }
-
-const calls: CallItem[] = [
-  {
-    id: "00003",
-    updatedAt: "13/04/25 20:56",
-    title: "Rede lenta",
-    service: "Instalação de Rede",
-    totalValue: "R$ 180,00",
-    technician: {
-      name: "Carlos Silva",
-      colorClass: "bg-blue-600",
-    },
-    status: "aberto",
-  },
-  {
-    id: "00001",
-    updatedAt: "12/04/25 09:01",
-    title: "Computador não liga",
-    service: "Manutenção de Hardware",
-    totalValue: "R$ 150,00",
-    technician: {
-      name: "Carlos Silva",
-      colorClass: "bg-blue-600",
-    },
-    status: "em_atendimento",
-  },
-  {
-    id: "00002",
-    updatedAt: "10/04/25 10:15",
-    title: "Instalação de software de gestão",
-    service: "Suporte de Software",
-    totalValue: "R$ 200,00",
-    technician: {
-      name: "Ana Oliveira",
-      colorClass: "bg-indigo-600",
-    },
-    status: "encerrado",
-  },
-];
 
 function getInitials(name: string) {
   const parts = name.trim().split(" ").filter(Boolean);
@@ -70,6 +56,41 @@ function getInitials(name: string) {
   if (parts.length === 1) return parts[0][0].toUpperCase();
 
   return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+}
+
+function getTechnicianColorClass(name: string) {
+  const colors = [
+    "bg-blue-600",
+    "bg-indigo-600",
+    "bg-violet-600",
+    "bg-cyan-600",
+    "bg-purple-600",
+  ];
+
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash += name.charCodeAt(i);
+  }
+
+  return colors[hash % colors.length];
+}
+
+function formatStatus(status: "open" | "in_progress" | "closed"): CallStatus {
+  if (status === "open") return "aberto";
+  if (status === "in_progress") return "em_atendimento";
+  return "encerrado";
+}
+
+function formatDateTime(dateString: string) {
+  const date = new Date(dateString);
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = String(date.getFullYear()).slice(-2);
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return `${day}/${month}/${year} ${hours}:${minutes}`;
 }
 
 function getStatusConfig(status: CallStatus) {
@@ -95,19 +116,68 @@ function getStatusConfig(status: CallStatus) {
   }
 }
 
-
-
-
 export function MyCallingsCustomersDetail() {
   const location = useLocation();
-  const { id } = useParams(); 
+  const { id } = useParams();
 
+  const { user } = useUser();
+  const { session } = useAuth();
 
-  const { user } = useUser(); // ✅ AGORA VEM DO CONTEXT
+  const displayName = session?.user.name ?? user.name;
+  const displayEmail = session?.user.email ?? user.email;
+  const userInitials = getInitials(displayName);
 
-  const userInitials = getInitials(user.name);
+  const [call, setCall] = useState<CallItem | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const call = calls.find((item) => item.id === id);
+  useEffect(() => {
+    async function loadCallDetail() {
+      try {
+        if (!id) return;
+
+        setIsLoading(true);
+
+        const response = await api.get<CallApiResponse>(`/calls/${id}`);
+        const data = response.data;
+
+        setCall({
+          id: data.id,
+          updatedAt: formatDateTime(data.updatedAt || data.createdAt),
+          title: data.title,
+          description: data.description,
+          service: data.service.name,
+          totalValue: `R$ ${data.service.basePrice.toFixed(2).replace(".", ",")}`,
+          technician: {
+            name: data.technician.name,
+            email: data.technician.email ?? "tecnico@test.com",
+            colorClass: getTechnicianColorClass(data.technician.name),
+          },
+          status: formatStatus(data.status),
+        });
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          alert(error.response?.data?.message ?? "Erro ao buscar chamado.");
+          return;
+        }
+
+        alert("Não foi possível carregar o chamado.");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadCallDetail();
+  }, [id]);
+
+  if (isLoading) {
+    return (
+      <div className="w-screen h-screen flex items-center justify-center bg-gray-100">
+        <div className="bg-white border border-gray-300 rounded-xl p-6 text-sm text-gray-400">
+          Carregando chamado...
+        </div>
+      </div>
+    );
+  }
 
   if (!call) {
     return (
@@ -127,8 +197,8 @@ export function MyCallingsCustomersDetail() {
   const statusConfig = getStatusConfig(call.status);
 
   return (
-    <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] bg-gray-100 xl:overflow-hidden">
-      <section className="hidden xl:flex xl:flex-col xl:justify-between bg-gray-100 pl-6 pt-14 pb-0">
+    <div className="w-screen h-screen xl:grid xl:grid-cols-[252px_1fr] bg-gray-100 xl:overflow-hidden">
+      <section className="hidden xl:flex xl:flex-col xl:justify-between bg-gray-100 pl-6 pt-14 pb-6 border-r border-gray-900">
         <div>
           <div className="flex gap-3">
             <img src={Logo_IconLight} alt="Logo padrão" />
@@ -163,22 +233,21 @@ export function MyCallingsCustomersDetail() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 text-white mb-11">
+        <div className="flex items-center gap-2 text-white mb-4 pr-4">
           <span className="w-8 h-8 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
             {userInitials}
           </span>
-          <div className="flex flex-col">
-            <span className="text-sm">{user.name}</span>
-            <span className="text-xs text-gray-400">{user.email}</span>
+          <div className="flex flex-col min-w-0">
+            <span className="text-sm truncate">{displayName}</span>
+            <span className="text-xs text-gray-400 truncate">{displayEmail}</span>
           </div>
         </div>
       </section>
 
       <section className="block xl:hidden w-screen h-screen absolute top-0">
-        <div className="flex justify-between items-center">
-          <div className="flex justify-center items-center gap-3.5 absolute top-7 left-6">
+        <div className="flex justify-between items-center px-6 pt-7">
+          <div className="flex justify-center items-center gap-3.5">
             <img src={menu} alt="menu" />
-
             <div className="flex justify-center gap-4">
               <img src={LogoIconLight} alt="LogoIconLight" className="h-11 w-11" />
               <div>
@@ -188,8 +257,8 @@ export function MyCallingsCustomersDetail() {
             </div>
           </div>
 
-          <div>
-            <img src={avatar} alt="avatar" className="absolute top-8 right-10" />
+          <div className="w-10 h-10 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
+            {userInitials}
           </div>
         </div>
       </section>
@@ -230,18 +299,14 @@ export function MyCallingsCustomersDetail() {
                 <p className="mb-1 text-xs font-medium text-gray-400">
                   Descrição
                 </p>
-                <p className="text-sm text-gray-700">
-                  {call.title}
-                </p>
+                <p className="text-sm text-gray-700">{call.description}</p>
               </div>
 
               <div className="mb-6">
                 <p className="mb-1 text-xs font-medium text-gray-400">
                   Categoria
                 </p>
-                <p className="text-sm text-gray-800">
-                  {call.service}
-                </p>
+                <p className="text-sm text-gray-800">{call.service}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4 text-sm">
@@ -249,18 +314,14 @@ export function MyCallingsCustomersDetail() {
                   <p className="text-xs font-medium text-gray-400">
                     Atualizado em
                   </p>
-                  <p className="text-gray-800">
-                    {call.updatedAt}
-                  </p>
+                  <p className="text-gray-800">{call.updatedAt}</p>
                 </div>
 
                 <div>
                   <p className="text-xs font-medium text-gray-400">
                     Valor total
                   </p>
-                  <p className="text-gray-800">
-                    {call.totalValue}
-                  </p>
+                  <p className="text-gray-800">{call.totalValue}</p>
                 </div>
               </div>
             </div>
@@ -283,7 +344,7 @@ export function MyCallingsCustomersDetail() {
                       {call.technician.name}
                     </p>
                     <p className="text-xs text-gray-700">
-                      tecnico@test.com
+                      {call.technician.email}
                     </p>
                   </div>
                 </div>
@@ -307,8 +368,7 @@ export function MyCallingsCustomersDetail() {
             </div>
           </div>
         </div>
-      </div> 
-         
+      </div>
     </div>
   );
 }

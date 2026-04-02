@@ -1,110 +1,164 @@
-import menu from "../assets/icons/Menu.png"
-import LogoIconLight from "../assets/Logo_IconLight.png"
-import avatar from "../assets/Avatar.svg"
-import clockOpen from "../assets/icons/clock-open.svg"
-import clock from "../assets/icons/clock.svg"
-import { Link } from "react-router-dom"
-import { Sidebar } from "../componentes/Sidebar"
+import clockOpen from "../assets/icons/clock-open.svg";
+import clock from "../assets/icons/clock.svg";
+import { Link, useParams } from "react-router-dom";
+import { Sidebar } from "../componentes/Sidebar";
+import { useEffect, useState } from "react";
+import { api } from "../services/api";
 
-export function DetailedCall(){
+interface Call {
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  technician: {
+    name: string;
+    email: string;
+  };
+  customer: {
+    name: string;
+  };
+  service: {
+    name: string;
+    basePrice: number;
+  };
+}
 
-  return(
-    <div className="w-screen h-screen  xl:grid xl:grid-cols-[280px_1fr] relative  bg-gray-100 xl:overflow-hidden">
+export function DetailedCall() {
+  const { id } = useParams();
+  const [call, setCall] = useState<Call | null>(null);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    async function fetchCall() {
+      try {
+       const response = await api.get(`/calls/${id}`);
+       setCall(response.data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (id) {
+      fetchCall();
+    }
+  }, [id]);
+
+  if (loading) {
+    return <div className="p-10">Carregando...</div>;
+  }
+
+  if (!call) {
+    return <div className="p-10">Chamado não encontrado</div>;
+  }
+
+  const getStatusStyle = () => {
+    switch (call.status) {
+      case "open":
+        return {
+          label: "Aberto",
+          class: "bg-red-100 text-red-700",
+          icon: clockOpen,
+        };
+      case "in_progress":
+        return {
+          label: "Em atendimento",
+          class: "bg-blue-100 text-blue-700",
+          icon: clock,
+        };
+      case "closed":
+        return {
+          label: "Encerrado",
+          class: "bg-green-100 text-green-700",
+          icon: null,
+        };
+      default:
+        return { label: call.status, class: "", icon: null };
+    }
+  };
+
+  const status = getStatusStyle();
+
+  return (
+    <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] bg-gray-100 xl:overflow-hidden">
       <Sidebar />
- 
-      <section className="block  xl:hidden w-screen h-screen  absolute  top-0 ">        
-        <div className="flex justify-between items-center  ">
-          {/* GRUPO ESQUERDA */}
-          <div className="flex justify-center items-center gap-3.5 absolute top-7 left-6">
-            <img src={menu} alt="menu" className=""/>
 
-            <div className="flex justify-center gap-4 ">
-              <img src= { LogoIconLight } alt="LogoIconLight" className="h-11 w-11"/>
-              <div>
-                <h1 className="text-xl text-gray-600 ">HelpDesk</h1>
-                <span className="text-xxs text-blue-light ">Admin</span>
-              </div>
-            </div>
-          </div>
-          {/* GRUPO DIREITA */}
-          <div>
-            <img src={avatar} alt="avatar" className="absolute top-8 right-10" />
-          </div>
-        </div>            
-      </section>      
-
-      <div className="w-full h-screen flex flex-col  xl:px-0  gap-4 bg-white absolute xl:relative rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4 py-24">
-        <div className="w-full px-8 xl:px-10 2xl:px-72">          
-          <div className="flex flex-col xl:ml-24 xl:w-[800px] "> 
-            <Link to="/" className="flex items-center gap-2 text-sm text-gray-700 hover:text-gray-500">
-              <span className="text-lg">←</span>
-              Voltar
+      <div className="w-full h-screen flex flex-col bg-white xl:rounded-tl-2xl py-24">
+        <div className="w-full px-8 xl:px-10 2xl:px-72">
+          <div className="flex flex-col xl:ml-24 xl:w-[800px]">
+            <Link
+              to="/"
+              className="flex items-center gap-2 text-sm text-gray-700 hover:text-gray-500"
+            >
+              ← Voltar
             </Link>
-            
-            <div className="flex flex-col  xl:flex-row xl:items-center xl:justify-between gap-4 mb-8">
+
+            <div className="flex flex-col xl:flex-row justify-between mb-8">
               <h1 className="text-2xl font-bold text-blue-dark">
                 Chamado detalhado
               </h1>
-              <div className="flex justify-between gap-3">
-                <span className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-500 text-gray-700 text-sm">
-                  <img src={clock} alt="" /> Em atendimento
-                </span>
-                <span className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-500 text-gray-700 text-sm">
-                  ✔ Encerrado
-                </span>
-              </div>
+
+              <span
+                className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm ${status.class}`}
+              >
+                {status.icon && <img src={status.icon} alt="" />}
+                {status.label}
+              </span>
             </div>
           </div>
 
-          {/* CONTAINER DO CONTEÚDO */}
+          {/* CONTEÚDO */}
           <div className="grid grid-cols-1 xl:grid-cols-[480px_300px] gap-8 mx-auto max-w-[900px] w-full">
+            {/* ESQUERDA */}
+            <div className="bg-white border border-gray-200 rounded-xl p-6">
+              <div className="flex justify-between">
+                <p className="text-sm text-gray-400">
+                  {call.id.slice(0, 5)}
+                </p>
 
-
-            {/* COLUNA ESQUERDA */}
-            <div className="bg-white border border-gray-500 rounded-xl p-6">
-
-            <div className="flex justify-between">
-              <p className="text-sm text-gray-200 mb-1">00004</p>
-              <span className="inline-flex items-center gap-2 text-sm bg-red-100 text-red-700 px-4 py-1.5 rounded-full mb-6">
-                <img src={clockOpen} alt="ícone relógio vermelho" /> Aberto
-              </span>
-            </div>
+                <span
+                  className={`inline-flex items-center gap-2 text-sm px-4 py-1.5 rounded-full ${status.class}`}
+                >
+                  {status.icon && <img src={status.icon} alt="" />}
+                  {status.label}
+                </span>
+              </div>
 
               <h2 className="text-lg font-bold text-gray-900 mb-4">
-                Backup não está funcionando
+                {call.title}
               </h2>
-                
 
               {/* Descrição */}
               <div className="mb-6">
                 <h3 className="text-xs text-gray-400">Descrição</h3>
-                <p className="text-sm text-gray-400 mt-1">
-                  O sistema de backup automático parou de funcionar. Última execução
-                  bem-sucedida foi há uma semana.
+                <p className="text-sm  mt-1">
+                  {call.description}
                 </p>
               </div>
 
-              {/* Categoria */}
+              {/* Serviço */}
               <div className="mb-6">
                 <h3 className="text-sm text-gray-400">Categoria</h3>
                 <p className="text-sm text-gray-700 mt-1">
-                  Recuperação de Dados
+                  {call.service.name}
                 </p>
               </div>
 
-              {/* Criado e Atualizado */}
+              {/* Datas */}
               <div className="grid grid-cols-2 gap-6 mb-6">
                 <div>
                   <h3 className="text-sm text-gray-400">Criado em</h3>
                   <p className="text-sm text-gray-700 mt-1">
-                    12/04/25 09:12
+                    {new Date(call.createdAt).toLocaleString()}
                   </p>
                 </div>
                 <div>
                   <h3 className="text-sm text-gray-400">Atualizado em</h3>
                   <p className="text-sm text-gray-700 mt-1">
-                    12/04/25 15:20
+                    {new Date(call.updatedAt).toLocaleString()}
                   </p>
                 </div>
               </div>
@@ -114,55 +168,55 @@ export function DetailedCall(){
                 <h3 className="text-sm text-gray-400">Cliente</h3>
                 <div className="flex items-center gap-3 mt-2">
                   <span className="w-8 h-8 rounded-full bg-blue-700 text-white flex items-center justify-center text-xs">
-                    AC
+                    {call.customer.name.slice(0, 2).toUpperCase()}
                   </span>
-                  <span className="text-sm text-gray-700">André Costa</span>
+                  <span className="text-sm text-gray-700">
+                    {call.customer.name}
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* COLUNA DIREITA */}
-            <div className="bg-white border border-gray-500 rounded-xl p-6">              
-              <h3 className="text-sm text-gray-400 mb-2">Técnico responsável</h3>
+            {/* DIREITA */}
+            <div className="bg-white border border-gray-200 rounded-xl p-6">
+              <h3 className="text-sm text-gray-400 mb-2">
+                Técnico responsável
+              </h3>
+
               <div className="flex items-center gap-3 mb-6">
                 <span className="w-9 h-9 rounded-full bg-blue-700 text-white flex items-center justify-center text-xs">
-                  CS
+                  {call.technician.name.slice(0, 2).toUpperCase()}
                 </span>
+
                 <div>
-                  <p className="text-sm font-medium text-gray-800">Carlos Silva</p>
-                  <p className="text-xs text-gray-400">carlos.silva@test.com</p>
-                </div>
-              </div>             
-              <div className="mb-6">
-                <h3 className="text-sm text-gray-400">Valores</h3>
-                <div className="flex justify-between text-sm text-gray-700 mt-2">
-                  <span>Preço base</span>
-                  <span className="font-medium">R$ 200,00</span>
-                </div>
-              </div>              
-              <div className="mb-6">
-                <h3 className="text-sm text-gray-400">Adicionais</h3>
-                <div className="flex justify-between text-sm text-gray-700 mt-2">
-                  <span>Assinatura de backup</span>
-                  <span>R$ 120,00</span>
-                </div>
-                <div className="flex justify-between text-sm text-gray-700 mt-1">
-                  <span>Formatação do PC</span>
-                  <span>R$ 75,00</span>
+                  <p className="text-sm font-medium text-gray-800">
+                    {call.technician.name}
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    {call.technician.email}
+                  </p>
                 </div>
               </div>
 
+              {/* VALOR */}
+              <div className="flex justify-between text-sm text-gray-700 mt-2">
+                <span>Preço base</span>
+                <span className="font-medium">
+                  R$ {call.service.basePrice.toFixed(2)}
+                </span>
+              </div>
+
               {/* TOTAL */}
-              <div className="flex justify-between text-sm font-semibold text-gray-900 border-t border-gray-200 pt-4">
+              <div className="flex justify-between text-sm font-semibold text-gray-900 border-t pt-4 mt-4">
                 <span>Total</span>
-                <span className="bold">R$ 395,00</span>
+                <span>
+                  R$ {call.service.basePrice.toFixed(2)}
+                </span>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
-
+  );
 }
- 

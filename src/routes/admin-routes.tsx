@@ -11,7 +11,7 @@ export function AdminRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Calls />} />
-      <Route path="/detailcalls" element={<DetailedCall />} />
+      <Route path="/chamados/:id" element={<DetailedCall />} />
       <Route path="/customers" element={<Customers />} />
       <Route path="/services" element={<Services />} />
       <Route path="/technicians" element={<Technicians />} />

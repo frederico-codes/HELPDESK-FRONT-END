@@ -1,13 +1,37 @@
 import clockOpen from "../assets/icons/clock-open.svg";
+import currentlyAssisting from "../assets/icons/currently_assisting.svg";
+import closed from "../assets/icons/closed.svg";
 import pen from "../assets/icons/pen-line.svg";
 import { Link } from "react-router-dom";
 import { Sidebar } from "../componentes/Sidebar";
 import { useEffect, useState } from "react";
+import { AxiosError } from "axios";
 import { api } from "../services/api";
 
-
-type Call = {
+type ApiCall = {
   id: string;
+  title: string;
+  status: "open" | "in_progress" | "closed";
+  createdAt: string;
+  updatedAt?: string | null;
+  customer: {
+    id: string;
+    name: string;
+  };
+  technician: {
+    id: string;
+    name: string;
+  };
+  service: {
+    id: string;
+    name: string;
+    basePrice: number;
+  };
+};
+
+type CallRow = {
+  id: string;
+  shortId: string;
   updatedAt: string;
   title: string;
   service: string;
@@ -23,7 +47,59 @@ type Call = {
   status: string;
   statusIcon: string;
   statusAlt: string;
+  statusClass: string;
 };
+
+function getInitials(name: string) {
+  const parts = name.trim().split(" ").filter(Boolean);
+
+  if (parts.length === 0) return "";
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+
+  return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+}
+
+function formatDateTime(dateString: string) {
+  const date = new Date(dateString);
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = String(date.getFullYear()).slice(-2);
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return `${day}/${month}/${year} ${hours}:${minutes}`;
+}
+
+function formatShortId(id: string) {
+  return id.slice(0, 5);
+}
+
+function getStatusMeta(status: ApiCall["status"]) {
+  switch (status) {
+    case "open":
+      return {
+        label: "Aberto",
+        icon: clockOpen,
+        alt: "Ícone de chamado aberto",
+        className: "bg-pink-100 text-pink-600",
+      };
+    case "in_progress":
+      return {
+        label: "Em atendimento",
+        icon: currentlyAssisting,
+        alt: "Ícone de chamado em atendimento",
+        className: "bg-blue-100 text-blue-600",
+      };
+    case "closed":
+      return {
+        label: "Encerrado",
+        icon: closed,
+        alt: "Ícone de chamado encerrado",
+        className: "bg-green-100 text-green-700",
+      };
+  }
+}
 
 function AvatarBadge({
   initials,
@@ -33,11 +109,11 @@ function AvatarBadge({
   name: string;
 }) {
   return (
-    <div className="flex items-center gap-2">
-      <span className="w-7 h-7 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
+    <div className="flex items-center gap-2 min-w-0">
+      <span className="w-7 h-7 rounded-full bg-blue-700 text-white text-[10px] flex items-center justify-center shrink-0">
         {initials}
       </span>
-      {name}
+      <span className="truncate">{name}</span>
     </div>
   );
 }
@@ -46,58 +122,65 @@ function StatusBadge({
   label,
   icon,
   alt,
+  className,
 }: {
   label: string;
   icon: string;
   alt: string;
+  className: string;
 }) {
   return (
     <span
-      className="
-        inline-flex items-center justify-center
-        h-8 w-8 rounded-full
-        bg-pink-100 text-pink-600
-        xl:h-auto xl:w-auto
-        xl:px-3 xl:py-1 xl:gap-1
-      "
+      className={`inline-flex items-center justify-center rounded-full h-8 w-8 xl:h-auto xl:w-auto xl:px-3 xl:py-1 xl:gap-1 text-xs font-medium ${className}`}
     >
-      <img src={icon} alt={alt} />
+      <img src={icon} alt={alt} className="h-4 w-4" />
       <span className="hidden xl:inline">{label}</span>
     </span>
   );
 }
 
 export function Calls() {
-  const [calls, setCalls] = useState<Call[]>([]);
+  const [calls, setCalls] = useState<CallRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchCalls() {
       try {
-        const response = await api.get("/calls");
+        const response = await api.get<ApiCall[]>("/calls");
 
-        const formattedCalls = response.data.map((call: any) => ({
-          id: String(call.id),
-          updatedAt: call.updatedAt,
-          title: call.title,
-          service: call.service,
-          totalValue: call.totalValue,
-          client: {
-            initials: call.client.initials,
-            name: call.client.name,
-          },
-          technician: {
-            initials: call.technician.initials,
-            name: call.technician.name,
-          },
-          status: call.status,
-          statusIcon: clockOpen,
-          statusAlt: "ícone de relógio vermelho",
-        }));
+        const formattedCalls: CallRow[] = response.data.map((call) => {
+          const statusMeta = getStatusMeta(call.status);
+
+          return {
+            id: call.id,
+            shortId: formatShortId(call.id),
+            updatedAt: formatDateTime(call.updatedAt || call.createdAt),
+            title: call.title,
+            service: call.service.name,
+            totalValue: `R$ ${call.service.basePrice.toFixed(2).replace(".", ",")}`,
+            client: {
+              initials: getInitials(call.customer.name),
+              name: call.customer.name,
+            },
+            technician: {
+              initials: getInitials(call.technician.name),
+              name: call.technician.name,
+            },
+            status: statusMeta.label,
+            statusIcon: statusMeta.icon,
+            statusAlt: statusMeta.alt,
+            statusClass: statusMeta.className,
+          };
+        });
 
         setCalls(formattedCalls);
       } catch (error) {
-        console.error("Erro ao buscar chamados", error);
+        if (error instanceof AxiosError) {
+          alert(error.response?.data?.message ?? "Erro ao buscar chamados.");
+          return;
+        }
+
+        alert("Não foi possível carregar os chamados.");
       } finally {
         setIsLoading(false);
       }
@@ -107,103 +190,116 @@ export function Calls() {
   }, []);
 
   return (
-    <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] bg-gray-100 xl:overflow-hidden">
+    <div className="w-screen h-screen xl:grid xl:grid-cols-[252px_1fr] bg-gray-100 xl:overflow-hidden">
       <Sidebar />
 
       <div className="w-full h-screen flex flex-col px-6 xl:px-6 gap-4 bg-white absolute xl:relative py-24 rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
-        <h1 className="text-2xl font-bold">Chamados</h1>
+        <div className="w-full ">
+          <h1 className="text-2xl font-bold mb-6">Chamados</h1>
 
-        <div className="w-full bg-white rounded-2xl shadow-sm overflow-hidden">
-          <table className="w-full text-left">
-            <thead className="border-b border-gray-500">
-              <tr className="text-sm text-gray-400">
-                <th className="py-4 xl:px-6 font-medium">Atualizado em</th>
-                <th className="py-4 px-6 font-medium hidden xl:table-cell">
-                  Id
-                </th>
-                <th className="py-4 xl:px-6 font-medium">
-                  Título e Serviço
-                </th>
-                <th className="py-4 px-6 font-medium hidden xl:table-cell">
-                  Valor total
-                </th>
-                <th className="py-4 px-6 font-medium hidden xl:table-cell">
-                  Cliente
-                </th>
-                <th className="py-4 px-6 font-medium hidden xl:table-cell">
-                  Técnico
-                </th>
-                <th className="py-4 xl:px-6 font-medium">Status</th>
-                <th className="py-4 xl:px-6 font-medium"></th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {calls.map((call) => (
-                <tr key={call.id} className="border-b last:border-none">
-                  <td className="py-4 xl:px-6 text-xs text-gray-700">
-                    {call.updatedAt}
-                  </td>
-
-                  <td className="py-4 px-6 font-semibold text-xs text-gray-800 hidden xl:table-cell">
-                    {call.id}
-                  </td>
-
-                  <td className="py-4 xl:px-6">
-                    <div className="font-bold text-gray-800 text-sm truncate max-w-[120px] xl:max-w-[220px]">
-                      {call.title}
-                    </div>
-                    <div className="text-gray-400 text-xs truncate max-w-[120px] xl:max-w-[220px]">
-                      {call.service}
-                    </div>
-                  </td>
-
-                  <td className="py-4 px-6 text-sm text-gray-700 hidden xl:table-cell">
-                    {call.totalValue}
-                  </td>
-
-                  <td className="py-4 px-6 text-sm hidden xl:table-cell">
-                    <AvatarBadge
-                      initials={call.client.initials}
-                      name={call.client.name}
-                    />
-                  </td>
-
-                  <td className="py-4 px-6 text-sm hidden xl:table-cell">
-                    <AvatarBadge
-                      initials={call.technician.initials}
-                      name={call.technician.name}
-                    />
-                  </td>
-
-                  <td className="py-4 xl:px-6">
-                    <StatusBadge
-                      label={call.status}
-                      icon={call.statusIcon}
-                      alt={call.statusAlt}
-                    />
-                  </td>
-
-                  <td className="py-4 xl:px-6">
-                    <div className="h-9 w-9 bg-gray-500 flex justify-center items-center rounded-sm hover:bg-gray-600 transition ease-linear">
-                      <Link
-                        to="/detailcalls"
-                        className="rounded-lg cursor-pointer"
-                      >
-                        <img src={pen} alt="Editar chamado" />
-                      </Link>
-                    </div>
-                  </td>
+          <div className="w-full bg-white rounded-2xl border border-gray-500 overflow-hidden">
+            <table className="w-full text-left table-fixed">
+              <thead className="border-b border-gray-500">
+                <tr className="text-sm text-gray-400">
+                  <th className="py-4 px-3 xl:px-4 font-medium w-[120px]">
+                    Atualizado em
+                  </th>
+                  <th className="py-4 px-3 xl:px-4 font-medium hidden xl:table-cell w-[60px]">
+                    Id
+                  </th>
+                  <th className="py-4 px-3 xl:px-4 font-medium w-[220px]">
+                    Título e Serviço
+                  </th>
+                  <th className="py-4 px-3 xl:px-4 font-medium hidden xl:table-cell w-[110px]">
+                    Valor total
+                  </th>
+                  <th className="py-4 px-3 xl:px-4 font-medium hidden xl:table-cell w-[140px]">
+                    Cliente
+                  </th>
+                  <th className="py-4 px-3 xl:px-4 font-medium hidden xl:table-cell w-[140px]">
+                    Técnico
+                  </th>
+                  <th className="py-4 px-3 xl:px-4 font-medium w-[120px]">
+                    Status
+                  </th>
+                  <th className="py-4 px-3 xl:px-4 font-medium w-[56px]"></th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
 
-          {calls.length === 0 && (
-            <div className="px-6 py-8 text-sm text-gray-400">
-              Nenhum chamado encontrado.
-            </div>
-          )}
+              <tbody>
+                {calls.map((call) => (
+                  <tr key={call.id} className="border-b last:border-none">
+                    <td className="py-4 px-3 xl:px-4 text-xs text-gray-700">
+                      {call.updatedAt}
+                    </td>
+
+                    <td className="py-4 px-3 xl:px-4 font-semibold text-xs text-gray-800 hidden xl:table-cell">
+                      {call.shortId}
+                    </td>
+
+                    <td className="py-4 px-3 xl:px-4">
+                      <div className="font-bold text-gray-800 text-sm truncate max-w-[200px]">
+                        {call.title}
+                      </div>
+                      <div className="text-gray-400 text-xs truncate max-w-[200px]">
+                        {call.service}
+                      </div>
+                    </td>
+
+                    <td className="py-4 px-3 xl:px-4 text-sm text-gray-700 hidden xl:table-cell">
+                      {call.totalValue}
+                    </td>
+
+                    <td className="py-4 px-3 xl:px-4 text-sm hidden xl:table-cell">
+                      <AvatarBadge
+                        initials={call.client.initials}
+                        name={call.client.name}
+                      />
+                    </td>
+
+                    <td className="py-4 px-3 xl:px-4 text-sm hidden xl:table-cell">
+                      <AvatarBadge
+                        initials={call.technician.initials}
+                        name={call.technician.name}
+                      />
+                    </td>
+
+                    <td className="py-4 px-3 xl:px-4">
+                      <StatusBadge
+                        label={call.status}
+                        icon={call.statusIcon}
+                        alt={call.statusAlt}
+                        className={call.statusClass}
+                      />
+                    </td>
+
+                    <td className="py-4 px-3 xl:px-4">
+                      <div className="h-9 w-9 bg-gray-500 flex justify-center items-center rounded-sm hover:bg-gray-600 transition ease-linear">
+                        <Link
+                           to={`/chamados/${call.id}`}
+                          className="rounded-lg cursor-pointer"
+                        >
+                          <img src={pen} alt="Editar chamado" />
+                        </Link>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {!isLoading && calls.length === 0 && (
+              <div className="px-6 py-8 text-sm text-gray-400">
+                Nenhum chamado encontrado.
+              </div>
+            )}
+
+            {isLoading && (
+              <div className="px-6 py-8 text-sm text-gray-400">
+                Carregando chamados...
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import { api } from "../services/api";
 import LogoIcon from "../assets/icons/Logo_IconLight.svg";
@@ -33,44 +33,22 @@ interface CallItem {
   status: CallStatus;
 }
 
-const calls: CallItem[] = [
-  {
-    id: "00003",
-    updatedAt: "13/04/25 20:56",
-    title: "Rede lenta",
-    service: "Instalação de Rede",
-    totalValue: "R$ 180,00",
-    technician: {
-      name: "Carlos Silva",
-      colorClass: "bg-blue-600",
-    },
-    status: "aberto",
-  },
-  {
-    id: "00001",
-    updatedAt: "12/04/25 09:01",
-    title: "Computador não liga",
-    service: "Manutenção de Hardware",
-    totalValue: "R$ 150,00",
-    technician: {
-      name: "Carlos Silva",
-      colorClass: "bg-blue-600",
-    },
-    status: "em_atendimento",
-  },
-  {
-    id: "00002",
-    updatedAt: "10/04/25 10:15",
-    title: "Instalação de software de gestão",
-    service: "Suporte de Software",
-    totalValue: "R$ 200,00",
-    technician: {
-      name: "Ana Oliveira",
-      colorClass: "bg-indigo-600",
-    },
-    status: "encerrado",
-  },
-];
+type CallApiResponse = {
+  id: string;
+  title: string;
+  status: "open" | "in_progress" | "closed";
+  createdAt: string;
+  updatedAt?: string | null;
+  technician: {
+    id: string;
+    name: string;
+  };
+  service: {
+    id: string;
+    name: string;
+    basePrice: number;
+  };
+};
 
 function getInitials(name: string) {
   const parts = name.trim().split(" ").filter(Boolean);
@@ -102,6 +80,41 @@ function getStatusConfig(status: CallStatus) {
         wrapperClass: "bg-green-100 text-green-700",
       };
   }
+}
+
+function formatStatus(status: "open" | "in_progress" | "closed"): CallStatus {
+  if (status === "open") return "aberto";
+  if (status === "in_progress") return "em_atendimento";
+  return "encerrado";
+}
+
+function formatDateTime(dateString: string) {
+  const date = new Date(dateString);
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = String(date.getFullYear()).slice(-2);
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return `${day}/${month}/${year} ${hours}:${minutes}`;
+}
+
+function getTechnicianColorClass(name: string) {
+  const colors = [
+    "bg-blue-600",
+    "bg-indigo-600",
+    "bg-violet-600",
+    "bg-cyan-600",
+    "bg-purple-600",
+  ];
+
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash += name.charCodeAt(i);
+  }
+
+  return colors[hash % colors.length];
 }
 
 function StatusBadge({ status }: { status: CallStatus }) {
@@ -145,7 +158,7 @@ function TechnicianBadge({
   );
 }
 
-export function MyCallingsCustomers() {  
+export function MyCallingsCustomers() {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -153,6 +166,8 @@ export function MyCallingsCustomers() {
   const [openProfile, setOpenProfile] = useState(false);
   const [openAlterProfile, setOpenAlterProfile] = useState(false);
   const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [calls, setCalls] = useState<CallItem[]>([]);
+  const [isLoadingCalls, setIsLoadingCalls] = useState(true);
 
   const { user, setUser } = useUser();
   const { session } = useAuth();
@@ -161,9 +176,44 @@ export function MyCallingsCustomers() {
   const displayEmail = session?.user.email ?? user.email;
   const userInitials = getInitials(displayName);
 
+  async function loadCalls() {
+    try {
+      setIsLoadingCalls(true);
+
+      const response = await api.get<CallApiResponse[]>("/calls");
+
+      const formattedCalls: CallItem[] = response.data.map((call) => ({
+        id: call.id,
+        updatedAt: formatDateTime(call.updatedAt || call.createdAt),
+        title: call.title,
+        service: call.service.name,
+        totalValue: `R$ ${call.service.basePrice.toFixed(2).replace(".", ",")}`,
+        technician: {
+          name: call.technician.name,
+          colorClass: getTechnicianColorClass(call.technician.name),
+        },
+        status: formatStatus(call.status),
+      }));
+
+      setCalls(formattedCalls);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        alert(error.response?.data?.message ?? "Erro ao buscar chamados.");
+        return;
+      }
+
+      alert("Não foi possível carregar os chamados.");
+    } finally {
+      setIsLoadingCalls(false);
+    }
+  }
+
+  useEffect(() => {
+    loadCalls();
+  }, []);
+
   async function handleSaveProfile(data: { name: string; email: string }) {
     try {
-
       if (!session?.user.id) {
         alert("Usuário não identificado.");
         return;
@@ -218,11 +268,7 @@ export function MyCallingsCustomers() {
               <img
                 src={list}
                 alt=""
-                className={
-                  location.pathname === "/meus-chamados"
-                    ? "invert brightness-0"
-                    : ""
-                }
+                className={location.pathname === "/" ? "invert brightness-0" : ""}
               />
               Meus chamados
             </Link>
@@ -289,7 +335,7 @@ export function MyCallingsCustomers() {
       </section>
 
       <div className="w-full h-screen flex flex-col px-2 xl:px-6 gap-4 bg-white absolute xl:relative py-0 rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
-        <div className="w-full max-w-6xl px-0 pt-12 xl:px-0">
+        <div className="w-full  px-0 pt-12 xl:px-0">
           <h1 className="mb-6 text-xl font-semibold text-blue-700">
             Meus chamados
           </h1>
@@ -341,7 +387,7 @@ export function MyCallingsCustomers() {
                         {call.id}
                       </td>
 
-                      <td className="px-4 py-4 font-medium text-gray-900 truncate max-w-[110px]">
+                      <td className="px-4 py-4 font-medium text-gray-900 sm:truncate max-w-[110px]">
                         {call.title}
                       </td>
 
@@ -376,6 +422,18 @@ export function MyCallingsCustomers() {
                 })}
               </tbody>
             </table>
+
+            {!isLoadingCalls && calls.length === 0 && (
+              <div className="px-6 py-8 text-sm text-gray-400">
+                Nenhum chamado encontrado.
+              </div>
+            )}
+
+            {isLoadingCalls && (
+              <div className="px-6 py-8 text-sm text-gray-400">
+                Carregando chamados...
+              </div>
+            )}
           </div>
         </div>
       </div>
