@@ -1,5 +1,7 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { AxiosError } from "axios";
+import { api } from "../services/api";
 import LogoIcon from "../assets/icons/Logo_IconLight.svg";
 import LogoIconMobile from "../assets/Logo_IconLight.png";
 import list from "../assets/icons/clipboard-list.svg";
@@ -13,8 +15,8 @@ import closed from "../assets/icons/closed.svg";
 import { ProfileModalCustomer } from "../componentes/ProfileModalCustomer";
 import { AlterProfileModalCustomer } from "../componentes/AlterProfileModalCustomer";
 import { ProfileOptionsModal } from "../componentes/ProfileOptionsModal";
-import { useNavigate } from "react-router-dom";
 import { useUser } from "../hooks/useUser";
+import { useAuth } from "../hooks/useAuth";
 
 type CallStatus = "aberto" | "em_atendimento" | "encerrado";
 
@@ -24,7 +26,7 @@ interface CallItem {
   title: string;
   service: string;
   totalValue: string;
-   technician: {
+  technician: {
     name: string;
     colorClass: string;
   };
@@ -143,18 +145,52 @@ function TechnicianBadge({
   );
 }
 
-export function MyCallingsCustomers() {
+export function MyCallingsCustomers() {  
   const location = useLocation();
+  const navigate = useNavigate();
+
   const [open, setOpen] = useState(false);
   const [openProfile, setOpenProfile] = useState(false);
   const [openAlterProfile, setOpenAlterProfile] = useState(false);
-
- 
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
 
   const { user, setUser } = useUser();
-  const userInitials = getInitials(user.name);
+  const { session } = useAuth();
 
-  const navigate = useNavigate();
+  const displayName = session?.user.name ?? user.name;
+  const displayEmail = session?.user.email ?? user.email;
+  const userInitials = getInitials(displayName);
+
+  async function handleSaveProfile(data: { name: string; email: string }) {
+    try {
+
+      if (!session?.user.id) {
+        alert("Usuário não identificado.");
+        return;
+      }
+
+      setIsSavingProfile(true);
+
+      const response = await api.put(`/clients/${session.user.id}`, data);
+
+      setUser((prev) => ({
+        ...prev,
+        name: response.data.name,
+        email: response.data.email,
+      }));
+
+      alert("Perfil atualizado com sucesso.");
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        alert(error.response?.data?.message ?? "Erro ao atualizar perfil.");
+        return;
+      }
+
+      alert("Não foi possível atualizar o perfil.");
+    } finally {
+      setIsSavingProfile(false);
+    }
+  }
 
   return (
     <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] relative bg-gray-100 xl:overflow-hidden">
@@ -221,8 +257,8 @@ export function MyCallingsCustomers() {
             {userInitials}
           </span>
           <div className="flex flex-col">
-            <span className="text-sm">{user.name}</span>
-            <span className="text-xs text-gray-400">{user.email}</span>
+            <span className="text-sm">{displayName}</span>
+            <span className="text-xs text-gray-400">{displayEmail}</span>
           </div>
         </div>
       </section>
@@ -328,7 +364,6 @@ export function MyCallingsCustomers() {
                         <StatusBadge status={call.status} />
                       </td>
 
-                      {/* botão continua opcional */}
                       <td className="px-4 py-4">
                         <img
                           src={eye}
@@ -362,14 +397,10 @@ export function MyCallingsCustomers() {
           setOpenProfile(false);
           setOpenAlterProfile(true);
         }}
-        onSave={(data) => {
-          setUser((prev) => ({
-            ...prev,
-            ...data,
-          }));
-        }}
-        initialName={user.name}
-        initialEmail={user.email}
+        onSave={handleSaveProfile}
+        initialName={session?.user.name ?? ""}
+        initialEmail={session?.user.email ?? ""}
+        isLoading={isSavingProfile}
       />
 
       <AlterProfileModalCustomer

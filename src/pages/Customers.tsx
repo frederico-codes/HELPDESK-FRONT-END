@@ -2,12 +2,20 @@ import menu from "../assets/icons/Menu.png";
 import LogoIconLight from "../assets/Logo_IconLight.png";
 import avatar from "../assets/Avatar.svg";
 import pen from "../assets/icons/pen-line.svg";
-import { useState } from "react";
-import { CustomerModal } from "../componentes/CustomerModal"; // importar modal
+import { useEffect, useState } from "react";
+import { AxiosError } from "axios";
+import { EditCustomerModal } from "../componentes/EditCustomerModal";
 import { DeleteCustomerModal } from "../componentes/DeleteCustomerModal";
 import { Trash2 } from "lucide-react";
 import { Sidebar } from "../componentes/Sidebar";
-import { useUser } from "../hooks/useUser";
+import { api } from "../services/api";
+
+type Customer = {
+  id: string;
+  name: string;
+  email: string;
+  role: "customer";
+};
 
 function getInitials(name: string) {
   const parts = name.trim().split(" ").filter(Boolean);
@@ -21,44 +29,76 @@ function getInitials(name: string) {
 export function Customers() {
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  
-  const { user } = useUser();
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const customerExample = {
-    initials: getInitials(user.name),
-    name: user.name,
-    email: user.email,
-  };
-  
-  const [selectedCustomer, setSelectedCustomer] = useState({
-    name: customerExample.name,
-  });
-  
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
+    null,
+  );
+
+  async function loadCustomers() {
+    try {
+      setIsLoading(true);
+
+      const response = await api.get("/clients");
+      setCustomers(response.data);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        alert(error.response?.data?.message ?? "Erro ao buscar clientes.");
+        return;
+      }
+
+      alert("Não foi possível carregar os clientes.");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    loadCustomers();
+  }, []);
+
+  async function handleDeleteCustomer() {
+    if (!selectedCustomer) return;
+
+    try {
+      await api.delete(`/clients/${selectedCustomer.id}`);
+      await loadCustomers();
+      setDeleteModalOpen(false);
+      setSelectedCustomer(null);
+      alert("Cliente excluído com sucesso.");
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        alert(error.response?.data?.message ?? "Erro ao excluir cliente.");
+        return;
+      }
+
+      alert("Não foi possível excluir o cliente.");
+    }
+  }
 
   return (
-    <div className="w-screen h-screen  xl:grid xl:grid-cols-[280px_1fr] relative  bg-gray-100 xl:overflow-hidden">
-      
-         <Sidebar />
+    <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] relative bg-gray-100 xl:overflow-hidden">
+      <Sidebar />
 
-      <section className="block  xl:hidden w-screen h-screen absolute top-0 ">
-        <div className="flex justify-between items-center  ">
-          {/* GRUPO ESQUERDA */}
+      <section className="block xl:hidden w-screen h-screen absolute top-0">
+        <div className="flex justify-between items-center">
           <div className="flex justify-center items-center gap-3.5 absolute top-7 left-6">
-            <img src={menu} alt="menu" className="" />
+            <img src={menu} alt="menu" />
 
-            <div className="flex justify-center gap-4 ">
+            <div className="flex justify-center gap-4">
               <img
                 src={LogoIconLight}
                 alt="LogoIconLight"
                 className="h-11 w-11"
               />
               <div>
-                <h1 className="text-xl text-gray-600 ">HelpDesk</h1>
-                <span className="text-xxs text-blue-light ">Admin</span>
+                <h1 className="text-xl text-gray-600">HelpDesk</h1>
+                <span className="text-xxs text-blue-light">Admin</span>
               </div>
             </div>
           </div>
-          {/* GRUPO DIREITA */}
+
           <div>
             <img
               src={avatar}
@@ -69,11 +109,11 @@ export function Customers() {
         </div>
       </section>
 
-      <div className="w-full h-screen flex flex-col px-6 xl:px-16  gap-4 bg-white absolute xl:relative py-24  rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
+      <div className="w-full h-screen flex flex-col px-6 xl:px-16 gap-4 bg-white absolute xl:relative py-24 rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
         <h1 className="text-2xl font-bold">Clientes</h1>
-        <div className="w-full bg-white rounded-2xl shadow-sm">
+
+        <div className="w-full bg-white rounded-2xl shadow-sm overflow-hidden">
           <table className="w-full text-left">
-            {/* Cabeçalho */}
             <thead className="border-b border-gray-500">
               <tr className="text-sm text-gray-400">
                 <th className="py-4 xl:px-2 font-medium">Nome</th>
@@ -83,72 +123,109 @@ export function Customers() {
               </tr>
             </thead>
 
-            {/* Primeira linha */}
             <tbody>
-              <tr className="border-b last:border-none">
-                <td className="py-4 xl:px-2 text-sm">
-                  <div className="flex items-center gap-2 truncate max-w-[120px]">
-                    <span className="w-7 h-7 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
-                      {customerExample.initials}
-                    </span>
-                    <span className="font-bold truncate max-w-[50px] xl:truncate-none xl:max-w-full ">
-                      {customerExample.name}
-                    </span>
-                  </div>
-                </td>
+              {customers.map((customer) => (
+                <tr key={customer.id} className="border-b last:border-none">
+                  <td className="py-4 xl:px-2 text-sm">
+                    <div className="flex items-center gap-2 truncate max-w-[120px]">
+                      <span className="w-7 h-7 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
+                        {getInitials(customer.name)}
+                      </span>
 
-                <td className="py-4 xl:px-2">
-                  <div className="text-sm text-gray-400 truncate max-w-[120px] xl:truncate-none xl:max-w-full ">
-                    {customerExample.email}{" "}
-                  </div>
-                </td>
+                      <span className="font-bold truncate max-w-[50px] xl:truncate-none xl:max-w-full">
+                        {customer.name}
+                      </span>
+                    </div>
+                  </td>
 
-                <td className="py-4 px-1 w-4">
-                  <div className="h-9 w-9 bg-gray-500 hover:bg-gray-600 flex justify-center items-center rounded-sm transition ease-linear cursor-pointer">
-                    <a
-                      onClick={() => {
-                        setSelectedCustomer({ name: customerExample.name });
-                        setDeleteModalOpen(true);
-                      }}
-                      className=" rounded-lg cursor-pointer"
-                    >
-                      <Trash2 size={15} />
-                    </a>
-                  </div>
-                </td>
+                  <td className="py-4 xl:px-2">
+                    <div className="text-sm text-gray-400 truncate max-w-[120px] xl:truncate-none xl:max-w-full">
+                      {customer.email}
+                    </div>
+                  </td>
 
-                <td className="py-4 px-1  w-4">
-                  <div className="h-9 w-9 bg-gray-500  hover:bg-gray-600 flex justify-center items-center rounded-sm cursor-pointer transition ease-linear">
-                    <a
-                      onClick={() => setModalOpen(true)}
-                      className=" rounded-lg "
-                    >
-                      <img src={pen} alt="" />
-                    </a>
-                  </div>
-                </td>
-              </tr>
+                  <td className="py-4 px-1 w-4">
+                    <div className="h-9 w-9 bg-gray-500 hover:bg-gray-600 flex justify-center items-center rounded-sm transition ease-linear cursor-pointer">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedCustomer(customer);
+                          setDeleteModalOpen(true);
+                        }}
+                        className="rounded-lg cursor-pointer"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
+                  </td>
+
+                  <td className="py-4 px-1 w-4">
+                    <div className="h-9 w-9 bg-gray-500 hover:bg-gray-600 flex justify-center items-center rounded-sm cursor-pointer transition ease-linear ">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedCustomer(customer);
+                          setModalOpen(true);
+                        }}
+                        className="rounded-lg"
+                      >
+                        <img src={pen} alt="Editar cliente" className="cursor-pointer" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
+
+          {!isLoading && customers.length === 0 && (
+            <div className="px-6 py-8 text-sm text-gray-400">
+              Nenhum cliente encontrado.
+            </div>
+          )}
+
+          {isLoading && (
+            <div className="px-6 py-8 text-sm text-gray-400">
+              Carregando clientes...
+            </div>
+          )}
         </div>
       </div>
 
       <DeleteCustomerModal
         open={deleteModalOpen}
-        onClose={() => setDeleteModalOpen(false)}
-        customer={selectedCustomer}
-        onConfirm={() => {
-        setDeleteModalOpen(false);
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setSelectedCustomer(null);
         }}
+        customer={
+          selectedCustomer ? { name: selectedCustomer.name } : { name: "" }
+        }
+        onConfirm={handleDeleteCustomer}
       />
 
-      {/* MODAL */}
-      <CustomerModal
+      <EditCustomerModal
         open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        customer={customerExample}
+        onClose={() => {
+          setModalOpen(false);
+          setSelectedCustomer(null);
+        }}
+        customer={
+          selectedCustomer
+            ? {
+                id: selectedCustomer.id,
+                initials: getInitials(selectedCustomer.name),
+                name: selectedCustomer.name,
+                email: selectedCustomer.email,
+              }
+            : {
+                id: "",
+                initials: "",
+                name: "",
+                email: "",
+              }
+        }
       />
-    
     </div>
   );
 }

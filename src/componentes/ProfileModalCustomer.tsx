@@ -1,32 +1,49 @@
 import { X } from "phosphor-react";
-import { Input } from "../componentes/Input"
+import { useEffect, useState } from "react";
+import { Input } from "../componentes/Input";
 import { Upload } from "./Upload";
-import { useState } from "react";
 
 interface Props {
   open: boolean;
   onClose: () => void;
   onOpenAlterProfile: () => void;
-  onSave: (data: { name: string; email: string }) => void;
+  onSave: (data: { name: string; email: string }) => Promise<void> | void;
   initialName?: string;
   initialEmail?: string;
+  isLoading?: boolean;
 }
 
+export function ProfileModalCustomer({
+  open,
+  onClose,
+  onOpenAlterProfile,
+  onSave,
+  initialName,
+  initialEmail,
+  isLoading = false,
+}: Props) {
+  const [name, setName] = useState(initialName || "");
+  const [email, setEmail] = useState(initialEmail || "");
+  const [password, setPassword] = useState("");
 
+  useEffect(() => {
+    if (open) {
+      setName(initialName || "");
+      setEmail(initialEmail || "");
+      setPassword("");
+    }
+  }, [open, initialName, initialEmail]);
 
-export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile, onSave, initialName, initialEmail }: Props) {
-  const [name, setName] = useState(initialName || "")
-  const [email, setEmail] = useState(initialEmail || "")
-  const [password, setPassword] = useState("")
-  
+  async function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
 
-   async function onSubmit(e: React.FormEvent) {
-     e.preventDefault();
+    await onSave({
+      name,
+      email,
+    });
 
-    onSave({ name, email });
     onClose();
-   }
-
+  }
 
   if (!open) return null;
 
@@ -39,19 +56,18 @@ export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile, onSave
       "
       onClick={onClose}
     >
-      {/* MODAL */}
       <form
         onSubmit={onSubmit}
         onClick={(e) => e.stopPropagation()}
         className="
           bg-white rounded-2xl shadow-lg animate-fade
-          w-full max-w-[440px] 
+          w-full max-w-[440px]
         "
       >
-        {/* HEADER */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-500">
           <h2 className="text-lg font-semibold text-gray-900">Perfil</h2>
-          <button onClick={onClose}>
+
+          <button type="button" onClick={onClose}>
             <X
               size={22}
               className="text-gray-700 hover:text-gray-500 cursor-pointer"
@@ -59,14 +75,12 @@ export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile, onSave
           </button>
         </div>
 
-        {/* CONTEÚDO */}
         <div className="px-6 py-5 space-y-6">
           <Upload filename={null} />
 
-          {/* NOME */}
           <div>
             <Input
-              name="Nome"
+              name="name"
               required
               legend="Nome"
               type="text"
@@ -76,7 +90,6 @@ export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile, onSave
             />
           </div>
 
-          {/* EMAIL */}
           <div>
             <Input
               name="email"
@@ -85,28 +98,29 @@ export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile, onSave
               type="email"
               placeholder="exemplo@mail.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}              
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
-          {/* SENHA */}
           <div>
-            <div className="flex items-center justify-between gap-3">
-              <Input
-                name="password"
-                required
-                legend="SENHA"
-                type="password"
-                placeholder="Digite sua senha"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+            <div className="flex items-end justify-between gap-3">
+              <div className="flex-1">
+                <Input
+                  name="password"
+                  legend="Senha"
+                  type="password"
+                  placeholder="Digite sua senha"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
 
               <button
+                type="button"
                 className="px-3 py-1.5 rounded-md bg-gray-500 text-gray-700 hover:bg-gray-50 text-sm cursor-pointer"
                 onClick={() => {
-                  onClose(); // fecha o modal preto
-                  onOpenAlterProfile(); // abre o modal de perfil
+                  onClose();
+                  onOpenAlterProfile();
                 }}
               >
                 Alterar
@@ -114,16 +128,18 @@ export function ProfileModalCustomer({ open, onClose, onOpenAlterProfile, onSave
             </div>
           </div>
         </div>
-        {/* BOTÃO SALVAR */}
+
         <div className="px-6 pb-6">
           <button
-          type="submit"
-          className="
-          w-full bg-gray-900 text-white py-3 rounded-md
-          font-medium text-sm hover:bg-gray-500 transition cursor-pointer hover:text-gray-200
-          "
+            type="submit"
+            disabled={isLoading}
+            className="
+              w-full bg-gray-900 text-white py-3 rounded-md
+              font-medium text-sm hover:bg-gray-500 transition cursor-pointer hover:text-gray-200
+              disabled:opacity-50 disabled:cursor-not-allowed
+            "
           >
-            Salvar
+            {isLoading ? "Salvando..." : "Salvar"}
           </button>
         </div>
       </form>
