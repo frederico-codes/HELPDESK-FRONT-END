@@ -16,6 +16,9 @@ import { AlterProfileModalTechnicians } from "../componentes/AlterProfileModalTe
 import { useAuth } from "../hooks/useAuth";
 import { api } from "../services/api";
 import { AxiosError } from "axios";
+import { useUser } from "../hooks/useUser";
+
+
 
 type ApiCall = {
   id: string;
@@ -83,13 +86,11 @@ function CallCardItem({
   call,
   actionLabel,
   actionIcon,
-  actionType,
   statusIcon,
 }: {
   call: CallCard;
   actionLabel?: string;
   actionIcon?: string;
-  actionType?: "start" | "close";
   statusIcon: string;
 }) {
   return (
@@ -148,11 +149,13 @@ export function MyCallingsTechnicians() {
   const [openAlterProfile, setOpenAlterProfile] = useState(false);
   const [calls, setCalls] = useState<CallCard[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
 
   const { session } = useAuth();
+  const { user, setUser } = useUser();
 
-  const displayName = session?.user.name ?? "";
-  const displayEmail = session?.user.email ?? "";
+  const displayName = session?.user.name ?? user.name ?? "";
+  const displayEmail = session?.user.email ?? user.email ?? "";
   const userInitials = getInitials(displayName);
 
   useEffect(() => {
@@ -207,6 +210,63 @@ export function MyCallingsTechnicians() {
     [calls]
   );
 
+  async function handleSaveProfile(data: {
+    name: string;
+    email: string;
+    avatarFile: File | null;
+  }) {
+    try {
+      if (!session?.user.id) {
+        alert("Usuário não identificado.");
+        return;
+      }
+
+      setIsSavingProfile(true);
+
+      const response = await api.put(`/users/${session.user.id}`, {
+        name: data.name,
+        email: data.email,
+      });
+
+      setUser((prev) => ({
+        ...prev,
+        name: response.data.name,
+        email: response.data.email,
+      }));
+
+      if (data.avatarFile) {
+        const formData = new FormData();
+        formData.append("avatar", data.avatarFile);
+
+        const avatarResponse = await api.patch(
+          `/users/${session.user.id}/avatar`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          },
+        );
+
+        setUser((prev) => ({
+          ...prev,
+          avatar: avatarResponse.data.avatar,
+        }));
+      }
+
+      alert("Perfil atualizado com sucesso.");
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        alert(error.response?.data?.message ?? "Erro ao atualizar perfil.");
+        return;
+      }
+
+      alert("Não foi possível atualizar o perfil.");
+    } finally {
+      setIsSavingProfile(false);
+    }
+  }
+
   return (
     <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] bg-gray-100 xl:overflow-hidden">
       <section className="hidden xl:flex xl:flex-col xl:justify-between bg-gray-100 pl-6 pt-10 pb-6">
@@ -224,13 +284,17 @@ export function MyCallingsTechnicians() {
               <Link
                 to="/"
                 className={`w-[180px] flex items-center gap-2 text-sm p-3 outline-0 rounded-sm ${
-                  location.pathname === "/" ? "bg-blue-dark text-white" : "text-gray-400"
+                  location.pathname === "/"
+                    ? "bg-blue-dark text-white"
+                    : "text-gray-400"
                 }`}
               >
                 <img
                   src={list}
                   alt=""
-                  className={location.pathname === "/" ? "invert brightness-0" : ""}
+                  className={
+                    location.pathname === "/" ? "invert brightness-0" : ""
+                  }
                 />
                 Meus chamados
               </Link>
@@ -268,7 +332,7 @@ export function MyCallingsTechnicians() {
               />
               <div>
                 <h1 className="text-xl text-gray-600">HelpDesk</h1>
-                <span className="text-xxs text-blue-light">Admin</span>
+                <span className="text-xxs text-blue-light">Técnico</span>
               </div>
             </div>
           </div>
@@ -290,11 +354,15 @@ export function MyCallingsTechnicians() {
           </h1>
 
           {isLoading && (
-            <div className="text-sm text-gray-400 py-4">Carregando chamados...</div>
+            <div className="text-sm text-gray-400 py-4">
+              Carregando chamados...
+            </div>
           )}
 
           {!isLoading && calls.length === 0 && (
-            <div className="text-sm text-gray-400 py-4">Nenhum chamado encontrado.</div>
+            <div className="text-sm text-gray-400 py-4">
+              Nenhum chamado encontrado.
+            </div>
           )}
 
           {!isLoading && (
@@ -312,7 +380,6 @@ export function MyCallingsTechnicians() {
                       call={call}
                       actionLabel="Encerrar"
                       actionIcon={circleCheck}
-                      actionType="close"
                       statusIcon={currently_assisting}
                     />
                   ))}
@@ -332,7 +399,6 @@ export function MyCallingsTechnicians() {
                       call={call}
                       actionLabel="Iniciar"
                       actionIcon={circleCheck}
-                      actionType="start"
                       statusIcon={clock_open}
                     />
                   ))}
@@ -368,7 +434,7 @@ export function MyCallingsTechnicians() {
           setOpenProfile(true);
         }}
       />
-
+      
       <ProfileTechnicianModal
         open={openProfile}
         onClose={() => setOpenProfile(false)}
@@ -377,6 +443,20 @@ export function MyCallingsTechnicians() {
           setOpenProfile(false);
           setOpenAlterProfile(true);
         }}
+        onSave={handleSaveProfile}
+        initialName={displayName}
+        initialEmail={displayEmail}
+        isLoading={isSavingProfile}
+        availability={
+          session?.user.availability ?? [
+            "09:00",
+            "10:00",
+            "12:00",
+            "13:00",
+            "15:00",
+            "16:00",
+          ]
+        }
       />
 
       <AlterProfileModalTechnicians

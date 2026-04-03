@@ -1,15 +1,25 @@
 import bin from "../assets/icons/bin.svg";
 import uiface from "../assets/uifaces-popular-avatar (2).jpg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = React.ComponentProps<"input"> & {
   filename?: string | null;
+  initialPreview?: string | null;
   onFileChange?: (file: File | null) => void;
 };
 
-export function Upload({ filename = null, onFileChange, ...rest }: Props) {
-  const [preview, setPreview] = useState<string | null>(null);
+export function Upload({
+  filename = null,
+  initialPreview = null,
+  onFileChange,
+  ...rest
+}: Props) {
+  const [preview, setPreview] = useState<string | null>(initialPreview);
   const [fileName, setFileName] = useState<string | null>(null);
+
+  useEffect(() => {
+    setPreview(initialPreview);
+  }, [initialPreview]);
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0] ?? null;

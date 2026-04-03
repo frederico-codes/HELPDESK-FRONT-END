@@ -301,7 +301,9 @@ async function handleSaveProfile(data: {
               <img
                 src={list}
                 alt=""
-                className={location.pathname === "/" ? "invert brightness-0" : ""}
+                className={
+                  location.pathname === "/" ? "invert brightness-0" : ""
+                }
               />
               Meus chamados
             </Link>
@@ -489,8 +491,13 @@ async function handleSaveProfile(data: {
           setOpenAlterProfile(true);
         }}
         onSave={handleSaveProfile}
-        initialName={session?.user.name ?? ""}
-        initialEmail={session?.user.email ?? ""}
+        initialName={displayName}
+        initialEmail={displayEmail}
+        initialAvatar={
+          session?.user.avatar
+            ? `http://localhost:3000/uploads/${session.user.avatar}`
+            : null
+        }
         isLoading={isSavingProfile}
       />
 

@@ -14,6 +14,7 @@ interface Props {
   }) => Promise<void> | void;
   initialName?: string;
   initialEmail?: string;
+  initialAvatar?: string | null;
   isLoading?: boolean;
 }
 
@@ -24,8 +25,9 @@ export function ProfileModalCustomer({
   onSave,
   initialName,
   initialEmail,
+  initialAvatar,
   isLoading = false,
-}: Props) {
+}: Props)  {
   const [name, setName] = useState(initialName || "");
   const [email, setEmail] = useState(initialEmail || "");
   const [password, setPassword] = useState("");
@@ -83,7 +85,12 @@ export function ProfileModalCustomer({
         </div>
 
         <div className="px-6 py-5 space-y-6">
-          <Upload onFileChange={setAvatarFile} />
+
+          <Upload
+            filename={null}
+            initialPreview={initialAvatar}
+            onFileChange={setAvatarFile}
+          />
 
           <div>
             <Input

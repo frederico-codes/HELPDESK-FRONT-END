@@ -1,38 +1,59 @@
 import { X } from "phosphor-react";
 import { Upload } from "./Upload";
 import { Input } from "./Input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
-  open: boolean
-  onClose: () => void  
-  onOpenAlterProfile:() => void 
-  
+  open: boolean;
+  onClose: () => void;
+  onOpenAlterProfile: () => void;
+  onSave: (data: {
+    name: string;
+    email: string;
+    avatarFile: File | null;
+  }) => Promise<void> | void;
+  initialName?: string;
+  initialEmail?: string;
+  isLoading?: boolean;
+  availability?: string[];
 }
 
-function getInitials(name: string) {
-  const parts = name.trim().split(" ").filter(Boolean);
-
-  if (parts.length === 0) return "";
-  if (parts.length === 1) return parts[0][0].toUpperCase();
-
-  return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
-}
-
-
-
-export function ProfileTechnicianModal({ open, onClose, onOpenAlterProfile }: Props) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+export function ProfileTechnicianModal({
+  open,
+  onClose,
+  onOpenAlterProfile,
+  onSave,
+  initialName,
+  initialEmail,
+  isLoading = false,
+  availability = [],
+}: Props) {
+  const [name, setName] = useState(initialName || "");
+  const [email, setEmail] = useState(initialEmail || "");
   const [password, setPassword] = useState("");
-  
-  function onSubmit(e: React.FormEvent){
-    e.preventDefault()
-  
-    console.log({name, email, password})
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+
+  useEffect(() => {
+    if (open) {
+      setName(initialName || "");
+      setEmail(initialEmail || "");
+      setPassword("");
+      setAvatarFile(null);
+    }
+  }, [open, initialName, initialEmail]);
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    await onSave({
+      name,
+      email,
+      avatarFile,
+    });
+
+    onClose();
   }
 
-  
   if (!open) return null;
 
   return (
@@ -44,7 +65,6 @@ export function ProfileTechnicianModal({ open, onClose, onOpenAlterProfile }: Pr
       "
       onClick={onClose}
     >
-      {/* MODAL */}
       <form
         onSubmit={onSubmit}
         onClick={(e) => e.stopPropagation()}
@@ -53,10 +73,10 @@ export function ProfileTechnicianModal({ open, onClose, onOpenAlterProfile }: Pr
           w-full max-w-[440px]
         "
       >
-        {/* HEADER */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-500">
           <h2 className="text-lg font-semibold text-gray-900">Perfil</h2>
-          <button onClick={onClose}>
+
+          <button type="button" onClick={onClose}>
             <X
               size={22}
               className="text-gray-700 hover:text-gray-500 cursor-pointer"
@@ -64,12 +84,9 @@ export function ProfileTechnicianModal({ open, onClose, onOpenAlterProfile }: Pr
           </button>
         </div>
 
-        {/* CONTEÚDO */}
         <div className="px-6 py-5 space-y-6">
-          {/* FOTO + BOTÕES */}
-          <Upload filename={null} />
+          <Upload filename={null} onFileChange={setAvatarFile} />
 
-          {/* NOME */}
           <Input
             name="name"
             required
@@ -80,7 +97,6 @@ export function ProfileTechnicianModal({ open, onClose, onOpenAlterProfile }: Pr
             onChange={(e) => setName(e.target.value)}
           />
 
-          {/* EMAIL */}
           <Input
             name="email"
             required
@@ -91,24 +107,25 @@ export function ProfileTechnicianModal({ open, onClose, onOpenAlterProfile }: Pr
             onChange={(e) => setEmail(e.target.value)}
           />
 
-          {/* SENHA */}
           <div>
-            <div className="flex items-center justify-between">
-              <Input
-                name="password"
-                required
-                legend="SENHA"
-                type="password"
-                placeholder="Digite sua senha"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+            <div className="flex items-end justify-between gap-3">
+              <div className="flex-1">
+                <Input
+                  name="password"
+                  legend="SENHA"
+                  type="password"
+                  placeholder="Digite sua senha"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
 
               <button
+                type="button"
                 className="px-3 py-1.5 rounded-md bg-gray-500 text-gray-700 hover:bg-gray-50 text-sm cursor-pointer"
                 onClick={() => {
-                  onClose(); // fecha o modal preto
-                  onOpenAlterProfile(); // abre o modal de perfil
+                  onClose();
+                  onOpenAlterProfile();
                 }}
               >
                 Alterar
@@ -116,7 +133,6 @@ export function ProfileTechnicianModal({ open, onClose, onOpenAlterProfile }: Pr
             </div>
           </div>
 
-          {/* DISPONIBILIDADE  */}
           <div>
             <p className="text-xs font-semibold text-gray-400">
               Disponibilidade
@@ -126,34 +142,34 @@ export function ProfileTechnicianModal({ open, onClose, onOpenAlterProfile }: Pr
             </p>
 
             <div className="flex flex-wrap gap-2">
-              {["09:00", "10:00", "12:00", "13:00", "15:00", "16:00"].map(
-                (h, i) => (
-                  <button
-                    key={i}
-                    className="
+              {availability.map((hour) => (
+                <button
+                  key={hour}
+                  type="button"
+                  className="
                     px-3 py-1 rounded-full border border-gray-500
                     text-xs text-gray-700 bg-white
                     hover:bg-gray-500 cursor-pointer
                   "
-                  >
-                    {h}
-                  </button>
-                ),
-              )}
+                >
+                  {hour}
+                </button>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* BOTÃO SALVAR */}
         <div className="px-6 pb-6">
           <button
-          type="submit"
+            type="submit"
+            disabled={isLoading}
             className="
               w-full bg-gray-900 text-white py-3 rounded-md
               font-medium text-sm hover:bg-gray-500 transition cursor-pointer hover:text-gray-200
+              disabled:opacity-50 disabled:cursor-not-allowed
             "
           >
-            Salvar
+            {isLoading ? "Salvando..." : "Salvar"}
           </button>
         </div>
       </form>
