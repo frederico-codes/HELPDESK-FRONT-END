@@ -18,6 +18,7 @@ import { ProfileOptionsModal } from "../componentes/ProfileOptionsModal";
 import { useUser } from "../hooks/useUser";
 import { useAuth } from "../hooks/useAuth";
 
+
 type CallStatus = "aberto" | "em_atendimento" | "encerrado";
 
 interface CallItem {
@@ -49,6 +50,8 @@ type CallApiResponse = {
     basePrice: number;
   };
 };
+
+
 
 function getInitials(name: string) {
   const parts = name.trim().split(" ").filter(Boolean);
@@ -168,6 +171,7 @@ export function MyCallingsCustomers() {
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [calls, setCalls] = useState<CallItem[]>([]);
   const [isLoadingCalls, setIsLoadingCalls] = useState(true);
+  
 
   const { user, setUser } = useUser();
   const { session } = useAuth();
@@ -175,6 +179,8 @@ export function MyCallingsCustomers() {
   const displayName = session?.user.name ?? user.name;
   const displayEmail = session?.user.email ?? user.email;
   const userInitials = getInitials(displayName);
+
+  
 
   async function loadCalls() {
     try {
@@ -212,35 +218,62 @@ export function MyCallingsCustomers() {
     loadCalls();
   }, []);
 
-  async function handleSaveProfile(data: { name: string; email: string }) {
-    try {
-      if (!session?.user.id) {
-        alert("Usuário não identificado.");
-        return;
-      }
+async function handleSaveProfile(data: {
+  name: string;
+  email: string;
+  avatarFile: File | null;
+}) {
+  try {
+    if (!session?.user.id) {
+      alert("Usuário não identificado.");
+      return;
+    }
 
-      setIsSavingProfile(true);
+    setIsSavingProfile(true);
 
-      const response = await api.put(`/clients/${session.user.id}`, data);
+    const response = await api.put(`/clients/${session.user.id}`, {
+      name: data.name,
+      email: data.email,
+    });
+
+    setUser((prev) => ({
+      ...prev,
+      name: response.data.name,
+      email: response.data.email,
+    }));
+
+    if (data.avatarFile) {
+      const formData = new FormData();
+      formData.append("avatar", data.avatarFile);
+
+      const avatarResponse = await api.patch(
+        `/users/${session.user.id}/avatar`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       setUser((prev) => ({
         ...prev,
-        name: response.data.name,
-        email: response.data.email,
+        avatar: avatarResponse.data.avatar,
       }));
-
-      alert("Perfil atualizado com sucesso.");
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        alert(error.response?.data?.message ?? "Erro ao atualizar perfil.");
-        return;
-      }
-
-      alert("Não foi possível atualizar o perfil.");
-    } finally {
-      setIsSavingProfile(false);
     }
+
+    alert("Perfil atualizado com sucesso.");
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      alert(error.response?.data?.message ?? "Erro ao atualizar perfil.");
+      return;
+    }
+
+    alert("Não foi possível atualizar o perfil.");
+  } finally {
+    setIsSavingProfile(false);
   }
+}
 
   return (
     <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] relative bg-gray-100 xl:overflow-hidden">

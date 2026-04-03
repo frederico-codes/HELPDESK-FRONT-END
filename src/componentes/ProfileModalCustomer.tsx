@@ -7,7 +7,11 @@ interface Props {
   open: boolean;
   onClose: () => void;
   onOpenAlterProfile: () => void;
-  onSave: (data: { name: string; email: string }) => Promise<void> | void;
+  onSave: (data: {
+    name: string;
+    email: string;
+    avatarFile: File | null;
+  }) => Promise<void> | void;
   initialName?: string;
   initialEmail?: string;
   isLoading?: boolean;
@@ -25,21 +29,24 @@ export function ProfileModalCustomer({
   const [name, setName] = useState(initialName || "");
   const [email, setEmail] = useState(initialEmail || "");
   const [password, setPassword] = useState("");
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   useEffect(() => {
     if (open) {
       setName(initialName || "");
       setEmail(initialEmail || "");
       setPassword("");
+      setAvatarFile(null);
     }
   }, [open, initialName, initialEmail]);
 
-  async function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     await onSave({
       name,
       email,
+      avatarFile,
     });
 
     onClose();
@@ -76,7 +83,7 @@ export function ProfileModalCustomer({
         </div>
 
         <div className="px-6 py-5 space-y-6">
-          <Upload filename={null} />
+          <Upload onFileChange={setAvatarFile} />
 
           <div>
             <Input
