@@ -434,7 +434,7 @@ export function MyCallingsTechnicians() {
           setOpenProfile(true);
         }}
       />
-      
+
       <ProfileTechnicianModal
         open={openProfile}
         onClose={() => setOpenProfile(false)}
@@ -447,16 +447,12 @@ export function MyCallingsTechnicians() {
         initialName={displayName}
         initialEmail={displayEmail}
         isLoading={isSavingProfile}
-        availability={
-          session?.user.availability ?? [
-            "09:00",
-            "10:00",
-            "12:00",
-            "13:00",
-            "15:00",
-            "16:00",
-          ]
+        initialAvatar={
+          session?.user.avatar
+            ? `http://localhost:3000/uploads/${session.user.avatar}`
+            : null
         }
+        availability={session?.user.availability}
       />
 
       <AlterProfileModalTechnicians

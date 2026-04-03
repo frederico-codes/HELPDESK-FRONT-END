@@ -14,6 +14,7 @@ interface Props {
   }) => Promise<void> | void;
   initialName?: string;
   initialEmail?: string;
+  initialAvatar?: string | null; // 👈 ADICIONE ISSO
   isLoading?: boolean;
   availability?: string[];
 }
@@ -25,6 +26,7 @@ export function ProfileTechnicianModal({
   onSave,
   initialName,
   initialEmail,
+  initialAvatar, // 👈 AQUI
   isLoading = false,
   availability = [],
 }: Props) {
@@ -85,7 +87,11 @@ export function ProfileTechnicianModal({
         </div>
 
         <div className="px-6 py-5 space-y-6">
-          <Upload filename={null} onFileChange={setAvatarFile} />
+          <Upload
+            filename={null}
+            initialPreview={initialAvatar}
+            onFileChange={setAvatarFile}
+          />
 
           <Input
             name="name"
