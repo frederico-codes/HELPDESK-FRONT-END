@@ -128,7 +128,9 @@ export function CallForm() {
             <img src={Logo_IconLight} alt="Logo padrão" />
             <div className="flex flex-col">
               <h1 className="text-gray-600 text-xl">HelpDesk</h1>
-              <span className="text-xxs text-blue-light uppercase">cliente</span>
+              <span className="text-xxs text-blue-light uppercase">
+                cliente
+              </span>
             </div>
           </div>
 
@@ -137,13 +139,17 @@ export function CallForm() {
               <Link
                 to="/"
                 className={`w-[180px] flex items-center gap-2 text-sm p-3 outline-0 rounded-sm ${
-                  location.pathname === "/" ? "bg-blue-dark text-white" : "text-gray-400"
+                  location.pathname === "/"
+                    ? "bg-blue-dark text-white"
+                    : "text-gray-400"
                 }`}
               >
                 <img
                   src={list}
                   alt=""
-                  className={location.pathname === "/" ? "invert brightness-0" : ""}
+                  className={
+                    location.pathname === "/" ? "invert brightness-0" : ""
+                  }
                 />
                 Meus chamados
               </Link>
@@ -187,7 +193,9 @@ export function CallForm() {
               />
               <div>
                 <h1 className="text-xl text-gray-600">HelpDesk</h1>
-                <span className="text-xxs text-blue-light uppercase">cliente</span>
+                <span className="text-xxs text-blue-light uppercase">
+                  cliente
+                </span>
               </div>
             </div>
           </div>
@@ -256,7 +264,7 @@ export function CallForm() {
                   onChange={(e) => setServiceId(e.target.value)}
                   disabled={isLoadingServices}
                 >
-                  <option value="">
+                  <option value="" disabled hidden>
                     {isLoadingServices
                       ? "Carregando serviços..."
                       : "Selecione a categoria de atendimento"}

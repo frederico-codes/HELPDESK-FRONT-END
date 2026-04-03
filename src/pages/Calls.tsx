@@ -201,13 +201,13 @@ export function Calls() {
             <table className="w-full text-left table-fixed">
               <thead className="border-b border-gray-500">
                 <tr className="text-sm text-gray-400">
-                  <th className="py-4 px-3 xl:px-4 font-medium w-[120px]">
+                  <th className="py-4 px-3 xl:px-4 font-medium w-[70px] whitespace-nowrap overflow-hidden text-ellipsis">
                     Atualizado em
                   </th>
                   <th className="py-4 px-3 xl:px-4 font-medium hidden xl:table-cell w-[60px]">
                     Id
                   </th>
-                  <th className="py-4 px-3 xl:px-4 font-medium w-[220px]">
+                  <th className="py-4 px-3 xl:px-4 font-medium w-[100px]">
                     Título e Serviço
                   </th>
                   <th className="py-4 px-3 xl:px-4 font-medium hidden xl:table-cell w-[110px]">
@@ -219,17 +219,17 @@ export function Calls() {
                   <th className="py-4 px-3 xl:px-4 font-medium hidden xl:table-cell w-[140px]">
                     Técnico
                   </th>
-                  <th className="py-4 px-3 xl:px-4 font-medium w-[120px]">
+                  <th className="py-4 px-3 xl:px-4 font-medium w-20">
                     Status
                   </th>
-                  <th className="py-4 px-3 xl:px-4 font-medium w-[56px]"></th>
+                  <th className="py-4 px-3 xl:px-4 font-medium w-14"></th>
                 </tr>
               </thead>
 
               <tbody>
                 {calls.map((call) => (
                   <tr key={call.id} className="border-b last:border-none">
-                    <td className="py-4 px-3 xl:px-4 text-xs text-gray-700">
+                    <td className="py-4 px-3 xl:px-4 text-xs text-gray-700 ">
                       {call.updatedAt}
                     </td>
 
@@ -237,11 +237,11 @@ export function Calls() {
                       {call.shortId}
                     </td>
 
-                    <td className="py-4 px-3 xl:px-4">
-                      <div className="font-bold text-gray-800 text-sm truncate max-w-[200px]">
+                    <td className="py-4 px-3 xl:px-4 ">
+                      <div className="block w-full font-bold text-gray-800 text-sm truncate max-w-[100px]">
                         {call.title}
                       </div>
-                      <div className="text-gray-400 text-xs truncate max-w-[200px]">
+                      <div className="block w-full text-gray-400 text-xs truncate max-w-[100px]">
                         {call.service}
                       </div>
                     </td>
@@ -264,7 +264,7 @@ export function Calls() {
                       />
                     </td>
 
-                    <td className="py-4 px-3 xl:px-4">
+                    <td className="py-4 px-3 xl:px-4 ">
                       <StatusBadge
                         label={call.status}
                         icon={call.statusIcon}

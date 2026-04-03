@@ -3,28 +3,156 @@ import list from "../assets/icons/clipboard-list.svg";
 import menu from "../assets/icons/Menu.png";
 import LogoIconLight from "../assets/Logo_IconLight.png";
 import avatar from "../assets/Avatar.svg";
-import { useLocation } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useLocation, Link, useParams } from "react-router-dom";
 import clock_open from "../assets/icons/clock-open.svg";
 import clock from "../assets/icons/clock.svg";
 import clock_2 from "../assets/icons/clock_2.svg";
 import bin from "../assets/icons/bin.svg";
-import { useState } from "react";
+import closed from "../assets/icons/closed.svg";
+import currently_assisting from "../assets/icons/currently_assisting.svg";
+import { useEffect, useState } from "react";
 import { MyCallingsTechniciansDetailModalAdditionalService } from "../componentes/MyCallingsTechniciansDetailModalAdditionalService";
 import { CloseOptionsModal } from "../componentes/CloseOptionsModal";
+import { useAuth } from "../hooks/useAuth";
+import { api } from "../services/api";
+import { AxiosError } from "axios";
 
+type ApiCall = {
+  id: string;
+  title: string;
+  description: string;
+  status: "open" | "in_progress" | "closed";
+  createdAt: string;
+  updatedAt?: string | null;
+  customer: {
+    id: string;
+    name: string;
+    email?: string;
+  };
+  technician: {
+    id: string;
+    name: string;
+    email?: string;
+  };
+  service: {
+    id: string;
+    name: string;
+    basePrice: number;
+  };
+};
 
+function getInitials(name: string) {
+  const parts = name.trim().split(" ").filter(Boolean);
+
+  if (parts.length === 0) return "";
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+
+  return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+}
+
+function formatDateTime(dateString: string) {
+  const date = new Date(dateString);
+
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = String(date.getFullYear()).slice(-2);
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return `${day}/${month}/${year} ${hours}:${minutes}`;
+}
+
+function formatShortId(id: string) {
+  return id.slice(0, 5);
+}
+
+function getStatusMeta(status: ApiCall["status"]) {
+  switch (status) {
+    case "open":
+      return {
+        label: "Aberto",
+        icon: clock_open,
+        className: "bg-pink-100 text-pink-700",
+      };
+    case "in_progress":
+      return {
+        label: "Em atendimento",
+        icon: currently_assisting,
+        className: "bg-blue-100 text-blue-700",
+      };
+    case "closed":
+      return {
+        label: "Encerrado",
+        icon: closed,
+        className: "bg-green-100 text-green-700",
+      };
+  }
+}
 
 export function MyCallingsTechniciansDetail() {
   const location = useLocation();
-  const [open, setOpen] = useState(false)
+  const { id } = useParams();
+  const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  
-  
-  
+  const [call, setCall] = useState<ApiCall | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const { session } = useAuth();
+
+  const displayName = session?.user.name ?? "";
+  const displayEmail = session?.user.email ?? "";
+  const userInitials = getInitials(displayName);
+
+  useEffect(() => {
+    async function loadCall() {
+      try {
+        if (!id) return;
+
+        setIsLoading(true);
+
+        const response = await api.get<ApiCall>(`/calls/${id}`);
+        setCall(response.data);
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          alert(error.response?.data?.message ?? "Erro ao buscar chamado.");
+          return;
+        }
+
+        alert("Não foi possível carregar o chamado.");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    loadCall();
+  }, [id]);
+
+  if (isLoading) {
+    return (
+      <div className="w-screen h-screen flex items-center justify-center bg-gray-100">
+        <div className="bg-white rounded-xl border border-gray-500 px-6 py-4 text-sm text-gray-400">
+          Carregando chamado...
+        </div>
+      </div>
+    );
+  }
+
+  if (!call) {
+    return (
+      <div className="w-screen h-screen flex items-center justify-center bg-gray-100">
+        <div className="bg-white rounded-xl border border-gray-500 px-6 py-4 text-sm text-gray-400">
+          Chamado não encontrado.
+        </div>
+      </div>
+    );
+  }
+
+  const statusMeta = getStatusMeta(call.status);
+  const basePrice = `R$ ${call.service.basePrice.toFixed(2).replace(".", ",")}`;
+
   return (
-    <div className="w-screen h-screen  xl:grid xl:grid-cols-[280px_1fr] bg-gray-100  xl:overflow-hidden">
-      <section className="hidden xl:flex xl:flex-col xl:justify-between  bg-gray-100 pl-6 pt-10 pb-6">
+    <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] bg-gray-100 xl:overflow-hidden">
+      <section className="hidden xl:flex xl:flex-col xl:justify-between bg-gray-100 pl-6 pt-10 pb-6">
         <div>
           <div className="flex gap-3">
             <img src={Logo_IconLight} alt="Logo padrão" />
@@ -33,67 +161,61 @@ export function MyCallingsTechniciansDetail() {
               <span className="text-xxs text-blue-light">Técnico</span>
             </div>
           </div>
+
           <div className="flex flex-col gap-[730px]">
             <nav className="pt-5 px-4">
-              {/* CHAMADOS */}
               <Link
-                to="#"
-                className={`
-                    w-[180px] flex items-center gap-2 text-sm p-3 outline-0 rounded-sm
-                    ${
-                      location.pathname === "/"
-                        ? "bg-blue-dark text-white"
-                        : "text-gray-400"
-                    }
-                  `}
+                to="/"
+                className={`w-[180px] flex items-center gap-2 text-sm p-3 outline-0 rounded-sm ${
+                  location.pathname === "/" ? "bg-blue-dark text-white" : "text-gray-400"
+                }`}
               >
                 <img
                   src={list}
                   alt=""
-                  className={
-                    location.pathname === "/calls" ? "invert brightness-0" : ""
-                  }
+                  className={location.pathname === "/" ? "invert brightness-0" : ""}
                 />
                 Meus chamados
               </Link>
             </nav>
           </div>
         </div>
+
         <div
-          className="flex items-center gap-2  text-white cursor-pointer"
+          className="flex items-center gap-2 text-white cursor-pointer"
           onClick={() => setOpen(true)}
         >
           <span className="w-8 h-8 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
-            CS
+            {userInitials}
           </span>
-          <div className="flex flex-col">
-            <span className="text-sm">Carlos Silva</span>
-            <span className="text-xs text-gray-400">user.adm@test.com</span>
+
+          <div className="flex flex-col min-w-0">
+            <span className="text-sm truncate">{displayName}</span>
+            <span className="text-xs text-gray-400 truncate">{displayEmail}</span>
           </div>
         </div>
       </section>
 
-      <section className="block  xl:hidden w-screen h-screen  absolute ">
-        <div className="flex justify-between items-center  ">
-          {/* GRUPO ESQUERDA */}
+      <section className="block xl:hidden w-screen h-screen absolute">
+        <div className="flex justify-between items-center">
           <div className="flex justify-center items-center gap-3.5 absolute top-7 left-6">
-            <img src={menu} alt="menu" className="" />
+            <img src={menu} alt="menu" />
 
-            <div className="flex justify-center gap-4 ">
+            <div className="flex justify-center gap-4">
               <img
                 src={LogoIconLight}
                 alt="LogoIconLight"
                 className="h-11 w-11"
               />
               <div>
-                <h1 className="text-xl text-gray-600 ">HelpDesk</h1>
+                <h1 className="text-xl text-gray-600">HelpDesk</h1>
                 <span className="text-xxs text-blue-light uppercase">
                   Técnico
                 </span>
               </div>
             </div>
           </div>
-          {/* GRUPO DIREITA */}
+
           <div>
             <img
               src={avatar}
@@ -104,11 +226,9 @@ export function MyCallingsTechniciansDetail() {
         </div>
       </section>
 
-      <div className="w-full  px-6 xl:px-6  gap-4 bg-white absolute xl:relative rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4 ">
-        <main className="max-w-6xl mx-auto px-4  pt-10">
-          {/* Linha de voltar + título + botões */}
-          <header className="mb-6 md:mb-8 ">
-            {/* Voltar */}
+      <div className="w-full px-6 xl:px-6 gap-4 bg-white absolute xl:relative rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
+        <main className="max-w-6xl mx-auto px-4 pt-10">
+          <header className="mb-6 md:mb-8">
             <Link
               to="/"
               className="flex items-center gap-2 text-sm text-gray-700 hover:text-gray-500"
@@ -117,21 +237,24 @@ export function MyCallingsTechniciansDetail() {
               Voltar
             </Link>
 
-            {/* Título + botões de ação */}
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between max-w-[1090px] mx-auto px-4 ">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between max-w-[1090px] mx-auto px-4">
               <h1 className="text-2xl font-semibold text-blue-800">
                 Chamado detalhado
               </h1>
 
               <div className="flex flex-col gap-3 sm:flex-row">
-                <button className="flex items-center justify-center gap-2 rounded-md  bg-gray-500 px-5 py-2 text-sm font-medium text-gray-800 hover:bg-gray-600 ease-linear cursor-pointer">
-                  {/* Ícone de check/fechar */}
+                <button
+                  type="button"
+                  className="flex items-center justify-center gap-2 rounded-md bg-gray-500 px-5 py-2 text-sm font-medium text-gray-800 hover:bg-gray-600 ease-linear cursor-pointer"
+                >
                   <img src={clock} alt="" />
                   Encerrar
                 </button>
 
-                <button className="flex items-center justify-center gap-2 rounded-md bg-gray-900 px-5 py-2 text-sm font-medium text-white hover:bg-gray-300 ease-linear cursor-pointer">
-                  {/* Ícone de relógio */}
+                <button
+                  type="button"
+                  className="flex items-center justify-center gap-2 rounded-md bg-gray-900 px-5 py-2 text-sm font-medium text-white hover:bg-gray-300 ease-linear cursor-pointer"
+                >
                   <img src={clock_2} alt="" />
                   Iniciar atendimento
                 </button>
@@ -139,101 +262,98 @@ export function MyCallingsTechniciansDetail() {
             </div>
           </header>
 
-          {/* Conteúdo principal */}
-          <section className=" ">
-            {/* Grid principal: info do chamado + técnico/valores */}
+          <section>
             <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1.3fr)]">
-              {/* Card principal do chamado */}
               <div className="rounded-2xl border border-gray-500 bg-white p-5 md:p-6">
-                {/* Cabeçalho do card */}
                 <div className="mb-4 flex items-start justify-between">
-                  <span className="text-sm text-gray-400">00004</span>
+                  <span className="text-sm text-gray-400">
+                    {formatShortId(call.id)}
+                  </span>
 
-                  <span className="inline-flex items-center gap-2 rounded-full bg-pink-100 px-3 py-1 text-xs font-medium text-pink-700">
-                    <img src={clock_open} alt="" />
-                    Aberto
+                  <span
+                    className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium ${statusMeta.className}`}
+                  >
+                    <img src={statusMeta.icon} alt="" />
+                    {statusMeta.label}
                   </span>
                 </div>
 
-                {/* Título */}
                 <h2 className="mb-4 text-lg font-semibold text-gray-900">
-                  Backup não está funcionando
+                  {call.title}
                 </h2>
 
-                {/* Descrição */}
                 <div className="mb-6">
                   <p className="mb-1 text-xs font-semibold text-gray-400">
                     Descrição
                   </p>
-                  <p className="text-sm text-gray-700">
-                    O sistema de backup automático parou de funcionar. Última
-                    execução bem-sucedida foi há uma semana.
+                  <p className="text-sm text-gray-900">
+                    {call.description || "Sem descrição informada"}
                   </p>
                 </div>
 
-                {/* Categoria */}
                 <div className="mb-6">
                   <p className="mb-1 text-xs font-semibold text-gray-400">
                     Categoria
                   </p>
-                  <p className="text-sm text-gray-800">Recuperação de Dados</p>
+                  <p className="text-sm text-gray-800">{call.service.name}</p>
                 </div>
 
-                {/* Criado / Atualizado */}
                 <div className="mb-6 grid gap-4 sm:grid-cols-2">
                   <div>
                     <p className="mb-1 text-xs font-semibold text-gray-400">
                       Criado em
                     </p>
-                    <p className="text-sm text-gray-800">12/04/25 09:12</p>
+                    <p className="text-sm text-gray-800">
+                      {formatDateTime(call.createdAt)}
+                    </p>
                   </div>
 
                   <div>
                     <p className="mb-1 text-xs font-semibold text-gray-400">
                       Atualizado em
                     </p>
-                    <p className="text-sm text-gray-800">12/04/25 15:20</p>
+                    <p className="text-sm text-gray-800">
+                      {formatDateTime(call.updatedAt || call.createdAt)}
+                    </p>
                   </div>
                 </div>
 
-                {/* Cliente */}
                 <div>
                   <p className="mb-2 text-xs font-semibold text-gray-200">
                     Cliente
                   </p>
                   <div className="inline-flex items-center gap-2 rounded-full bg-gray-50 px-3 py-2">
                     <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-blue-600 text-xs font-semibold text-white">
-                      AC
+                      {getInitials(call.customer.name)}
                     </span>
-                    <span className="text-sm text-gray-800">André Costa</span>
+                    <span className="text-sm text-gray-800">
+                      {call.customer.name}
+                    </span>
                   </div>
                 </div>
               </div>
 
-              {/* Card do técnico / valores */}
               <div className="rounded-2xl border border-gray-500 bg-white p-5 md:p-6">
-                {/* Técnico responsável */}
                 <div className="mb-6">
                   <p className="mb-3 text-xs font-semibold text-gray-400">
                     Técnico responsável
                   </p>
 
-                  <div className="flex items-center gap-3 ">
+                  <div className="flex items-center gap-3">
                     <div className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white">
-                      CS
+                      {getInitials(call.technician.name)}
                     </div>
                     <div className="flex flex-col">
                       <span className="text-sm font-medium text-gray-900">
-                        Carlos Silva
+                        {call.technician.name}
                       </span>
                       <span className="text-xs text-gray-500">
-                        carlos.silva@test.com
+                        {call.technician.email ?? "Sem e-mail"}
                       </span>
                     </div>
                   </div>
                 </div>
 
-                {/* Valores */}
                 <div>
                   <p className="mb-3 text-xs font-semibold text-gray-400">
                     Valores
@@ -242,11 +362,11 @@ export function MyCallingsTechniciansDetail() {
                   <div className="space-y-2 text-sm">
                     <div className="flex items-center justify-between text-gray-700">
                       <span>Preço base</span>
-                      <span>R$ 200,00</span>
+                      <span>{basePrice}</span>
                     </div>
                     <div className="flex items-center justify-between text-gray-700">
                       <span>Adicionais</span>
-                      <span>R$ 195,00</span>
+                      <span>R$ 0,00</span>
                     </div>
                   </div>
 
@@ -254,14 +374,13 @@ export function MyCallingsTechniciansDetail() {
 
                   <div className="flex items-center justify-between text-sm font-semibold text-gray-900">
                     <span>Total</span>
-                    <span>R$ 395,00</span>
+                    <span>{basePrice}</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Serviços adicionais – embaixo e ocupando toda a largura */}
-            <div className="mt-6 rounded-2xl border border-gray-500 bg-white p-5 md:p-6 lg:col-span-2 xl:w-[665px] ">
+            <div className="mt-6 rounded-2xl border border-gray-500 bg-white p-5 md:p-6 lg:col-span-2 xl:w-[665px]">
               <div className="border-b border-gray-500 flex items-center justify-between">
                 <p className="text-sm font-semibold text-gray-800">
                   Serviços adicionais
@@ -276,32 +395,8 @@ export function MyCallingsTechniciansDetail() {
                 </button>
               </div>
 
-              <div className="divide-y divide-gray-500 text-sm">
-                {/* Serviço 1 */}
-                <div className="flex items-center justify-between py-3">
-                  <span className="text-gray-800">Assinatura de backup</span>
-                  <div className="flex items-center gap-4">
-                    <span className="text-gray-800">R$ 120,00</span>
-                    <img
-                      src={bin}
-                      alt="icone de lixeira"
-                      className="cursor-pointer"
-                    />
-                  </div>
-                </div>
-
-                {/* Serviço 2 */}
-                <div className="flex items-center justify-between py-3">
-                  <span className="text-gray-800">Formatação do PC</span>
-                  <div className="flex items-center gap-4">
-                    <span className="text-gray-800">R$ 75,00</span>
-                    <img
-                      src={bin}
-                      alt="icone de lixeira"
-                      className="cursor-pointer"
-                    />
-                  </div>
-                </div>
+              <div className="py-4 text-sm text-gray-400">
+                Nenhum serviço adicional cadastrado.
               </div>
             </div>
           </section>
@@ -312,7 +407,7 @@ export function MyCallingsTechniciansDetail() {
         open={open}
         onClose={() => setOpen(false)}
         onOpenProfile={() => {
-          setOpen(false); // fecha o modal preto
+          setOpen(false);
         }}
       />
 

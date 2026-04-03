@@ -5,6 +5,7 @@ import { ServiceModal } from "../componentes/ServiceModal";
 import { Sidebar } from "../componentes/Sidebar";
 import plus from "../assets/icons/plus.svg";
 import pen from "../assets/icons/pen-line.svg";
+import circleCheckBig from "../assets/icons/circle-check-big.svg";
 
 type Service = {
   id: string;
@@ -148,7 +149,7 @@ export function Services() {
             <tbody>
               {services.map((service) => (
                 <tr key={service.id} className="border-b last:border-none">
-                  <td className="py-4 px-6 font-bold text-sm text-gray-800">
+                  <td className="truncate block w-full max-w-[100px]  py-4 px-6 font-bold text-sm text-gray-800">
                     {service.name}
                   </td>
 
@@ -158,13 +159,25 @@ export function Services() {
 
                   <td className="py-4 px-6">
                     <span
-                      className={`px-3 py-1 text-xs rounded-full ${
+                      className={`px-3 py-1 text-xs rounded-full hidden xl:inline-flex ${
                         service.active
                           ? "bg-green-100 text-green-700"
                           : "bg-pink-100 text-pink-600"
                       }`}
                     >
                       {service.active ? "Ativo" : "Inativo"}
+                    </span>
+
+                    <span
+                      className={`w-8 h-8 flex items-center justify-center rounded-full xl:hidden ${
+                        service.active ? "bg-green-100" : "bg-pink-100"
+                      }`}
+                    >
+                      {service.active ? (
+                        <img src={circleCheckBig} className="w-4 h-4" />
+                      ) : (
+                        <img src={disable} className="w-4 h-4" />
+                      )}
                     </span>
                   </td>
 
