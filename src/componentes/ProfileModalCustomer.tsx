@@ -1,3 +1,4 @@
+import bin from "../assets/icons/bin.svg";
 import { X } from "phosphor-react";
 import { useEffect, useState } from "react";
 import { Input } from "../componentes/Input";
@@ -12,6 +13,7 @@ interface Props {
     email: string;
     avatarFile: File | null;
   }) => Promise<void> | void;
+  onDeleteAccount: () => Promise<void> | void;
   initialName?: string;
   initialEmail?: string;
   initialAvatar?: string | null;
@@ -23,11 +25,12 @@ export function ProfileModalCustomer({
   onClose,
   onOpenAlterProfile,
   onSave,
+  onDeleteAccount,
   initialName,
   initialEmail,
   initialAvatar,
   isLoading = false,
-}: Props)  {
+}: Props) {
   const [name, setName] = useState(initialName || "");
   const [email, setEmail] = useState(initialEmail || "");
   const [password, setPassword] = useState("");
@@ -85,12 +88,20 @@ export function ProfileModalCustomer({
         </div>
 
         <div className="px-6 py-5 space-y-6">
-
-          <Upload
-            filename={null}
-            initialPreview={initialAvatar}
-            onFileChange={setAvatarFile}
-          />
+          <div className="flex gap-3">
+            <Upload
+              filename={null}
+              initialPreview={initialAvatar}
+              onFileChange={setAvatarFile}
+            />
+            <button
+              type="button"
+              onClick={onDeleteAccount}
+              className="p-1 rounded-md  hover:bg-gray-50 cursor-pointer"
+            >
+              <img src={bin} alt="remover imagem" />
+            </button>
+          </div>
 
           <div>
             <Input

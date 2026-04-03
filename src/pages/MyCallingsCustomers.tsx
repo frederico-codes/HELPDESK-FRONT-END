@@ -19,6 +19,7 @@ import { useUser } from "../hooks/useUser";
 import { useAuth } from "../hooks/useAuth";
 
 
+
 type CallStatus = "aberto" | "em_atendimento" | "encerrado";
 
 interface CallItem {
@@ -33,6 +34,8 @@ interface CallItem {
   };
   status: CallStatus;
 }
+
+
 
 type CallApiResponse = {
   id: string;
@@ -174,11 +177,39 @@ export function MyCallingsCustomers() {
   
 
   const { user, setUser } = useUser();
-  const { session } = useAuth();
+  const { session, remove } = useAuth();
 
   const displayName = session?.user.name ?? user.name;
   const displayEmail = session?.user.email ?? user.email;
+  const displayAvatar = session?.user.avatar ?? user.avatar;
   const userInitials = getInitials(displayName);
+
+  async function handleDeleteAccount() {
+    try {
+      if (!session?.user.id) {
+        alert("Usuário não identificado.");
+        return;
+      }
+
+      const confirmed = window.confirm(
+        "Tem certeza que deseja excluir sua conta? Essa ação não pode ser desfeita."
+      );
+
+      if (!confirmed) return;
+
+      await api.delete(`/clients/${session.user.id}`);
+
+      alert("Conta excluída com sucesso.");
+      remove();
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        alert(error.response?.data?.message ?? "Erro ao excluir conta.");
+        return;
+      }
+
+      alert("Não foi possível excluir a conta.");
+    }
+  }
 
   
 
@@ -491,12 +522,13 @@ async function handleSaveProfile(data: {
           setOpenAlterProfile(true);
         }}
         onSave={handleSaveProfile}
+        onDeleteAccount={handleDeleteAccount}
         initialName={displayName}
         initialEmail={displayEmail}
         initialAvatar={
-          session?.user.avatar
-            ? `http://localhost:3000/uploads/${session.user.avatar}`
-            : null
+          displayAvatar
+            ? `http://localhost:3000/uploads/${displayAvatar}`
+            : undefined
         }
         isLoading={isSavingProfile}
       />

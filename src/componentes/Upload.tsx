@@ -1,4 +1,3 @@
-import bin from "../assets/icons/bin.svg";
 import uiface from "../assets/uifaces-popular-avatar (2).jpg";
 import { useEffect, useState } from "react";
 
@@ -31,12 +30,6 @@ export function Upload({
     }
 
     onFileChange?.(file);
-  }
-
-  function handleRemoveImage() {
-    setPreview(null);
-    setFileName(null);
-    onFileChange?.(null);
   }
 
   return (
@@ -78,15 +71,7 @@ export function Upload({
           accept="image/*"
           className="hidden"
           onChange={handleFileChange}
-        />
-
-        <button
-          type="button"
-          onClick={handleRemoveImage}
-          className="p-1 rounded-md bg-gray-500 hover:bg-gray-50 cursor-pointer"
-        >
-          <img src={bin} alt="remover imagem" />
-        </button>
+        />       
       </div>
     </div>
   );
