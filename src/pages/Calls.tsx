@@ -7,6 +7,7 @@ import { Sidebar } from "../componentes/Sidebar";
 import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import { api } from "../services/api";
+import { Tooltip } from "react-tooltip";
 
 type ApiCall = {
   id: string;
@@ -219,9 +220,7 @@ export function Calls() {
                   <th className="py-4 px-3 xl:px-4 font-medium hidden xl:table-cell w-[140px]">
                     Técnico
                   </th>
-                  <th className="py-4 px-3 xl:px-4 font-medium w-20">
-                    Status
-                  </th>
+                  <th className="py-4 px-3 xl:px-4 font-medium w-20">Status</th>
                   <th className="py-4 px-3 xl:px-4 font-medium w-14"></th>
                 </tr>
               </thead>
@@ -238,11 +237,21 @@ export function Calls() {
                     </td>
 
                     <td className="py-4 px-3 xl:px-4 ">
-                      <div className="block w-full font-bold text-gray-800 text-sm truncate max-w-[100px]">
+                      <div
+                        className="block w-full font-bold text-gray-800 text-sm truncate max-w-[100px] cursor-pointer"
+                        data-tooltip-id="global-tooltip"
+                        data-tooltip-content={call.title}
+                      >
                         {call.title}
+                        <Tooltip id="global-tooltip" place="top" />
                       </div>
-                      <div className="block w-full text-gray-400 text-xs truncate max-w-[100px]">
+                      <div
+                        className="block w-full text-gray-400 text-xs truncate max-w-[100px] cursor-pointer"
+                        data-tooltip-id="global-tooltip"
+                        data-tooltip-content={call.service}
+                      >
                         {call.service}
+                        <Tooltip id="global-tooltip" place="top" />
                       </div>
                     </td>
 
@@ -274,12 +283,17 @@ export function Calls() {
                     </td>
 
                     <td className="py-4 px-3 xl:px-4">
-                      <div className="h-9 w-9 bg-gray-500 flex justify-center items-center rounded-sm hover:bg-gray-600 transition ease-linear">
+                      <div
+                        className="h-9 w-9 bg-gray-500 flex justify-center items-center rounded-sm hover:bg-gray-600 transition ease-linear"
+                        data-tooltip-id="tooltip-info"
+                        data-tooltip-content="Detalhes do chamado"
+                      >
                         <Link
-                           to={`/chamados/${call.id}`}
+                          to={`/chamados/${call.id}`}
                           className="rounded-lg cursor-pointer"
                         >
                           <img src={pen} alt="Editar chamado" />
+                          <Tooltip id="tooltip-info" />
                         </Link>
                       </div>
                     </td>

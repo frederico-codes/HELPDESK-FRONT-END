@@ -17,6 +17,8 @@ import { AlterProfileModalCustomer } from "../componentes/AlterProfileModalCusto
 import { ProfileOptionsModal } from "../componentes/ProfileOptionsModal";
 import { useUser } from "../hooks/useUser";
 import { useAuth } from "../hooks/useAuth";
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
 
 
@@ -453,8 +455,13 @@ async function handleSaveProfile(data: {
                         {call.id}
                       </td>
 
-                      <td className="px-4 py-4 font-medium text-gray-900 sm:truncate max-w-[110px]">
+                      <td
+                        className="px-4 py-4 font-medium text-gray-900 sm:truncate max-w-[110px]"
+                        data-tooltip-id="global-tooltip"
+                        data-tooltip-content={`Excluir ${call.title}`}
+                      >
                         {call.title}
+                        <Tooltip id="global-tooltip" place="top" />
                       </td>
 
                       <td className="hidden px-4 py-4 xl:table-cell">
@@ -476,12 +483,17 @@ async function handleSaveProfile(data: {
                         <StatusBadge status={call.status} />
                       </td>
 
-                      <td className="px-4 py-4">
+                      <td
+                        className="px-4 py-4"
+                        data-tooltip-id="tooltip-detail"
+                        data-tooltip-content="Ver detalhes do chamado"
+                      >
                         <img
                           src={eye}
                           alt="Ver chamado"
                           onClick={() => navigate(`/chamados/${call.id}`)}
                         />
+                        <Tooltip id="tooltip-detail" place="top" />
                       </td>
                     </tr>
                   );

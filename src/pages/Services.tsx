@@ -6,6 +6,7 @@ import { Sidebar } from "../componentes/Sidebar";
 import plus from "../assets/icons/plus.svg";
 import pen from "../assets/icons/pen-line.svg";
 import circleCheckBig from "../assets/icons/circle-check-big.svg";
+import { Tooltip } from "react-tooltip";
 
 type Service = {
   id: string;
@@ -134,76 +135,75 @@ export function Services() {
           </button>
         </div>
 
-        <div className="w-full h-full bg-white rounded-2xl shadow-sm overflow-hidden">
-          <table className="w-full text-left">
-            <thead className="border-b border-gray-500">
-              <tr className="text-sm text-gray-400">
-                <th className="py-4 px-6 font-medium">Título</th>
-                <th className="py-4 px-6 font-medium">Valor</th>
-                <th className="py-4 px-6 font-medium">Status</th>
-                <th className="py-4 px-6 font-medium"></th>
-                <th className="py-4 px-6 font-medium"></th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {services.map((service) => (
-                <tr key={service.id} className="border-b last:border-none">
-                  <td className="truncate block w-full max-w-[100px]  py-4 px-6 font-bold text-sm text-gray-800">
-                    {service.name}
-                  </td>
-
-                  <td className="py-4 px-6 text-sm text-gray-400">
-                    R$ {service.basePrice}
-                  </td>
-
-                  <td className="py-4 px-6">
-                    <span
-                      className={`px-3 py-1 text-xs rounded-full hidden xl:inline-flex ${
-                        service.active
-                          ? "bg-green-100 text-green-700"
-                          : "bg-pink-100 text-pink-600"
-                      }`}
-                    >
-                      {service.active ? "Ativo" : "Inativo"}
-                    </span>
-
-                    <span
-                      className={`w-8 h-8 flex items-center justify-center rounded-full xl:hidden ${
-                        service.active ? "bg-green-100" : "bg-pink-100"
-                      }`}
-                    >
-                      {service.active ? (
-                        <img src={circleCheckBig} className="w-4 h-4" />
-                      ) : (
-                        <img src={disable} className="w-4 h-4" />
-                      )}
-                    </span>
-                  </td>
-
-                  <td className="py-4 px-6">
-                    <button
-                      onClick={() => handleDeactivateService(service.id)}
-                      className="text-sm text-gray-800 hover:text-gray-500 transition ease-linear cursor-pointer"
-                    >
-                      ⦸ Desativar
-                    </button>
-                  </td>
-
-                  <td className="py-4 px-6">
-                    <div className="h-9 w-9 bg-gray-500 hover:bg-gray-600 flex justify-center items-center rounded-sm cursor-pointer transition ease-linear">
-                      <button
-                        type="button"
-                        onClick={() => handleOpenEditModal(service)}
-                      >
-                        <img src={pen} alt="Editar serviço" />
-                      </button>
-                    </div>
-                  </td>
+        <div className="w-full h-full bg-white rounded-2xl shadow-sm flex flex-col">
+          <div className="overflow-y-auto max-h-[700px]">
+            <table className="w-full text-left">
+              <thead className="border-b border-gray-500">
+                <tr className="text-sm text-gray-400">
+                  <th className="py-4 px-6 font-medium">Título</th>
+                  <th className="py-4 px-6 font-medium">Valor</th>
+                  <th className="py-4 px-6 font-medium">Status</th>
+                  <th className="py-4 px-6 font-medium"></th>
+                  <th className="py-4 px-6 font-medium"></th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {services.map((service) => (
+                  <tr key={service.id} className="border-b last:border-none">
+                    <td className="truncate block w-full max-w-[100px] xl:max-w-[400px]  py-4 px-6 font-bold text-sm text-gray-800">
+                      {service.name}
+                    </td>
+                    <td className="py-4 px-6 text-sm text-gray-400">
+                      R$ {service.basePrice}
+                    </td>
+                    <td className="py-4 px-6">
+                      <span
+                        className={`px-3 py-1 text-xs rounded-full hidden xl:inline-flex ${
+                          service.active
+                            ? "bg-green-100 text-green-700"
+                            : "bg-pink-100 text-pink-600"
+                        }`}
+                      >
+                        {service.active ? "Ativo" : "Inativo"}
+                      </span>
+                      <span
+                        className={`w-8 h-8 flex items-center justify-center rounded-full xl:hidden ${
+                          service.active ? "bg-green-100" : "bg-pink-100"
+                        }`}
+                      >
+                        {service.active ? (
+                          <img src={circleCheckBig} className="w-4 h-4" />
+                        ) : (
+                          <img src={disable} className="w-4 h-4" />
+                        )}
+                      </span>
+                    </td>
+                    <td className="py-4 px-6">
+                      <button
+                        onClick={() => handleDeactivateService(service.id)}
+                        className="text-sm text-gray-800 hover:text-gray-500 transition ease-linear cursor-pointer"
+                      >
+                        ⦸ Desativar
+                      </button>
+                    </td>
+                    <td className="py-4 px-6">
+                      <div className="h-9 w-9 bg-gray-500 hover:bg-gray-600 flex justify-center items-center rounded-sm cursor-pointer transition ease-linear">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenEditModal(service)}
+                          data-tooltip-id="tooltip-info"
+                          data-tooltip-content="Editar serviço"
+                        >
+                          <img src={pen} alt="Editar serviço" />
+                          <Tooltip id="tooltip-info" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
           {services.length === 0 && (
             <div className="px-6 py-8 text-sm text-gray-400">

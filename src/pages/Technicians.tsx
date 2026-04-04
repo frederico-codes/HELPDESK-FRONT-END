@@ -4,6 +4,7 @@ import plus from "../assets/icons/plus.svg";
 import { Sidebar } from "../componentes/Sidebar";
 import { useEffect, useState } from "react";
 import { api } from "../services/api";
+import { Tooltip } from "react-tooltip";
 
 type Technician = {
   id: string;
@@ -89,9 +90,14 @@ export function Technicians() {
                           {getInitials(technician.name)}
                         </span>
 
-                        <span className="font-bold truncate max-w-[50px] xl:max-w-full">
+                        <span 
+                        className="font-bold truncate max-w-[50px] xl:max-w-full cursor-pointer"
+                        data-tooltip-id="tooltip-info"
+                        data-tooltip-content={technician.name}
+                        >
                           {technician.name}
                         </span>
+                        <Tooltip id="tooltip-info" />
                       </div>
                     </td>
 
@@ -130,13 +136,17 @@ export function Technicians() {
                     </td>
 
                     <td className="py-4 px-1 w-4">
-                      <div className="h-9 w-9 bg-gray-500 hover:bg-gray-600 flex justify-center items-center rounded-sm cursor-pointer transition ease-linear">
+                      <div 
+                      className="h-9 w-9 bg-gray-500 hover:bg-gray-600 flex justify-center items-center rounded-sm cursor-pointer transition ease-linear"
+                      data-tooltip-id="tooltip-info"
+                      data-tooltip-content="Editar técnico">
                         <Link
                           to={`/technicians/${technician.id}/edit`}
                           className="rounded-lg"
                         >
                           <img src={pen} alt="Editar técnico" />
                         </Link>
+                        <Tooltip id="tooltip-info" />
                       </div>
                     </td>
                   </tr>

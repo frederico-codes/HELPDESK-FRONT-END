@@ -6,12 +6,14 @@ import { Link, useParams } from "react-router-dom";
 import { Sidebar } from "../componentes/Sidebar";
 import { useEffect, useState } from "react";
 import { api } from "../services/api";
+import { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface Call {
   id: string;
   title: string;
   description: string;
-  status: string;
+  status: "open" | "in_progress" | "closed";
   createdAt: string;
   updatedAt: string;
   technician: {
@@ -31,12 +33,14 @@ export function DetailedCall() {
   const { id } = useParams();
   const [call, setCall] = useState<Call | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchCall() {
       try {
-       const response = await api.get(`/calls/${id}`);
-       setCall(response.data);
+        const response = await api.get(`/calls/${id}`);
+        setCall(response.data);
       } catch (error) {
         console.error(error);
       } finally {
@@ -48,6 +52,27 @@ export function DetailedCall() {
       fetchCall();
     }
   }, [id]);
+
+async function handleUpdateStatus(status: "in_progress" | "closed") {
+  try {
+    if (!id) return;
+
+    setIsUpdatingStatus(true);
+
+    await api.patch(`/calls/${id}/status`, { status });
+
+    navigate("/");
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      alert(error.response?.data?.message ?? "Erro ao atualizar status.");
+      return;
+    }
+
+    alert("Não foi possível atualizar o status.");
+  } finally {
+    setIsUpdatingStatus(false);
+  }
+}
 
   if (loading) {
     return <div className="p-10">Carregando...</div>;
@@ -75,7 +100,7 @@ export function DetailedCall() {
         return {
           label: "Encerrado",
           class: "bg-green-100 text-green-700",
-          icon: null,
+          icon: circleCheckBig,
         };
       default:
         return { label: call.status, class: "", icon: null };
@@ -109,26 +134,36 @@ export function DetailedCall() {
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  className="h-10 px-4 rounded-lg bg-gray-500 text-gray-700 text-sm font-medium flex items-center gap-2"
+                  disabled={
+                    isUpdatingStatus ||
+                    call.status === "in_progress" ||
+                    call.status === "closed"
+                  }
+                  onClick={() => handleUpdateStatus("in_progress")}
+                  className="h-10 px-4 rounded-lg bg-gray-500 text-gray-700 text-sm font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <img src={clock} alt="" className="w-4 h-4" />
-                  Em atendimento
+                  {isUpdatingStatus && call.status !== "in_progress"
+                    ? "Salvando..."
+                    : "Em atendimento"}
                 </button>
 
                 <button
                   type="button"
-                  className="h-10 px-4 rounded-lg bg-gray-500 text-gray-700 text-sm font-medium flex items-center gap-2"
+                  disabled={isUpdatingStatus || call.status === "closed"}
+                  onClick={() => handleUpdateStatus("closed")}
+                  className="h-10 px-4 rounded-lg bg-gray-500 text-gray-700 text-sm font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <img src={circleCheckBig} alt="" className="w-4 h-4" />
-                  Encerrado
+                  {isUpdatingStatus && call.status !== "closed"
+                    ? "Salvando..."
+                    : "Encerrado"}
                 </button>
               </div>
             </div>
           </div>
 
-          {/* CONTEÚDO */}
           <div className="grid grid-cols-1 xl:grid-cols-[480px_300px] gap-8 mx-auto max-w-[900px] w-full">
-            {/* ESQUERDA */}
             <div>
               <div className="bg-white border border-gray-200 rounded-xl p-6">
                 <div className="flex justify-between">
@@ -140,22 +175,23 @@ export function DetailedCall() {
                     {status.label}
                   </span>
                 </div>
+
                 <h2 className="text-lg font-bold text-gray-900 mb-4">
                   {call.title}
                 </h2>
-                {/* Descrição */}
+
                 <div className="mb-6">
                   <h3 className="text-xs text-gray-400">Descrição</h3>
-                  <p className="text-sm  mt-1">{call.description}</p>
+                  <p className="text-sm mt-1">{call.description}</p>
                 </div>
-                {/* Serviço */}
+
                 <div className="mb-6">
                   <h3 className="text-sm text-gray-400">Categoria</h3>
                   <p className="text-sm text-gray-700 mt-1">
                     {call.service.name}
                   </p>
                 </div>
-                {/* Datas */}
+
                 <div className="grid grid-cols-2 gap-6 mb-6">
                   <div>
                     <h3 className="text-sm text-gray-400">Criado em</h3>
@@ -170,7 +206,7 @@ export function DetailedCall() {
                     </p>
                   </div>
                 </div>
-                {/* Cliente */}
+
                 <div>
                   <h3 className="text-sm text-gray-400">Cliente</h3>
                   <div className="flex items-center gap-3 mt-2">
@@ -183,16 +219,15 @@ export function DetailedCall() {
                   </div>
                 </div>
               </div>
-              {/* SERVIÇOS ADICIONAIS */}
+
               <div className="bg-white border border-gray-200 rounded-xl p-6 mt-8">
-                {/* HEADER */}
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-sm text-gray-400">Serviços adicionais</h3>
                   <button className="w-9 h-9 bg-gray-900 text-white rounded-md flex items-center justify-center">
                     +
                   </button>
                 </div>
-                {/* ITEM 1 */}
+
                 <div className="flex justify-between items-center py-3 border-t">
                   <div>
                     <p className="text-sm text-gray-800">Assinatura de backup</p>
@@ -204,7 +239,7 @@ export function DetailedCall() {
                     </button>
                   </div>
                 </div>
-                {/* ITEM 2 */}
+
                 <div className="flex justify-between items-center py-3 border-t">
                   <div>
                     <p className="text-sm text-gray-800">Formatação do PC</p>
@@ -219,7 +254,6 @@ export function DetailedCall() {
               </div>
             </div>
 
-            {/* DIREITA */}
             <div className="bg-white border border-gray-200 rounded-xl p-6">
               <h3 className="text-sm text-gray-400 mb-2">
                 Técnico responsável
@@ -240,7 +274,6 @@ export function DetailedCall() {
                 </div>
               </div>
 
-              {/* VALOR */}
               <div className="flex justify-between text-sm text-gray-700 mt-2">
                 <span>Preço base</span>
                 <span className="font-medium">
@@ -248,7 +281,6 @@ export function DetailedCall() {
                 </span>
               </div>
 
-              {/* TOTAL */}
               <div className="flex justify-between text-sm font-semibold text-gray-900 border-t pt-4 mt-4">
                 <span>Total</span>
                 <span>R$ {call.service.basePrice.toFixed(2)}</span>

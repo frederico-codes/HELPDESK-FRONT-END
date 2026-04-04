@@ -9,6 +9,7 @@ import { DeleteCustomerModal } from "../componentes/DeleteCustomerModal";
 import { Trash2 } from "lucide-react";
 import { Sidebar } from "../componentes/Sidebar";
 import { api } from "../services/api";
+import { Tooltip } from "react-tooltip";
 
 type Customer = {
   id: string;
@@ -127,12 +128,12 @@ export function Customers() {
               {customers.map((customer) => (
                 <tr key={customer.id} className="border-b last:border-none">
                   <td className="py-4 xl:px-2 text-sm">
-                    <div className="flex items-center gap-2 truncate max-w-[120px]">
+                    <div className="flex items-center gap-2 truncate max-w-[120px] xl:max-w-none">
                       <span className="w-7 h-7 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
                         {getInitials(customer.name)}
                       </span>
 
-                      <span className="font-bold truncate max-w-[50px] xl:truncate-none xl:max-w-full">
+                      <span className="font-bold truncate xl:overflow-visible xl:whitespace-normal">
                         {customer.name}
                       </span>
                     </div>
@@ -153,8 +154,11 @@ export function Customers() {
                           setDeleteModalOpen(true);
                         }}
                         className="rounded-lg cursor-pointer"
+                        data-tooltip-id="tooltip-info"
+                        data-tooltip-content="Excluir cliente"
                       >
                         <Trash2 size={15} />
+                        <Tooltip id="tooltip-info" />
                       </button>
                     </div>
                   </td>
@@ -168,8 +172,15 @@ export function Customers() {
                           setModalOpen(true);
                         }}
                         className="rounded-lg"
+                        data-tooltip-id="tooltip-info"
+                        data-tooltip-content="Editar cliente"
                       >
-                        <img src={pen} alt="Editar cliente" className="cursor-pointer" />
+                        <img
+                          src={pen}
+                          alt="Editar cliente"
+                          className="cursor-pointer"
+                        />
+                        <Tooltip id="tooltip-info" />
                       </button>
                     </div>
                   </td>

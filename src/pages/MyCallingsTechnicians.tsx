@@ -6,7 +6,7 @@ import menu from "../assets/icons/Menu.png";
 import LogoIconLight from "../assets/Logo_IconLight.png";
 import avatar from "../assets/Avatar.svg";
 import closed from "../assets/icons/closed.svg";
-import circleCheck from "../assets/icons/circle-check-big.svg";
+import CircleCheckClose from "../assets/icons/circle-check-big-close.svg";
 import currently_assisting from "../assets/icons/currently_assisting.svg";
 import { useLocation, Link } from "react-router-dom";
 import clock_open from "../assets/icons/clock-open.svg";
@@ -17,6 +17,7 @@ import { useAuth } from "../hooks/useAuth";
 import { api } from "../services/api";
 import { AxiosError } from "axios";
 import { useUser } from "../hooks/useUser";
+import { Tooltip } from "react-tooltip";
 
 
 
@@ -94,7 +95,7 @@ function CallCardItem({
   statusIcon: string;
 }) {
   return (
-    <div className="border rounded-xl shadow-sm p-5 bg-white">
+    <div className="h-[200px] border rounded-xl shadow-sm p-5 bg-white">
       <div className="flex justify-between items-end">
         <span className="text-gray-400 text-sm">{call.shortId}</span>
 
@@ -102,8 +103,11 @@ function CallCardItem({
           <Link
             to={`/detailcalls/${call.id}`}
             className="flex justify-center items-center rounded-lg cursor-pointer bg-gray-500 w-8 h-8 hover:bg-gray-600 transition"
+            data-tooltip-id="tooltip-info"
+            data-tooltip-content="Detalhes do Serviço"
           >
             <img src={pen} alt="Detalhar chamado" />
+            <Tooltip id="tooltip-info" />
           </Link>
 
           {actionLabel && actionIcon && (
@@ -131,7 +135,9 @@ function CallCardItem({
           <div className="w-7 h-7 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center shrink-0">
             {call.customer.initials}
           </div>
-          <span className="text-gray-700 text-sm truncate">{call.customer.name}</span>
+          <span className="text-gray-700 text-sm truncate">
+            {call.customer.name}
+          </span>
         </div>
 
         <button type="button">
@@ -347,7 +353,7 @@ export function MyCallingsTechnicians() {
         </div>
       </section>
 
-      <div className="w-full px-6 xl:px-6 gap-4 bg-white absolute xl:relative rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4 overflow-y-auto">
+      <div className="w-full h-screen px-6 xl:px-6 gap-4 bg-white absolute xl:relative rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4 overflow-y-auto">
         <div className="w-full max-w-6xl px-4 pt-3">
           <h1 className="text-2xl font-semibold text-gray-800 mb-6">
             Meus chamados
@@ -368,7 +374,7 @@ export function MyCallingsTechnicians() {
           {!isLoading && (
             <>
               <div className="mb-5">
-                <span className="inline-flex items-center gap-2 text-sm font-medium text-blue-700 bg-blue-100 px-3 py-1 rounded-full">
+                <span className="inline-flex items-center gap-2 text-sm font-medium text-blue-700 bg-blue-100 px-3 py-2 rounded-full">
                   <img src={currently_assisting} alt="" />
                   Em atendimento
                 </span>
@@ -379,7 +385,7 @@ export function MyCallingsTechnicians() {
                       key={call.id}
                       call={call}
                       actionLabel="Encerrar"
-                      actionIcon={circleCheck}
+                      actionIcon={CircleCheckClose}
                       statusIcon={currently_assisting}
                     />
                   ))}
@@ -387,7 +393,7 @@ export function MyCallingsTechnicians() {
               </div>
 
               <div className="mb-5">
-                <span className="inline-flex items-center gap-2 text-sm font-medium text-pink-700 bg-pink-100 px-3 rounded-full">
+                <span className="inline-flex items-center gap-2 text-sm font-medium text-pink-700 bg-pink-100 px-3 py-1.5 rounded-full">
                   <img src={clock_open} alt="" />
                   Aberto
                 </span>
@@ -398,7 +404,7 @@ export function MyCallingsTechnicians() {
                       key={call.id}
                       call={call}
                       actionLabel="Iniciar"
-                      actionIcon={circleCheck}
+                      actionIcon={CircleCheckClose}
                       statusIcon={clock_open}
                     />
                   ))}
@@ -406,7 +412,7 @@ export function MyCallingsTechnicians() {
               </div>
 
               <div className="mb-5">
-                <span className="inline-flex items-center gap-2 text-sm font-medium text-green-700 bg-green-100 px-3 py-1 rounded-full">
+                <span className="inline-flex items-center gap-2 text-sm font-medium text-green-700 bg-green-100 px-3 py-2 rounded-full">
                   <img src={closed} alt="" />
                   Encerrado
                 </span>

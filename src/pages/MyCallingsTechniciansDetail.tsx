@@ -96,6 +96,7 @@ export function MyCallingsTechniciansDetail() {
   const [modalOpen, setModalOpen] = useState(false);
   const [call, setCall] = useState<ApiCall | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  
 
   const { session } = useAuth();
 
