@@ -148,6 +148,8 @@ function CallCardItem({
   );
 }
 
+
+
 export function MyCallingsTechnicians() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
@@ -162,7 +164,11 @@ export function MyCallingsTechnicians() {
 
   const displayName = session?.user.name ?? user.name ?? "";
   const displayEmail = session?.user.email ?? user.email ?? "";
+  const displayAvatar = session?.user.avatar ?? user.avatar;
   const userInitials = getInitials(displayName);
+
+
+ 
 
   useEffect(() => {
     async function loadCalls() {
@@ -452,13 +458,13 @@ export function MyCallingsTechnicians() {
         onSave={handleSaveProfile}
         initialName={displayName}
         initialEmail={displayEmail}
-        isLoading={isSavingProfile}
         initialAvatar={
-          session?.user.avatar
-            ? `http://localhost:3000/uploads/${session.user.avatar}`
-            : null
+          displayAvatar
+            ? `http://localhost:3000/uploads/${displayAvatar}`
+            : undefined
         }
-        availability={session?.user.availability}
+        isLoading={isSavingProfile}
+        availability={session?.user.availability ?? []}
       />
 
       <AlterProfileModalTechnicians

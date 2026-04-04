@@ -119,7 +119,7 @@ export function ProfileTechnicianModal({
                 <Input
                   name="password"
                   legend="SENHA"
-                  type="password"
+                  type="text"
                   placeholder="Digite sua senha"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}

@@ -84,7 +84,7 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
         name,
         email,
         password: password || undefined,
-        role: "technical",
+        role: "technical" as const,
         availability,
       };
 
@@ -94,6 +94,7 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
       } else {
         await api.post("/users", data);
         alert("Técnico cadastrado com sucesso.");
+        navigate("/technicians");
       }
 
       navigate("/technicians");
@@ -116,7 +117,7 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
       <section className="block xl:hidden w-screen h-screen absolute">
         <div className="flex justify-between items-center">
           <div className="flex justify-center items-center gap-3.5 absolute top-7 left-6">
-            <img src={menu} alt="menu" className="" />
+            <img src={menu} alt="menu" />
 
             <div className="flex justify-center gap-4">
               <img
@@ -211,7 +212,7 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
                     legend="NOME"
                     type="text"
                     value={name}
-                    placeholder="carlos silva"
+                    placeholder="Carlos Silva"
                     onChange={(e) => setName(e.target.value)}
                   />
                 </div>
@@ -235,7 +236,9 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
                     legend="SENHA"
                     type="password"
                     placeholder={
-                      technicianId ? "Digite apenas se quiser alterar" : "********"
+                      technicianId
+                        ? "Digite apenas se quiser alterar"
+                        : "Digite a senha provisória do técnico"
                     }
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -245,7 +248,7 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
                 <p className="text-xs text-gray-400 mt-2">
                   {technicianId
                     ? "Preencha a senha apenas se quiser alterá-la"
-                    : "Mínimo de 6 dígitos"}
+                    : "A senha será definida pelo manager e repassada ao técnico"}
                 </p>
               </div>
 
@@ -254,8 +257,7 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
                   Horários de atendimento
                 </h2>
                 <p className="text-xs mb-6">
-                  Selecione os horários de disponibilidade do técnico para
-                  atendimento
+                  Selecione os horários de disponibilidade do técnico para atendimento
                 </p>
 
                 <h3 className="text-xs font-bold mb-2">MANHÃ</h3>
