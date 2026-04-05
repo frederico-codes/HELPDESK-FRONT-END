@@ -1,17 +1,16 @@
 import Logo_IconLight from "../assets/icons/Logo_IconLight.svg";
 import list from "../assets/icons/clipboard-list.svg";
-import menu from "../assets/icons/Menu.png";
 import LogoIconLight from "../assets/Logo_IconLight.png";
-import avatar from "../assets/Avatar.svg";
-import { useLocation, Link, useParams } from "react-router-dom";
 import clock_open from "../assets/icons/clock-open.svg";
+import menu from "../assets/icons/Menu.png";
 import clock from "../assets/icons/clock.svg";
 import clock_2 from "../assets/icons/clock_2.svg";
-import bin from "../assets/icons/bin.svg";
+import avatar from "../assets/Avatar.svg";
 import closed from "../assets/icons/closed.svg";
+import bin from "../assets/icons/bin.svg";
+import { useLocation, Link, useParams } from "react-router-dom";
 import currently_assisting from "../assets/icons/currently_assisting.svg";
 import { useEffect, useState } from "react";
-import { MyCallingsTechniciansDetailModalAdditionalService } from "../componentes/MyCallingsTechniciansDetailModalAdditionalService";
 import { CloseOptionsModal } from "../componentes/CloseOptionsModal";
 import { useAuth } from "../hooks/useAuth";
 import { api } from "../services/api";
@@ -39,6 +38,14 @@ type ApiCall = {
     name: string;
     basePrice: number;
   };
+  additionalServices: {
+    id: string;
+    service: {
+      id: string;
+      name: string;
+      basePrice: number;
+    };
+  }[];
 };
 
 function getInitials(name: string) {
@@ -96,6 +103,46 @@ export function MyCallingsTechniciansDetail() {
   const [modalOpen, setModalOpen] = useState(false);
   const [call, setCall] = useState<ApiCall | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  async function handleRemoveAdditionalService(additionalServiceId: string) {
+    try {
+      if (!id) return;
+
+      await api.delete(
+        `/calls/${id}/additional-services/${additionalServiceId}`,
+      );
+
+      const response = await api.get(`/calls/${id}`);
+      setCall(response.data);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        alert(error.response?.data?.message ?? "Erro ao remover serviço.");
+        return;
+      }
+
+      alert("Não foi possível remover o serviço adicional.");
+    }
+  }
+
+  async function loadCallById() {
+  try {
+    if (!id) return;
+
+    setIsLoading(true);
+
+    const response = await api.get<ApiCall>(`/calls/${id}`);
+    setCall(response.data);
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      alert(error.response?.data?.message ?? "Erro ao buscar chamado.");
+      return;
+    }
+
+    alert("Não foi possível carregar o chamado.");
+  } finally {
+    setIsLoading(false);
+  }
+}
   
 
   const { session } = useAuth();
@@ -105,27 +152,7 @@ export function MyCallingsTechniciansDetail() {
   const userInitials = getInitials(displayName);
 
   useEffect(() => {
-    async function loadCall() {
-      try {
-        if (!id) return;
-
-        setIsLoading(true);
-
-        const response = await api.get<ApiCall>(`/calls/${id}`);
-        setCall(response.data);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          alert(error.response?.data?.message ?? "Erro ao buscar chamado.");
-          return;
-        }
-
-        alert("Não foi possível carregar o chamado.");
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    loadCall();
+    loadCallById();
   }, [id]);
 
   if (isLoading) {
@@ -151,6 +178,19 @@ export function MyCallingsTechniciansDetail() {
   const statusMeta = getStatusMeta(call.status);
   const basePrice = `R$ ${call.service.basePrice.toFixed(2).replace(".", ",")}`;
 
+  const additionalTotal = call.additionalServices.reduce(
+    (sum, item) => sum + item.service.basePrice,
+    0,
+  );
+
+  const totalPrice = call.service.basePrice + additionalTotal;
+
+  const formattedAdditionalTotal = `R$ ${additionalTotal
+    .toFixed(2)
+    .replace(".", ",")}`;
+
+  const formattedTotalPrice = `R$ ${totalPrice.toFixed(2).replace(".", ",")}`;
+
   return (
     <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] bg-gray-100 xl:overflow-hidden">
       <section className="hidden xl:flex xl:flex-col xl:justify-between bg-gray-100 pl-6 pt-10 pb-6">
@@ -168,13 +208,17 @@ export function MyCallingsTechniciansDetail() {
               <Link
                 to="/"
                 className={`w-[180px] flex items-center gap-2 text-sm p-3 outline-0 rounded-sm ${
-                  location.pathname === "/" ? "bg-blue-dark text-white" : "text-gray-400"
+                  location.pathname === "/"
+                    ? "bg-blue-dark text-white"
+                    : "text-gray-400"
                 }`}
               >
                 <img
                   src={list}
                   alt=""
-                  className={location.pathname === "/" ? "invert brightness-0" : ""}
+                  className={
+                    location.pathname === "/" ? "invert brightness-0" : ""
+                  }
                 />
                 Meus chamados
               </Link>
@@ -192,7 +236,9 @@ export function MyCallingsTechniciansDetail() {
 
           <div className="flex flex-col min-w-0">
             <span className="text-sm truncate">{displayName}</span>
-            <span className="text-xs text-gray-400 truncate">{displayEmail}</span>
+            <span className="text-xs text-gray-400 truncate">
+              {displayEmail}
+            </span>
           </div>
         </div>
       </section>
@@ -365,9 +411,10 @@ export function MyCallingsTechniciansDetail() {
                       <span>Preço base</span>
                       <span>{basePrice}</span>
                     </div>
+
                     <div className="flex items-center justify-between text-gray-700">
                       <span>Adicionais</span>
-                      <span>R$ 0,00</span>
+                      <span>{formattedAdditionalTotal}</span>
                     </div>
                   </div>
 
@@ -375,7 +422,7 @@ export function MyCallingsTechniciansDetail() {
 
                   <div className="flex items-center justify-between text-sm font-semibold text-gray-900">
                     <span>Total</span>
-                    <span>{basePrice}</span>
+                    <span>{formattedTotalPrice}</span>
                   </div>
                 </div>
               </div>
@@ -396,9 +443,39 @@ export function MyCallingsTechniciansDetail() {
                 </button>
               </div>
 
-              <div className="py-4 text-sm text-gray-400">
-                Nenhum serviço adicional cadastrado.
-              </div>
+              {call.additionalServices.length === 0 ? (
+                <div className="py-4 text-sm text-gray-400">
+                  Nenhum serviço adicional cadastrado.
+                </div>
+              ) : (
+                <div className="divide-y divide-gray-500">
+                  {call.additionalServices.map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between py-4"
+                    >
+                      <p className="text-sm font-medium text-gray-900">
+                        {item.service.name}
+                      </p>
+
+                      <div className="flex items-center gap-4">
+                        <span className="text-sm text-gray-800">
+                          R${" "}
+                          {item.service.basePrice.toFixed(2).replace(".", ",")}
+                        </span>
+
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveAdditionalService(item.id)}
+                          className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-gray-500 hover:bg-gray-50 cursor-pointer hover:text-gray-200 ease-linear transition"
+                        >
+                          <img src={bin} alt="Remover serviço adicional" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </section>
         </main>
@@ -411,11 +488,7 @@ export function MyCallingsTechniciansDetail() {
           setOpen(false);
         }}
       />
-
-      <MyCallingsTechniciansDetailModalAdditionalService
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-      />
+ 
     </div>
   );
 }

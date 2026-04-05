@@ -150,6 +150,7 @@ function CallCardItem({
 
 
 
+
 export function MyCallingsTechnicians() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
@@ -158,17 +159,17 @@ export function MyCallingsTechnicians() {
   const [calls, setCalls] = useState<CallCard[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSavingProfile, setIsSavingProfile] = useState(false);
-
+  
   const { session } = useAuth();
   const { user, setUser } = useUser();
-
+  
   const displayName = session?.user.name ?? user.name ?? "";
   const displayEmail = session?.user.email ?? user.email ?? "";
   const displayAvatar = session?.user.avatar ?? user.avatar;
   const userInitials = getInitials(displayName);
+  
+  
 
-
- 
 
   useEffect(() => {
     async function loadCalls() {
@@ -380,7 +381,7 @@ export function MyCallingsTechnicians() {
           {!isLoading && (
             <>
               <div className="mb-5">
-                <span className="inline-flex items-center gap-2 text-sm font-medium text-blue-700 bg-blue-100 px-3 py-2 rounded-full">
+                <span className="inline-flex items-center gap-2 text-sm font-medium text-blue-700 bg-blue-100 px-3 py-1 rounded-full">
                   <img src={currently_assisting} alt="" />
                   Em atendimento
                 </span>
@@ -399,7 +400,7 @@ export function MyCallingsTechnicians() {
               </div>
 
               <div className="mb-5">
-                <span className="inline-flex items-center gap-2 text-sm font-medium text-pink-700 bg-pink-100 px-3 py-1.5 rounded-full">
+                <span className="inline-flex items-center gap-2 text-sm font-medium text-pink-700 bg-pink-100 px-3 py-1 rounded-full">
                   <img src={clock_open} alt="" />
                   Aberto
                 </span>
@@ -418,7 +419,7 @@ export function MyCallingsTechnicians() {
               </div>
 
               <div className="mb-5">
-                <span className="inline-flex items-center gap-2 text-sm font-medium text-green-700 bg-green-100 px-3 py-2 rounded-full">
+                <span className="inline-flex items-center gap-2 text-sm font-medium text-green-700 bg-green-100 px-3 py-1 rounded-full">
                   <img src={closed} alt="" />
                   Encerrado
                 </span>

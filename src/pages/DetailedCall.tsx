@@ -2,12 +2,12 @@ import clockOpen from "../assets/icons/clock-open.svg";
 import clock from "../assets/icons/clock.svg";
 import circleCheckBig from "../assets/icons/circle-check-big.svg";
 import trash from "../assets/icons/trash.svg";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Sidebar } from "../componentes/Sidebar";
 import { useEffect, useState } from "react";
 import { api } from "../services/api";
 import { AxiosError } from "axios";
-import { useNavigate } from "react-router-dom";
+import { MyCallingsTechniciansDetailModalAdditionalService } from "../componentes/MyCallingsTechniciansDetailModalAdditionalService";
 
 interface Call {
   id: string;
@@ -17,62 +17,98 @@ interface Call {
   createdAt: string;
   updatedAt: string;
   technician: {
+    id: string;
     name: string;
     email: string;
   };
   customer: {
+    id: string;
     name: string;
   };
   service: {
+    id: string;
     name: string;
     basePrice: number;
   };
+  additionalServices: {
+    id: string;
+    service: {
+      id: string;
+      name: string;
+      basePrice: number;
+    };
+  }[];
 }
 
 export function DetailedCall() {
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const [call, setCall] = useState<Call | null>(null);
   const [loading, setLoading] = useState(true);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
-  const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState(false);
+
+  async function loadCallById() {
+    try {
+      if (!id) return;
+
+      setLoading(true);
+
+      const response = await api.get<Call>(`/calls/${id}`);
+      setCall(response.data);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        alert(error.response?.data?.message ?? "Erro ao buscar chamado.");
+        return;
+      }
+
+      alert("Não foi possível carregar o chamado.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    async function fetchCall() {
-      try {
-        const response = await api.get(`/calls/${id}`);
-        setCall(response.data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    if (id) {
-      fetchCall();
-    }
+    loadCallById();
   }, [id]);
 
-async function handleUpdateStatus(status: "in_progress" | "closed") {
-  try {
-    if (!id) return;
+  async function handleUpdateStatus(status: "in_progress" | "closed") {
+    try {
+      if (!id) return;
 
-    setIsUpdatingStatus(true);
+      setIsUpdatingStatus(true);
 
-    await api.patch(`/calls/${id}/status`, { status });
+      await api.patch(`/calls/${id}/status`, { status });
 
-    navigate("/");
-  } catch (error) {
-    if (error instanceof AxiosError) {
-      alert(error.response?.data?.message ?? "Erro ao atualizar status.");
-      return;
+      navigate("/");
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        alert(error.response?.data?.message ?? "Erro ao atualizar status.");
+        return;
+      }
+
+      alert("Não foi possível atualizar o status.");
+    } finally {
+      setIsUpdatingStatus(false);
     }
-
-    alert("Não foi possível atualizar o status.");
-  } finally {
-    setIsUpdatingStatus(false);
   }
-}
+
+  async function handleRemoveAdditionalService(additionalServiceId: string) {
+    try {
+      if (!id) return;
+
+      await api.delete(`/calls/${id}/additional-services/${additionalServiceId}`);
+      await loadCallById();
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        alert(error.response?.data?.message ?? "Erro ao remover serviço.");
+        return;
+      }
+
+      alert("Não foi possível remover o serviço adicional.");
+    }
+  }
 
   if (loading) {
     return <div className="p-10">Carregando...</div>;
@@ -109,13 +145,30 @@ async function handleUpdateStatus(status: "in_progress" | "closed") {
 
   const status = getStatusStyle();
 
+  const additionalTotal = call.additionalServices.reduce(
+    (sum, item) => sum + item.service.basePrice,
+    0
+  );
+
+  const totalPrice = call.service.basePrice + additionalTotal;
+
+  const formattedBasePrice = `R$ ${call.service.basePrice
+    .toFixed(2)
+    .replace(".", ",")}`;
+
+  const formattedAdditionalTotal = `R$ ${additionalTotal
+    .toFixed(2)
+    .replace(".", ",")}`;
+
+  const formattedTotalPrice = `R$ ${totalPrice.toFixed(2).replace(".", ",")}`;
+
   return (
     <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] bg-gray-100 xl:overflow-hidden">
       <Sidebar />
 
       <div
         className="w-full h-screen flex flex-col px-6 xl:px-6 gap-4 bg-white absolute xl:relative py-24 
-      rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4"
+        rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4"
       >
         <div className="w-full px-8 xl:px-10 2xl:px-72">
           <div className="flex flex-col xl:ml-24 xl:w-[800px]">
@@ -182,7 +235,9 @@ async function handleUpdateStatus(status: "in_progress" | "closed") {
 
                 <div className="mb-6">
                   <h3 className="text-xs text-gray-400">Descrição</h3>
-                  <p className="text-sm mt-1">{call.description}</p>
+                  <p className="text-sm mt-1">
+                    {call.description || "Sem descrição informada"}
+                  </p>
                 </div>
 
                 <div className="mb-6">
@@ -221,36 +276,51 @@ async function handleUpdateStatus(status: "in_progress" | "closed") {
               </div>
 
               <div className="bg-white border border-gray-200 rounded-xl p-6 mt-8">
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex justify-between items-center mb-4 border-b border-gray-500 pb-4">
                   <h3 className="text-sm text-gray-400">Serviços adicionais</h3>
-                  <button className="w-9 h-9 bg-gray-900 text-white rounded-md flex items-center justify-center">
+                  <button
+                    type="button"
+                    onClick={() => setModalOpen(true)}
+                    className="w-9 h-9 bg-gray-900 text-white rounded-md flex items-center justify-center hover:bg-gray-700 transition"
+                  >
                     +
                   </button>
                 </div>
 
-                <div className="flex justify-between items-center py-3 border-t">
-                  <div>
-                    <p className="text-sm text-gray-800">Assinatura de backup</p>
+                {call.additionalServices.length === 0 ? (
+                  <div className="py-4 text-sm text-gray-400">
+                    Nenhum serviço adicional cadastrado.
                   </div>
-                  <div className="flex items-center gap-4">
-                    <span className="text-sm text-gray-700">R$ 120,00</span>
-                    <button className="w-9 h-9 bg-gray-500 rounded-md flex items-center justify-center hover:bg-red-100 transition">
-                      <img src={trash} alt="Excluir" />
-                    </button>
-                  </div>
-                </div>
+                ) : (
+                  <div className="divide-y divide-gray-500">
+                    {call.additionalServices.map((item) => (
+                      <div
+                        key={item.id}
+                        className="flex justify-between items-center py-3"
+                      >
+                        <div>
+                          <p className="text-sm text-gray-800">
+                            {item.service.name}
+                          </p>
+                        </div>
 
-                <div className="flex justify-between items-center py-3 border-t">
-                  <div>
-                    <p className="text-sm text-gray-800">Formatação do PC</p>
+                        <div className="flex items-center gap-4">
+                          <span className="text-sm text-gray-700">
+                            R$ {item.service.basePrice.toFixed(2).replace(".", ",")}
+                          </span>
+
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveAdditionalService(item.id)}
+                            className="w-9 h-9 bg-gray-500 rounded-md flex items-center justify-center hover:bg-red-100 transition"
+                          >
+                            <img src={trash} alt="Excluir" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <div className="flex items-center gap-4">
-                    <span className="text-sm text-gray-700">R$ 75,00</span>
-                    <button className="w-9 h-9 bg-gray-500 rounded-md flex items-center justify-center hover:bg-red-100 transition">
-                      <img src={trash} alt="Excluir" />
-                    </button>
-                  </div>
-                </div>
+                )}
               </div>
             </div>
 
@@ -276,19 +346,28 @@ async function handleUpdateStatus(status: "in_progress" | "closed") {
 
               <div className="flex justify-between text-sm text-gray-700 mt-2">
                 <span>Preço base</span>
-                <span className="font-medium">
-                  R$ {call.service.basePrice.toFixed(2)}
-                </span>
+                <span className="font-medium">{formattedBasePrice}</span>
+              </div>
+
+              <div className="flex justify-between text-sm text-gray-700 mt-2">
+                <span>Adicionais</span>
+                <span className="font-medium">{formattedAdditionalTotal}</span>
               </div>
 
               <div className="flex justify-between text-sm font-semibold text-gray-900 border-t pt-4 mt-4">
                 <span>Total</span>
-                <span>R$ {call.service.basePrice.toFixed(2)}</span>
+                <span>{formattedTotalPrice}</span>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <MyCallingsTechniciansDetailModalAdditionalService
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onAdded={loadCallById}
+      />
     </div>
   );
 }
