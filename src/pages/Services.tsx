@@ -6,6 +6,7 @@ import { Sidebar } from "../componentes/Sidebar";
 import plus from "../assets/icons/plus.svg";
 import pen from "../assets/icons/pen-line.svg";
 import circleCheckBig from "../assets/icons/circle-check-big.svg";
+import disable from "../assets/icons/disable.svg";
 import { Tooltip } from "react-tooltip";
 
 type Service = {
@@ -28,7 +29,7 @@ export function Services() {
 
   async function loadServices() {
     try {
-      const response = await api.get("/services");
+      const response = await api.get("/services?includeInactive=true")
       setServices(response.data);
     } catch (error) {
       console.log(error);
@@ -114,7 +115,16 @@ export function Services() {
       alert("Não foi possível desativar o serviço.");
     }
   }
-
+  
+  async function handleActivateService(id: string) {
+    try {
+      await api.patch(`/services/${id}/activate`);
+      alert("Serviço reativado com sucesso.");
+      loadServices(); // recarrega lista
+    } catch (error) {
+      alert("Erro ao reativar serviço.");
+    }
+  }
   return (
     <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] bg-gray-100 xl:overflow-hidden">
       <Sidebar />
@@ -156,9 +166,9 @@ export function Services() {
                     <td className="py-4 px-6 text-sm text-gray-400">
                       R$ {service.basePrice}
                     </td>
-                    <td className="py-4 px-6">
+                    <td className="py-6 px-6">
                       <span
-                        className={`px-3 py-1 text-xs rounded-full hidden xl:inline-flex ${
+                        className={`px-3 py-1.5 text-xs rounded-full hidden xl:inline-flex  ${
                           service.active
                             ? "bg-green-100 text-green-700"
                             : "bg-pink-100 text-pink-600"
@@ -178,13 +188,22 @@ export function Services() {
                         )}
                       </span>
                     </td>
-                    <td className="py-4 px-6">
-                      <button
-                        onClick={() => handleDeactivateService(service.id)}
-                        className="text-sm text-gray-800 hover:text-gray-500 transition ease-linear cursor-pointer"
-                      >
-                        ⦸ Desativar
-                      </button>
+                    <td className="py-4 px-6 cursor-pointer">
+                      {service.active ? (
+                        <button
+                          className="cursor-pointer"
+                          onClick={() => handleDeactivateService(service.id)}
+                        >
+                          Desativar
+                        </button>
+                      ) : (
+                        <button
+                          className="cursor-pointer"
+                          onClick={() => handleActivateService(service.id)}
+                        >
+                          Reativar
+                        </button>
+                      )}
                     </td>
                     <td className="py-4 px-6">
                       <div className="h-9 w-9 bg-gray-500 hover:bg-gray-600 flex justify-center items-center rounded-sm cursor-pointer transition ease-linear">
