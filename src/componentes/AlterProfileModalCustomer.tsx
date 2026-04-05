@@ -1,6 +1,9 @@
 import { X } from "phosphor-react"
 import { Input } from "./Input";
 import { useState } from "react";
+import { api } from "../services/api";
+import { AxiosError } from "axios";
+import { useAuth } from "../hooks/useAuth";
 
 interface Props {
   open: boolean
@@ -10,12 +13,49 @@ interface Props {
 export function AlterProfileModalCustomer({ open, onClose }: Props) {
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { session } = useAuth();
 
-
-  function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    console.log({ password, newPassword });
+    try {
+      if (!session?.user.id) {
+        alert("Usuário não identificado.");
+        return;
+      }
+
+      if (!password || !newPassword) {
+        alert("Preencha a senha atual e a nova senha.");
+        return;
+      }
+
+      if (newPassword.length < 6) {
+        alert("A nova senha deve ter no mínimo 6 dígitos.");
+        return;
+      }
+
+      setIsLoading(true);
+
+      await api.patch(`/users/${session.user.id}/password`, {
+        password,
+        newPassword,
+      });
+
+      alert("Senha alterada com sucesso.");
+      setPassword("");
+      setNewPassword("");
+      onClose();
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        alert(error.response?.data?.message ?? "Erro ao alterar senha.");
+        return;
+      }
+
+      alert("Não foi possível alterar a senha.");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
 
@@ -93,14 +133,10 @@ export function AlterProfileModalCustomer({ open, onClose }: Props) {
         <div className="px-6 pb-6">
           <button
             type="submit"
-            className="
-              w-full rounded-md
-              bg-gray-900 py-3
-              text-sm font-medium text-white
-              hover:bg-gray-800 transition cursor-pointer
-            "
+            disabled={isLoading}
+            className="w-full bg-gray-800 text-white text-sm font-medium py-3 rounded-xl hover:bg-gray-900 transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Salvar
+            {isLoading ? "Salvando..." : "Salvar"}
           </button>
         </div>
       </div>
