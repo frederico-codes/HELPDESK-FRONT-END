@@ -2,6 +2,7 @@ import clockOpen from "../assets/icons/clock-open.svg";
 import clock from "../assets/icons/clock.svg";
 import circleCheckBig from "../assets/icons/circle-check-big.svg";
 import trash from "../assets/icons/trash.svg";
+import plus from "../assets/icons/plus.svg";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { Sidebar } from "../componentes/Sidebar";
 import { useEffect, useState } from "react";
@@ -280,10 +281,21 @@ export function DetailedCall() {
                   <h3 className="text-sm text-gray-400">Serviços adicionais</h3>
                   <button
                     type="button"
-                    onClick={() => setModalOpen(true)}
-                    className="w-9 h-9 bg-gray-900 text-white rounded-md flex items-center justify-center hover:bg-gray-700 transition"
+                    onClick={() => {
+                      if (call?.status === "closed") return;
+                      setModalOpen(true);
+                    }}
+                    disabled={call?.status === "closed"}
+                    className={`
+                    w-9 h-9 rounded-md flex items-center justify-center
+                      ${
+                        call?.status === "closed"
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-gray-900 text-white hover:bg-gray-700"
+                      }
+                  `}
                   >
-                    +
+                    <img src={plus} alt="" />
                   </button>
                 </div>
 
@@ -306,15 +318,27 @@ export function DetailedCall() {
 
                         <div className="flex items-center gap-4">
                           <span className="text-sm text-gray-700">
-                            R$ {item.service.basePrice.toFixed(2).replace(".", ",")}
+                            R${" "}
+                            {item.service.basePrice
+                              .toFixed(2)
+                              .replace(".", ",")}
                           </span>
 
                           <button
-                            type="button"
-                            onClick={() => handleRemoveAdditionalService(item.id)}
-                            className="w-9 h-9 bg-gray-500 rounded-md flex items-center justify-center hover:bg-red-100 transition"
+                            onClick={() =>
+                             handleRemoveAdditionalService(item.id)
+                            }
+                            disabled={call.status === "closed"}
+                            className={`
+                              p-2 rounded-md
+                              ${
+                                call.status === "closed"
+                                  ? "bg-gray-300 cursor-not-allowed"
+                                  : "bg-gray-100 hover:bg-gray-200"
+                              }
+                            `}
                           >
-                            <img src={trash} alt="Excluir" />
+                           <img src={trash} alt="Excluir" />
                           </button>
                         </div>
                       </div>

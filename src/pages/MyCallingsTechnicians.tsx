@@ -88,11 +88,15 @@ function CallCardItem({
   actionLabel,
   actionIcon,
   statusIcon,
+  onAction,
+  isUpdating,
 }: {
   call: CallCard;
   actionLabel?: string;
   actionIcon?: string;
   statusIcon: string;
+  onAction?: () => void;
+  isUpdating?: boolean;
 }) {
   return (
     <div className="h-[200px] border rounded-xl shadow-sm p-5 bg-white">
@@ -113,10 +117,12 @@ function CallCardItem({
           {actionLabel && actionIcon && (
             <button
               type="button"
-              className="px-3 py-1 bg-gray-900 text-white text-sm rounded-md flex items-center gap-1 hover:bg-gray-800 transition"
+              onClick={onAction}
+              disabled={isUpdating}
+              className="px-3 py-1 bg-gray-900 text-white text-sm rounded-md flex items-center gap-1 hover:bg-gray-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <img src={actionIcon} alt="" />
-              {actionLabel}
+              {isUpdating ? "Salvando..." : actionLabel}
             </button>
           )}
         </div>
@@ -159,6 +165,7 @@ export function MyCallingsTechnicians() {
   const [calls, setCalls] = useState<CallCard[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [updatingCallId, setUpdatingCallId] = useState<string | null>(null);
   
   const { session } = useAuth();
   const { user, setUser } = useUser();
@@ -167,43 +174,65 @@ export function MyCallingsTechnicians() {
   const displayEmail = session?.user.email ?? user.email ?? "";
   const displayAvatar = session?.user.avatar ?? user.avatar;
   const userInitials = getInitials(displayName);
-  
+
+  async function handleUpdateStatus(
+    callId: string,
+    status: "in_progress" | "closed",
+  ) {
+    try {
+      setUpdatingCallId(callId);
+
+      await api.patch(`/calls/${callId}/status`, { status });
+
+      await loadCalls();
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        alert(error.response?.data?.message ?? "Erro ao atualizar status.");
+        return;
+      }
+
+      alert("Não foi possível atualizar o status do chamado.");
+    } finally {
+      setUpdatingCallId(null);
+    }
+  }
+
+  async function loadCalls() {
+    try {
+      setIsLoading(true);
+
+      const response = await api.get<ApiCall[]>("/calls");
+
+      const formattedCalls: CallCard[] = response.data.map((call) => ({
+        id: call.id,
+        shortId: formatShortId(call.id),
+        title: call.title,
+        service: call.service.name,
+        updatedAt: formatDateTime(call.updatedAt || call.createdAt),
+        totalValue: `R$ ${call.service.basePrice.toFixed(2).replace(".", ",")}`,
+        customer: {
+          initials: getInitials(call.customer.name),
+          name: call.customer.name,
+        },
+        status: call.status,
+      }));
+
+      setCalls(formattedCalls);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        alert(error.response?.data?.message ?? "Erro ao buscar chamados.");
+        return;
+      }
+
+      alert("Não foi possível carregar os chamados.");
+    } finally {
+      setIsLoading(false);
+    }
+  }
   
 
 
   useEffect(() => {
-    async function loadCalls() {
-      try {
-        setIsLoading(true);
-
-        const response = await api.get<ApiCall[]>("/calls");
-
-        const formattedCalls: CallCard[] = response.data.map((call) => ({
-          id: call.id,
-          shortId: formatShortId(call.id),
-          title: call.title,
-          service: call.service.name,
-          updatedAt: formatDateTime(call.updatedAt || call.createdAt),
-          totalValue: `R$ ${call.service.basePrice.toFixed(2).replace(".", ",")}`,
-          customer: {
-            initials: getInitials(call.customer.name),
-            name: call.customer.name,
-          },
-          status: call.status,
-        }));
-
-        setCalls(formattedCalls);
-      } catch (error) {
-        if (error instanceof AxiosError) {
-          alert(error.response?.data?.message ?? "Erro ao buscar chamados.");
-          return;
-        }
-
-        alert("Não foi possível carregar os chamados.");
-      } finally {
-        setIsLoading(false);
-      }
-    }
 
     loadCalls();
   }, []);
@@ -394,6 +423,8 @@ export function MyCallingsTechnicians() {
                       actionLabel="Encerrar"
                       actionIcon={CircleCheckClose}
                       statusIcon={currently_assisting}
+                      onAction={() => handleUpdateStatus(call.id, "closed")}
+                      isUpdating={updatingCallId === call.id}
                     />
                   ))}
                 </div>
@@ -413,6 +444,10 @@ export function MyCallingsTechnicians() {
                       actionLabel="Iniciar"
                       actionIcon={CircleCheckClose}
                       statusIcon={clock_open}
+                      onAction={() =>
+                        handleUpdateStatus(call.id, "in_progress")
+                      }
+                      isUpdating={updatingCallId === call.id}
                     />
                   ))}
                 </div>
