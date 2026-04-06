@@ -194,7 +194,7 @@ export function DetailedCall() {
                     call.status === "closed"
                   }
                   onClick={() => handleUpdateStatus("in_progress")}
-                  className="h-10 px-4 rounded-lg bg-gray-500 text-gray-700 text-sm font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="h-10 px-4 rounded-lg bg-gray-500 text-gray-700 text-sm font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:bg-gray-600 easy-linear transition"
                 >
                   <img src={clock} alt="" className="w-4 h-4" />
                   {isUpdatingStatus && call.status !== "in_progress"
@@ -206,7 +206,7 @@ export function DetailedCall() {
                   type="button"
                   disabled={isUpdatingStatus || call.status === "closed"}
                   onClick={() => handleUpdateStatus("closed")}
-                  className="h-10 px-4 rounded-lg bg-gray-500 text-gray-700 text-sm font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="h-10 px-4 rounded-lg bg-gray-500 text-gray-700 text-sm font-medium flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:bg-gray-600 easy-linear transition"
                 >
                   <img src={circleCheckBig} alt="" className="w-4 h-4" />
                   {isUpdatingStatus && call.status !== "closed"
@@ -287,7 +287,7 @@ export function DetailedCall() {
                     }}
                     disabled={call?.status === "closed"}
                     className={`
-                    w-9 h-9 rounded-md flex items-center justify-center
+                    w-9 h-9 rounded-md flex items-center justify-center cursor-pointer
                       ${
                         call?.status === "closed"
                           ? "bg-gray-400 cursor-not-allowed"
@@ -330,11 +330,11 @@ export function DetailedCall() {
                             }
                             disabled={call.status === "closed"}
                             className={`
-                              p-2 rounded-md
+                              p-2 rounded-md cursor-pointer
                               ${
                                 call.status === "closed"
-                                  ? "bg-gray-300 cursor-not-allowed"
-                                  : "bg-gray-100 hover:bg-gray-200"
+                                  ? "bg-gray-100 cursor-not-allowed"
+                                  : "bg-gray-500 hover:bg-gray-600"
                               }
                             `}
                           >

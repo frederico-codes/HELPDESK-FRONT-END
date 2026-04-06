@@ -168,7 +168,7 @@ export function Services() {
                     </td>
                     <td className="py-6 px-6">
                       <span
-                        className={`px-3 py-1.5 text-xs rounded-full hidden xl:inline-flex  ${
+                        className={`px-3 py-1.5 text-sm rounded-full hidden xl:inline-flex  ${
                           service.active
                             ? "bg-green-100 text-green-700"
                             : "bg-pink-100 text-pink-600"

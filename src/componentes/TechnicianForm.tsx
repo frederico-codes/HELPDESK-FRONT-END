@@ -7,6 +7,7 @@ import { Input } from "../componentes/Input";
 import { useEffect, useState } from "react";
 import { api } from "../services/api";
 import { AxiosError } from "axios";
+import { z, ZodError } from "zod";
 
 interface TechnicianFormProps {
   technicianId?: string;
@@ -27,6 +28,18 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
   const [availability, setAvailability] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchingTechnician, setIsFetchingTechnician] = useState(false);
+
+  const schema = z.object({
+    name: z.string().min(1, "Nome obrigatório"),
+    email: z.string().email("E-mail inválido"),
+    password: technicianId
+      ? z
+          .string()
+          .min(6, "Senha mínima de 6 caracteres")
+          .optional()
+          .or(z.literal(""))
+      : z.string().min(6, "Senha mínima de 6 caracteres"),
+  });
 
   const navigate = useNavigate();
 
@@ -74,41 +87,51 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
     return availability.includes(hour);
   }
 
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
+ async function onSubmit(e: React.FormEvent) {
+   e.preventDefault();
 
-    try {
-      setIsLoading(true);
+   try {
+     schema.parse({
+       name,
+       email,
+       password,
+     });
 
-      const data = {
-        name,
-        email,
-        password: password || undefined,
-        role: "technical" as const,
-        availability,
-      };
+     setIsLoading(true);
 
-      if (technicianId) {
-        await api.put(`/users/${technicianId}`, data);
-        alert("Técnico atualizado com sucesso.");
-      } else {
-        await api.post("/users", data);
-        alert("Técnico cadastrado com sucesso.");
-        navigate("/technicians");
-      }
+     const data = {
+       name,
+       email,
+       password: password || undefined,
+       role: "technical" as const,
+       availability,
+     };
 
-      navigate("/technicians");
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        alert(error.response?.data?.message ?? "Erro ao salvar técnico.");
-        return;
-      }
+     if (technicianId) {
+       await api.put(`/users/${technicianId}`, data);
+       alert("Técnico atualizado com sucesso.");
+     } else {
+       await api.post("/users", data);
+       alert("Técnico cadastrado com sucesso.");
+     }
 
-      alert("Não foi possível salvar o técnico.");
-    } finally {
-      setIsLoading(false);
-    }
-  }
+     navigate("/technicians");
+   } catch (error) {
+     if (error instanceof ZodError) {
+       alert(error.issues[0].message);
+       return;
+     }
+
+     if (error instanceof AxiosError) {
+       alert(error.response?.data?.message ?? "Erro ao salvar técnico.");
+       return;
+     }
+
+     alert("Não foi possível salvar o técnico.");
+   } finally {
+     setIsLoading(false);
+   }
+ }
 
   return (
     <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] bg-gray-100 xl:overflow-hidden">
@@ -251,6 +274,7 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
                     : "A senha será definida pelo manager e repassada ao técnico"}
                 </p>
               </div>
+              
 
               <div className="border border-gray-500 rounded-xl p-6 bg-white">
                 <h2 className="text-base font-semibold mb-1">

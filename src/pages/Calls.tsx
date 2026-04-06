@@ -132,7 +132,7 @@ function StatusBadge({
 }) {
   return (
     <span
-      className={`inline-flex items-center justify-center rounded-full h-8 w-8 xl:h-auto xl:w-auto xl:px-3 xl:py-1 xl:gap-1 text-xs font-medium ${className}`}
+      className={`inline-flex items-center justify-center rounded-full h-8 w-8 xl:h-auto xl:w-auto xl:px-3 xl:py-2 xl:gap-1 text-xs font-medium ${className}`}
     >
       <img src={icon} alt={alt} className="h-4 w-4" />
       <span className="hidden xl:inline">{label}</span>

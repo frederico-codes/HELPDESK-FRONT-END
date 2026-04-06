@@ -20,6 +20,16 @@ type Service = {
   active: boolean;
 };
 
+type Technician = {
+  id: string;
+  name: string;
+  email: string;
+  availability?: string[];
+};
+
+
+
+
 function getInitials(name: string) {
   const parts = name.trim().split(" ").filter(Boolean);
 
@@ -45,6 +55,27 @@ export function CallForm() {
   const [services, setServices] = useState<Service[]>([]);
   const [isLoadingServices, setIsLoadingServices] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [technicianId, setTechnicianId] = useState("");
+  const [technicians, setTechnicians] = useState<Technician[]>([]);
+  const [isLoadingTechnicians, setIsLoadingTechnicians] = useState(true);
+
+  async function loadTechnicians() {
+    try {
+      setIsLoadingTechnicians(true);
+
+      const response = await api.get<Technician[]>("/technicals");
+      setTechnicians(response.data);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        alert(error.response?.data?.message ?? "Erro ao buscar técnicos.");
+        return;
+      }
+
+      alert("Não foi possível carregar os técnicos.");
+    } finally {
+      setIsLoadingTechnicians(false);
+    }
+  }
 
   async function loadServices() {
     try {
@@ -66,6 +97,7 @@ export function CallForm() {
 
   useEffect(() => {
     loadServices();
+    loadTechnicians();
   }, []);
 
   const selectedService = useMemo(
@@ -77,6 +109,14 @@ export function CallForm() {
     selectedService?.name ?? "Selecione a categoria de atendimento";
 
   const selectedServicePrice = selectedService?.basePrice ?? 0;
+
+  const selectedTechnician = useMemo(
+    () => technicians.find((technician) => technician.id === technicianId),
+    [technicians, technicianId],
+  );
+
+  const selectedTechnicianName =
+    selectedTechnician?.name ?? "Selecione um técnico disponível";
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -92,6 +132,11 @@ export function CallForm() {
         return;
       }
 
+      if (!technicianId) {
+        alert("Selecione um técnico disponível.");
+        return;
+      }
+
       setIsSubmitting(true);
  
 
@@ -99,6 +144,7 @@ export function CallForm() {
         title,
         description,
         serviceId,
+        technicianId,
       });
 
       alert("Chamado criado com sucesso.");
@@ -106,6 +152,7 @@ export function CallForm() {
       setTitle("");
       setDescription("");
       setServiceId("");
+      setTechnicianId("");
 
       navigate("/");
     } catch (error) {
@@ -277,12 +324,39 @@ export function CallForm() {
                   ))}
                 </Select>
               </div>
+
+              <div className="pt-6">
+                <Select
+                  required
+                  legend="TÉCNICO DISPONÍVEL"
+                  value={technicianId}
+                  onChange={(e) => setTechnicianId(e.target.value)}
+                  disabled={isLoadingTechnicians}
+                >
+                  <option value="" disabled hidden>
+                    {isLoadingTechnicians
+                      ? "Carregando técnicos..."
+                      : "Selecione um técnico disponível"}
+                  </option>
+
+                  {technicians.map((technician) => (
+                    <option key={technician.id} value={technician.id}>
+                      {technician.name}
+                    </option>
+                  ))}
+                </Select>
+              </div>
             </div>
 
             <div className="bg-white rounded-xl border border-gray-500 p-6 h-fit">
               <h2 className="text-base font-semibold text-gray-900">Resumo</h2>
 
               <p className="text-sm mt-1">Valores e detalhes</p>
+
+              <div>
+                <p className="text-xs font-semibold">Técnico</p>
+                <p className="text-sm">{selectedTechnicianName}</p>
+              </div>
 
               <div className="mt-6 space-y-4">
                 <div>
@@ -298,8 +372,8 @@ export function CallForm() {
                 </div>
 
                 <p className="text-xs">
-                  O chamado será automaticamente atribuído a um técnico
-                  disponível
+                  O cliente deve selecionar um técnico disponível para este
+                  chamado
                 </p>
               </div>
 
