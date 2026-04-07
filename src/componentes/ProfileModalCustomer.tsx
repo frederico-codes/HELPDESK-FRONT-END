@@ -1,7 +1,9 @@
 import { X } from "phosphor-react";
+import trash from "../assets/icons/trash.svg";
 import { useEffect, useState } from "react";
 import { Input } from "../componentes/Input";
 import { Upload } from "./Upload";
+
 
 interface Props {
   open: boolean;
@@ -24,6 +26,7 @@ export function ProfileModalCustomer({
   onClose,
   onOpenAlterProfile,
   onSave,
+  onDeleteAccount,
   initialName,
   initialEmail,
   initialAvatar, 
@@ -86,10 +89,21 @@ export function ProfileModalCustomer({
         </div>
 
         <div className="px-6 py-5 space-y-6">
-          <Upload  
-            filename={null}
-            initialPreview={initialAvatar}
-            onFileChange={setAvatarFile} />
+          <div className="flex items-center gap-4">
+            <Upload
+              filename={null}
+              initialPreview={initialAvatar}
+              onFileChange={setAvatarFile} />
+
+              <img 
+              src={trash} 
+              alt="lixeira"  
+              className="cursor-pointer bg-gray-500 w-5 h-5 '"
+               onClick={() => {
+                 onDeleteAccount();
+                }}              
+              />
+          </div>
 
           <div>
             <Input
