@@ -167,12 +167,12 @@ export function MyCallingsTechnicians() {
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [updatingCallId, setUpdatingCallId] = useState<string | null>(null);
   
-  const { session } = useAuth();
   const { user, setUser } = useUser();
+  const { session } = useAuth();
   
   const displayName = session?.user.name ?? user.name ?? "";
   const displayEmail = session?.user.email ?? user.email ?? "";
-  const displayAvatar = session?.user.avatar ?? user.avatar;
+  const displayAvatar = user.avatar ?? session?.user.avatar;
   const userInitials = getInitials(displayName);
 
   async function handleUpdateStatus(
@@ -496,7 +496,7 @@ export function MyCallingsTechnicians() {
         initialEmail={displayEmail}
         initialAvatar={
           displayAvatar
-            ? `http://localhost:3000/uploads/${displayAvatar}`
+            ? `http://localhost:3001/uploads/${displayAvatar}`
             : undefined
         }
         isLoading={isSavingProfile}

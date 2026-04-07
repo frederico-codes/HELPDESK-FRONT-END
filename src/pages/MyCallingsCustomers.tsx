@@ -1,17 +1,17 @@
+import eye from "../assets/icons/eye.svg";
+import menu from "../assets/icons/Menu.png";
+import list from "../assets/icons/clipboard-list.svg";
+import closed from "../assets/icons/closed.svg";
+import plus from "../assets/icons/plus.svg";
+import LogoIcon from "../assets/icons/Logo_IconLight.svg";
+import LogoIconMobile from "../assets/Logo_IconLight.png";
+import clockOpen from "../assets/icons/clock-open.svg";
+import avatar from "../assets/Avatar.svg";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import { api } from "../services/api";
-import LogoIcon from "../assets/icons/Logo_IconLight.svg";
-import LogoIconMobile from "../assets/Logo_IconLight.png";
-import list from "../assets/icons/clipboard-list.svg";
-import menu from "../assets/icons/Menu.png";
-import avatar from "../assets/Avatar.svg";
-import eye from "../assets/icons/eye.svg";
-import plus from "../assets/icons/plus.svg";
-import clockOpen from "../assets/icons/clock-open.svg";
 import currentlyAssisting from "../assets/icons/currently_assisting.svg";
-import closed from "../assets/icons/closed.svg";
 import { ProfileModalCustomer } from "../componentes/ProfileModalCustomer";
 import { AlterProfileModalCustomer } from "../componentes/AlterProfileModalCustomer";
 import { ProfileOptionsModal } from "../componentes/ProfileOptionsModal";
@@ -181,9 +181,10 @@ export function MyCallingsCustomers() {
   const { user, setUser } = useUser();
   const { session, remove } = useAuth();
 
-  const displayName = session?.user.name ?? user.name;
-  const displayEmail = session?.user.email ?? user.email;
-  const displayAvatar = session?.user.avatar ?? user.avatar;
+  
+  const displayName = session?.user.name ?? user.name ?? "";
+  const displayEmail = session?.user.email ?? user.email ?? "";
+  const displayAvatar = user.avatar ?? session?.user.avatar;
   const userInitials = getInitials(displayName);
 
   async function handleDeleteAccount() {
@@ -264,7 +265,7 @@ async function handleSaveProfile(data: {
 
     setIsSavingProfile(true);
 
-    const response = await api.put(`/clients/${session.user.id}`, {
+    const response = await api.put(`/users/${session.user.id}`, {
       name: data.name,
       email: data.email,
     });
@@ -539,7 +540,7 @@ async function handleSaveProfile(data: {
         initialEmail={displayEmail}
         initialAvatar={
           displayAvatar
-            ? `http://localhost:3000/uploads/${displayAvatar}`
+            ? `http://localhost:3001/uploads/${displayAvatar}`
             : undefined
         }
         isLoading={isSavingProfile}
