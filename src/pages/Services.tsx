@@ -160,8 +160,8 @@ export function Services() {
               </thead>
               <tbody>
                 {services.map((service) => (
-                  <tr key={service.id} className="border-b last:border-none">
-                    <td className="truncate block w-full max-w-[100px] xl:max-w-[400px]  py-4 px-6 font-bold text-sm text-gray-800">
+                  <tr key={service.id} className="border-b border-gray-500 last:border-none">
+                    <td className="truncate   max-w-[100px] xl:max-w-[400px]  py-4 px-6 font-bold text-sm text-gray-800">
                       {service.name}
                     </td>
                     <td className="py-4 px-6 text-sm text-gray-400">
