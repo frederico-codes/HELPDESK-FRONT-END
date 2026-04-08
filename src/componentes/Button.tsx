@@ -1,4 +1,4 @@
-import { classMerge } from "../util/classMerge"
+import { classMerge } from "../utils/classMerge"
 
 
 type Props = React.ComponentProps<"button"> &

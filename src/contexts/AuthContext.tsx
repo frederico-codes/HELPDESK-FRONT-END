@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
-import type { UserApiResponse, Session } from "../dtos/user";
+import type { UserApiResponse, Session } from "../dtos/user.dto";
 import { api } from "../services/api";
 
 type AuthContextType = {

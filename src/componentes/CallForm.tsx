@@ -12,6 +12,7 @@ import { AxiosError } from "axios";
 import { api } from "../services/api";
 import { useAuth } from "../hooks/useAuth";
 import { useUser } from "../hooks/useUser";
+import { z } from "zod";
 
 type Service = {
   id: string;
@@ -27,8 +28,12 @@ type Technician = {
   availability?: string[];
 };
 
-
-
+type FormErrors = {
+  title?: string;
+  description?: string;
+  serviceId?: string;
+  technicianId?: string;
+};
 
 function getInitials(name: string) {
   const parts = name.trim().split(" ").filter(Boolean);
@@ -58,6 +63,14 @@ export function CallForm() {
   const [technicianId, setTechnicianId] = useState("");
   const [technicians, setTechnicians] = useState<Technician[]>([]);
   const [isLoadingTechnicians, setIsLoadingTechnicians] = useState(true);
+  const [errors, setErrors] = useState<FormErrors>({});
+
+  const schema = z.object({
+    title: z.string().trim().min(1, "Título obrigatório"),
+    description: z.string().trim().min(1, "Descrição obrigatória"),
+    serviceId: z.string().min(1, "Selecione uma categoria de serviço"),
+    technicianId: z.string().min(1, "Selecione um técnico disponível"),
+  });
 
   async function loadTechnicians() {
     try {
@@ -81,7 +94,7 @@ export function CallForm() {
     try {
       setIsLoadingServices(true);
 
-      const response = await api.get("/services");
+      const response = await api.get<Service[]>("/services");
       setServices(response.data);
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -112,7 +125,7 @@ export function CallForm() {
 
   const selectedTechnician = useMemo(
     () => technicians.find((technician) => technician.id === technicianId),
-    [technicians, technicianId],
+    [technicians, technicianId]
   );
 
   const selectedTechnicianName =
@@ -120,31 +133,41 @@ export function CallForm() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setErrors({});
+
+    if (!session?.user.id) {
+      alert("Usuário não identificado.");
+      return;
+    }
+
+    const result = schema.safeParse({
+      title,
+      description,
+      serviceId,
+      technicianId,
+    });
+
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors;
+
+      setErrors({
+        title: fieldErrors.title?.[0],
+        description: fieldErrors.description?.[0],
+        serviceId: fieldErrors.serviceId?.[0],
+        technicianId: fieldErrors.technicianId?.[0],
+      });
+
+      return;
+    }
 
     try {
-      if (!session?.user.id) {
-        alert("Usuário não identificado.");
-        return;
-      }
-
-      if (!serviceId) {
-        alert("Selecione uma categoria de serviço.");
-        return;
-      }
-
-      if (!technicianId) {
-        alert("Selecione um técnico disponível.");
-        return;
-      }
-
       setIsSubmitting(true);
- 
 
       await api.post("/calls", {
-        title,
-        description,
-        serviceId,
-        technicianId,
+        title: result.data.title,
+        description: result.data.description,
+        serviceId: result.data.serviceId,
+        technicianId: result.data.technicianId,
       });
 
       alert("Chamado criado com sucesso.");
@@ -153,6 +176,7 @@ export function CallForm() {
       setDescription("");
       setServiceId("");
       setTechnicianId("");
+      setErrors({});
 
       navigate("/");
     } catch (error) {
@@ -284,7 +308,11 @@ export function CallForm() {
                   type="text"
                   value={title}
                   placeholder="Digite um título para o chamado"
-                  onChange={(e) => setTitle(e.target.value)}
+                  error={errors.title}
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                    setErrors((prev) => ({ ...prev, title: undefined }));
+                  }}
                 />
               </div>
 
@@ -297,10 +325,20 @@ export function CallForm() {
                   required
                   placeholder="Descreva o que está acontecendo"
                   rows={6}
-                  className="w-full border border-gray-500 py-2 px-4 text-sm text-gray-700 resize-none focus:outline-none focus:border-blue-600"
+                  className={`w-full border py-2 px-4 text-sm text-gray-700 resize-none focus:outline-none focus:border-blue-600 ${
+                    errors.description ? "border-red-500" : "border-gray-500"
+                  }`}
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                    setErrors((prev) => ({ ...prev, description: undefined }));
+                  }}
                 />
+                {errors.description && (
+                  <span className="text-red-500 text-xxs mt-1 block">
+                    {errors.description}
+                  </span>
+                )}
               </div>
 
               <div className="pt-6">
@@ -308,8 +346,12 @@ export function CallForm() {
                   required
                   legend="CATEGORIA DE SERVIÇO"
                   value={serviceId}
-                  onChange={(e) => setServiceId(e.target.value)}
+                  onChange={(e) => {
+                    setServiceId(e.target.value);
+                    setErrors((prev) => ({ ...prev, serviceId: undefined }));
+                  }}
                   disabled={isLoadingServices}
+                  error={errors.serviceId}
                 >
                   <option value="" disabled hidden>
                     {isLoadingServices
@@ -323,6 +365,7 @@ export function CallForm() {
                     </option>
                   ))}
                 </Select>
+              
               </div>
 
               <div className="pt-6">
@@ -330,7 +373,14 @@ export function CallForm() {
                   required
                   legend="TÉCNICO DISPONÍVEL"
                   value={technicianId}
-                  onChange={(e) => setTechnicianId(e.target.value)}
+                  error={errors.technicianId}
+                  onChange={(e) => {
+                    setTechnicianId(e.target.value);
+                    setErrors((prev) => ({
+                      ...prev,
+                      technicianId: undefined,
+                    }));
+                  }}
                   disabled={isLoadingTechnicians}
                 >
                   <option value="" disabled hidden>
@@ -345,6 +395,7 @@ export function CallForm() {
                     </option>
                   ))}
                 </Select>
+            
               </div>
             </div>
 
@@ -379,7 +430,9 @@ export function CallForm() {
 
               <button
                 type="submit"
-                disabled={isSubmitting || isLoadingServices}
+                disabled={
+                  isSubmitting || isLoadingServices || isLoadingTechnicians
+                }
                 className="mt-6 w-full rounded-lg bg-gray-900 py-3 text-sm text-gray-50 font-medium hover:bg-gray-500 hover:text-gray-200 ease-linear transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? "Criando..." : "Criar chamado"}

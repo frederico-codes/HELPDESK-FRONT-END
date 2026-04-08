@@ -7,7 +7,7 @@ import { Input } from "../componentes/Input";
 import { useEffect, useState } from "react";
 import { api } from "../services/api";
 import { AxiosError } from "axios";
-import { z, ZodError } from "zod";
+import { z } from "zod";
 
 interface TechnicianFormProps {
   technicianId?: string;
@@ -21,6 +21,12 @@ type TechnicianResponse = {
   availability?: string[];
 };
 
+type FormErrors = {
+  name?: string;
+  email?: string;
+  password?: string;
+};
+
 export function TechnicianForm({ technicianId }: TechnicianFormProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -28,17 +34,19 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
   const [availability, setAvailability] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetchingTechnician, setIsFetchingTechnician] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const schema = z.object({
-    name: z.string().min(1, "Nome obrigatório"),
-    email: z.string().email("E-mail inválido"),
+    name: z.string().trim().min(1, "Nome obrigatório"),
+    email: z.string().trim().email("E-mail inválido"),
     password: technicianId
       ? z
           .string()
+          .trim()
           .min(6, "Senha mínima de 6 caracteres")
           .optional()
           .or(z.literal(""))
-      : z.string().min(6, "Senha mínima de 6 caracteres"),
+      : z.string().trim().min(6, "Senha mínima de 6 caracteres"),
   });
 
   const navigate = useNavigate();
@@ -87,51 +95,59 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
     return availability.includes(hour);
   }
 
- async function onSubmit(e: React.FormEvent) {
-   e.preventDefault();
+  async function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setErrors({});
 
-   try {
-     schema.parse({
-       name,
-       email,
-       password,
-     });
+    const result = schema.safeParse({
+      name,
+      email,
+      password,
+    });
 
-     setIsLoading(true);
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors;
 
-     const data = {
-       name,
-       email,
-       password: password || undefined,
-       role: "technical" as const,
-       availability,
-     };
+      setErrors({
+        name: fieldErrors.name?.[0],
+        email: fieldErrors.email?.[0],
+        password: fieldErrors.password?.[0],
+      });
 
-     if (technicianId) {
-       await api.put(`/users/${technicianId}`, data);
-       alert("Técnico atualizado com sucesso.");
-     } else {
-       await api.post("/users", data);
-       alert("Técnico cadastrado com sucesso.");
-     }
+      return;
+    }
 
-     navigate("/technicians");
-   } catch (error) {
-     if (error instanceof ZodError) {
-       alert(error.issues[0].message);
-       return;
-     }
+    try {
+      setIsLoading(true);
 
-     if (error instanceof AxiosError) {
-       alert(error.response?.data?.message ?? "Erro ao salvar técnico.");
-       return;
-     }
+      const data = {
+        name: result.data.name,
+        email: result.data.email,
+        password: result.data.password || undefined,
+        role: "technical" as const,
+        availability,
+      };
 
-     alert("Não foi possível salvar o técnico.");
-   } finally {
-     setIsLoading(false);
-   }
- }
+      if (technicianId) {
+        await api.put(`/users/${technicianId}`, data);
+        alert("Técnico atualizado com sucesso.");
+      } else {
+        await api.post("/users", data);
+        alert("Técnico cadastrado com sucesso.");
+      }
+
+      navigate("/technicians");
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        alert(error.response?.data?.message ?? "Erro ao salvar técnico.");
+        return;
+      }
+
+      alert("Não foi possível salvar o técnico.");
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return (
     <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] bg-gray-100 xl:overflow-hidden">
@@ -236,7 +252,11 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
                     type="text"
                     value={name}
                     placeholder="Carlos Silva"
-                    onChange={(e) => setName(e.target.value)}
+                    error={errors.name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      setErrors((prev) => ({ ...prev, name: undefined }));
+                    }}
                   />
                 </div>
 
@@ -248,7 +268,11 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
                     type="email"
                     placeholder="carlos.silva@test.com"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    error={errors.email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setErrors((prev) => ({ ...prev, email: undefined }));
+                    }}
                   />
                 </div>
 
@@ -264,7 +288,11 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
                         : "Digite a senha provisória do técnico"
                     }
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    error={errors.password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      setErrors((prev) => ({ ...prev, password: undefined }));
+                    }}
                   />
                 </div>
 
@@ -274,7 +302,6 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
                     : "A senha será definida pelo manager e repassada ao técnico"}
                 </p>
               </div>
-              
 
               <div className="border border-gray-500 rounded-xl p-6 bg-white">
                 <h2 className="text-base font-semibold mb-1">
