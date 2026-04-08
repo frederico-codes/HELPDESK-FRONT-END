@@ -71,13 +71,13 @@ export function SignUp(){
       </section>      
 
       <div className="w-full h-screen mt-4  flex flex-col items-center justify-center xl:px-50  gap-4 bg-white absolute xl:relative py-24  rounded-3xl xl:rounded-none xl:rounded-tl-2xl ">
-        <form onSubmit={onSubmit} className="w-[370px] ">
+        <form onSubmit={onSubmit} className="lg:w-[470px] max-[470px] ">
           <div className="flex justify-center gap-2 mb-8">
             <img src= { Logo_IconDark } alt="Logo"/>
             <h1 className="text-2xl --color-blue-dark font-bold">HelpDesk</h1>
           </div>
 
-          <div className="p-7">
+          <div className="p-7 border border-gray-500 rounded-lg mb-3">
             <h1 className="text-xl font-bold">Crie sua conta</h1>
             <span>Informe seu nome, e-mail e senha</span>
             <div className="mt-10 flex flex-col gap-4">
@@ -103,13 +103,13 @@ export function SignUp(){
               onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <span className="mb-10">Mínimo de 6 dígitos</span>
+            <span className="mb-10 text-xs text-gray-400">Mínimo de 6 dígitos</span>
             <Button type="submit" isLoading={isLoading}>
               Cadastrar
             </Button>
           </div>
-          <div className="p-7">
-            <p className="text-base font-semibold">Já uma conta?</p>
+          <div className="p-7 border  border-gray-500 rounded-lg">
+            <p className="text-base font-semibold">Já tem uma conta?</p>
             <span className="text-xs">Entre agora mesmo</span>
             <a href="/" className="flex justify-center items-center py-1.5 rounded-lg cursor-pointer mt-7 bg-gray-500 hover:bg-gray-600 transition ease-linear text-gray-200">
             Acessar conta

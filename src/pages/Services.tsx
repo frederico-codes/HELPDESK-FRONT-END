@@ -6,6 +6,7 @@ import { Sidebar } from "../componentes/Sidebar";
 import plus from "../assets/icons/plus.svg";
 import pen from "../assets/icons/pen-line.svg";
 import circleCheckBig from "../assets/icons/circle-check-big.svg";
+import circleCheck from "../assets/icons/circle-check.svg";
 import disable from "../assets/icons/disable.svg";
 import { Tooltip } from "react-tooltip";
 
@@ -188,20 +189,36 @@ export function Services() {
                         )}
                       </span>
                     </td>
-                    <td className="py-4 px-6 cursor-pointer">
+                    <td className="py-4 xl:px-6">
                       {service.active ? (
                         <button
-                          className="cursor-pointer"
+                          type="button"
+                          className="flex items-center justify-center xl:justify-start gap-3 w-full cursor-pointer text-gray-400"
                           onClick={() => handleDeactivateService(service.id)}
                         >
-                          Desativar
+                          <img
+                            src={disable}
+                            alt="Desativar"
+                            className="w-6 h-6"
+                          />
+                          <span className="hidden xl:inline text-sm font-medium">
+                            Desativar
+                          </span>
                         </button>
                       ) : (
                         <button
-                          className="cursor-pointer"
+                          type="button"
+                          className="flex items-center justify-center xl:justify-start gap-3 w-full cursor-pointer text-gray-400"
                           onClick={() => handleActivateService(service.id)}
                         >
-                          Reativar
+                          <img
+                            src={circleCheck}
+                            alt="Reativar"
+                            className="w-6 h-6"
+                          />
+                          <span className="hidden xl:inline text-sm font-medium">
+                            Reativar
+                          </span>
                         </button>
                       )}
                     </td>

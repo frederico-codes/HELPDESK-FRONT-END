@@ -1,4 +1,4 @@
-import eye from "../assets/icons/eye.svg";
+import eye from "../assets/icons/eye-icon.svg";
 import menu from "../assets/icons/Menu.png";
 import list from "../assets/icons/clipboard-list.svg";
 import closed from "../assets/icons/closed.svg";
@@ -365,7 +365,7 @@ async function handleSaveProfile(data: {
         </div>
 
         <div
-          className="flex items-center gap-2 text-white cursor-pointer mb-5"
+          className="flex items-center gap-2 text-white cursor-pointer mb-4"
           onClick={() => setOpen(true)}
         >
           <span className="w-8 h-8 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
@@ -452,12 +452,12 @@ async function handleSaveProfile(data: {
                         <div>{time}</div>
                       </td>
 
-                      <td className="hidden px-4 py-4 font-semibold xl:table-cell">
+                      <td className="hidden px-4 py-4 font-semibold xl:table-cell max-w-[120px] truncate">
                         {call.id}
                       </td>
 
                       <td
-                        className="px-4 py-4 font-medium text-gray-900 sm:truncate max-w-[110px]"
+                        className="px-4 py-4 font-medium text-gray-900 truncate max-w-[100px]  xl:truncate-none xl:max-w-none"
                         data-tooltip-id="global-tooltip"
                         data-tooltip-content={`Excluir ${call.title}`}
                       >
@@ -466,7 +466,9 @@ async function handleSaveProfile(data: {
                       </td>
 
                       <td className="hidden px-4 py-4 xl:table-cell">
-                        {call.service}
+                        <div className="max-w-[150px] truncate 2xl:truncate-none 2xl:max-w-none">
+                          {call.service}
+                        </div>
                       </td>
 
                       <td className="hidden px-4 py-4 xl:table-cell">
@@ -492,6 +494,7 @@ async function handleSaveProfile(data: {
                         <img
                           src={eye}
                           alt="Ver chamado"
+                          className="cursor-pointer"
                           onClick={() => navigate(`/chamados/${call.id}`)}
                         />
                         <Tooltip id="tooltip-detail" place="top" />

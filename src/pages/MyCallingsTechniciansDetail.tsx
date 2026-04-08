@@ -1,6 +1,7 @@
 import Logo_IconLight from "../assets/icons/Logo_IconLight.svg";
 import list from "../assets/icons/clipboard-list.svg";
 import LogoIconLight from "../assets/Logo_IconLight.png";
+import arrowLeft from "../assets/icons/arrow-left.svg";
 import clock_open from "../assets/icons/clock-open.svg";
 import menu from "../assets/icons/Menu.png";
 import clock from "../assets/icons/clock.svg";
@@ -280,8 +281,8 @@ export function MyCallingsTechniciansDetail() {
               to="/"
               className="flex items-center gap-2 text-sm text-gray-700 hover:text-gray-500"
             >
-              <span className="text-lg">←</span>
-              Voltar
+              <img src={arrowLeft} alt="Voltar" />
+              <span>Voltar</span>
             </Link>
 
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between max-w-[1090px] mx-auto px-4">

@@ -42,7 +42,7 @@ export function Sidebar() {
   const initials = getInitials(name);
   return (
     <div>
-      <section className="h-screen hidden xl:flex xl:flex-col xl:justify-between  bg-gray-100 pl-6 pb-1 pt-12 ">
+      <section className="h-screen hidden xl:flex xl:flex-col xl:justify-between  bg-gray-100 pl-6  pt-12 ">
         <div>
           <div className="flex gap-3">
             <img src={Logo_IconLight} alt="Logo padrão" />
@@ -147,7 +147,7 @@ export function Sidebar() {
           </div>
         </div>
         <div className="flex items-center gap-2  text-white mb-5">
-          <div className="flex items-center gap-2 text-white mb-5">
+          <div className="flex items-center gap-2 text-white mb-1">
             <span className="w-8 h-8 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
               {initials}
             </span>
@@ -164,7 +164,7 @@ export function Sidebar() {
       </section>
 
       <section className="block  xl:hidden w-screen h-screen absolute">
-        <div className="flex justify-between items-center  ">
+        <div >
           {/* GRUPO ESQUERDA */}
           <div className="flex justify-center items-center gap-3.5 absolute top-7 left-6">
             <img src={menu} alt="menu" className="" />

@@ -311,7 +311,7 @@ export function MyCallingsTechnicians() {
 
   return (
     <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] bg-gray-100 xl:overflow-hidden">
-      <section className="hidden xl:flex xl:flex-col xl:justify-between bg-gray-100 pl-6 pt-10 pb-6">
+      <section className="hidden xl:flex xl:flex-col xl:justify-between bg-gray-100 pl-6 pt-10 pb-10">
         <div>
           <div className="flex gap-3">
             <img src={Logo_IconLight} alt="Logo padrão" />

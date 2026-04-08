@@ -172,7 +172,7 @@ export function DetailedCall() {
         rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4"
       >
         <div className="w-full px-8 xl:px-10 2xl:px-72">
-          <div className="flex flex-col xl:ml-24 xl:w-[800px]">
+          <div className="flex flex-col xl:ml-16 xl:w-[800px]">
             <Link
               to="/"
               className="flex items-center gap-2 text-sm text-gray-700 hover:text-gray-500"
@@ -219,7 +219,7 @@ export function DetailedCall() {
 
           <div className="grid grid-cols-1 xl:grid-cols-[480px_300px] gap-8 mx-auto max-w-[900px] w-full">
             <div>
-              <div className="bg-white border border-gray-200 rounded-xl p-6">
+              <div className="bg-white border border-gray-500 rounded-lg  p-6">
                 <div className="flex justify-between">
                   <p className="text-sm text-gray-400">{call.id.slice(0, 5)}</p>
                   <span
@@ -276,7 +276,7 @@ export function DetailedCall() {
                 </div>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-xl p-6 mt-8">
+              <div className="bg-white border border-gray-500 rounded-lg  p-6 mt-8">
                 <div className="flex justify-between items-center mb-4 border-b border-gray-500 pb-4">
                   <h3 className="text-sm text-gray-400">Serviços adicionais</h3>
                   <button
@@ -348,8 +348,8 @@ export function DetailedCall() {
               </div>
             </div>
 
-            <div className="bg-white border border-gray-200 rounded-xl p-6">
-              <h3 className="text-sm text-gray-400 mb-2">
+            <div className="bg-white border border-gray-500 rounded-lg p-6">
+              <h3 className="text-sm text-gray-400 mb-4">
                 Técnico responsável
               </h3>
 
@@ -367,13 +367,16 @@ export function DetailedCall() {
                   </p>
                 </div>
               </div>
+                <div className="flex justify-between text-xs text-gray-700 mt-2">
+                <span>Valores</span>                
+              </div>
 
               <div className="flex justify-between text-sm text-gray-700 mt-2">
                 <span>Preço base</span>
                 <span className="font-medium">{formattedBasePrice}</span>
               </div>
 
-              <div className="flex justify-between text-sm text-gray-700 mt-2">
+              <div className="flex justify-between text-xs text-gray-700 mt-2">
                 <span>Adicionais</span>
                 <span className="font-medium">{formattedAdditionalTotal}</span>
               </div>

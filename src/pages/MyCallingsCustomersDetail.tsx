@@ -1,8 +1,8 @@
 import Logo_IconLight from "../assets/icons/Logo_IconLight.svg";
 import list from "../assets/icons/clipboard-list.svg";
 import menu from "../assets/icons/Menu.png";
+import arrowLeft from "../assets/icons/arrow-left.svg";
 import LogoIconLight from "../assets/Logo_IconLight.png";
-import avatar from "../assets/Avatar.svg";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
@@ -264,12 +264,13 @@ export function MyCallingsCustomersDetail() {
       </section>
 
       <div className="w-full h-screen flex flex-col px-2 xl:px-44 gap-4 bg-white absolute xl:relative rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
-        <div className="bg-gray-50 px-4 py-6 xl:px-0 mt-6">
+        <div className="px-4 py-6 xl:px-0 mt-6">
           <Link
             to="/"
-            className="mb-4 flex items-center gap-2 text-sm text-gray-700 hover:text-gray-500 cursor-pointer"
+            className="mb-4 flex items-center gap-2 text-xs text-gray-700 cursor-pointer"
           >
-            ← Voltar
+            <img src={arrowLeft} alt="Voltar" />
+             <span>Voltar</span>
           </Link>
 
           <h1 className="mb-6 text-xl font-semibold text-blue-700">
@@ -277,7 +278,7 @@ export function MyCallingsCustomersDetail() {
           </h1>
 
           <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1fr_309px]">
-            <div className="rounded-xl border border-gray-200 bg-white p-6">
+            <div className="border border-gray-500 rounded-xl bg-white p-6">
               <div className="mb-2 flex items-center justify-between">
                 <span className="text-sm font-medium text-gray-700">
                   {call.id}
@@ -326,7 +327,7 @@ export function MyCallingsCustomersDetail() {
               </div>
             </div>
 
-            <div className="rounded-xl border border-gray-200 bg-white p-6">
+            <div className="border border-gray-500 rounded-xl bg-white p-6">
               <div className="mb-6">
                 <p className="mb-3 text-xs font-medium text-gray-400">
                   Técnico responsável

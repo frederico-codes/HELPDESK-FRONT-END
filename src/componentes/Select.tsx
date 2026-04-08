@@ -15,7 +15,7 @@ export function Select({ legend, error, children, ...rest }: Props) {
       <select
         className={`
           w-full h-12 rounded-lg px-4 text-sm bg-transparent outline-none
-          ${error ? "border-2 border-red-500 text-red-500" : "border border-gray-300 text-gray-100"}
+          ${error ? "border-2 border-red-500 text-red-500" : "border border-gray-500 text-gray-100"}
           focus:border-blue-600
         `}
         {...rest}

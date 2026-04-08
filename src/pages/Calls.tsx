@@ -238,7 +238,7 @@ export function Calls() {
 
                     <td className="py-4 px-3 xl:px-4 ">
                       <div
-                        className="block w-full font-bold text-gray-800 text-sm truncate max-w-[100px] cursor-pointer"
+                        className="block w-full font-bold text-gray-800 text-sm truncate max-w-[100px]  xl:truncate-none xl:max-w-none cursor-pointer"
                         data-tooltip-id="global-tooltip"
                         data-tooltip-content={call.title}
                       >
@@ -246,7 +246,7 @@ export function Calls() {
                         <Tooltip id="global-tooltip" place="top" />
                       </div>
                       <div
-                        className="block w-full text-gray-400 text-xs truncate max-w-[100px] cursor-pointer"
+                        className="block w-full text-gray-400 text-xs truncate max-w-[100px]  xl:truncate-none xl:max-w-none cursor-pointer"
                         data-tooltip-id="global-tooltip"
                         data-tooltip-content={call.service}
                       >

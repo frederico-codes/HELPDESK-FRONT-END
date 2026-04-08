@@ -191,7 +191,7 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
           <div className="flex flex-col">
             <Link
               to="/technicians"
-              className="flex items-center gap-2 text-sm text-gray-700 hover:text-gray-500 font-bold transition ease-linear mb-4 relative left-0 xl:left-30 cursor-pointer"
+              className="flex items-center gap-2 text-sm text-gray-700  font-bold transition ease-linear mb-4 relative left-0 xl:left-30 cursor-pointer"
             >
               <span className="text-lg font-bold">←</span>
               Voltar
@@ -214,7 +214,7 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
                 <button
                   type="submit"
                   disabled={isLoading || isFetchingTechnician}
-                  className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-200 text-gray-600 text-sm cursor-pointer disabled:opacity-50"
+                  className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-200 text-gray-600 text-sm cursor-pointer hover:bg-gray-300 disabled:opacity-50"
                 >
                   {isLoading ? "Salvando..." : "Salvar"}
                 </button>

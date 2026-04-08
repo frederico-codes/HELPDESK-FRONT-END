@@ -60,16 +60,16 @@ export function SignIn(){
       </section>      
 
       <div className="w-full h-screen mt-4  flex flex-col items-center justify-center xl:px-50  gap-4 bg-white absolute xl:relative py-24  rounded-3xl xl:rounded-none xl:rounded-tl-2xl ">
-        <form action ={ formAction } className="max-w-[400px] ">  
+        <form action ={ formAction } className="lg:w-[470px] max-[470px]">  
           <div className="flex justify-center gap-2 mb-8">
             <img src= { LogoIconDark } alt="Logo"/>
             <h1 className="text-2xl --color-blue-dark font-bold">HelpDesk</h1>
           </div>
   
-          <div className="p-7">
+          <div className="p-7 border border-gray-500 rounded-lg mb-3">
             <h1 className="text-xl font-bold">Acesse o portal</h1>
             <span>Entre usando seu e-mail e senha cadastrados</span>
-            <div className="mt-10 flex flex-col gap-4">
+            <div className="mt-10 flex flex-col gap-10">
   
               <Input
                 name = "email"
@@ -87,7 +87,7 @@ export function SignIn(){
                 placeholder="Digite sua senha"
               />
   
-              <p className="text-sm text-red-600 text-center my-4 font-medium">
+              <p className="text-sm text-red-600 text-center  font-medium">
                 { state?.message }
               </p>
             </div>
@@ -97,7 +97,7 @@ export function SignIn(){
             </Button>
           </div>
   
-          <div className="p-7">
+          <div className="p-7 border border-gray-500 rounded-lg">
             <p className="text-base font-semibold">Ainda não tem uma conta?</p>
             <span className="text-xs">Cadastre agora mesmo</span>
             <a href="/signup" className="flex justify-center items-center py-1.5 rounded-lg cursor-pointer mt-7 bg-gray-500 hover:bg-gray-600 transition ease-linear text-gray-200">
