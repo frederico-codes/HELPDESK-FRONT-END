@@ -198,8 +198,7 @@ export function Services() {
                         >
                           <img
                             src={disable}
-                            alt="Desativar"
-                            className="w-6 h-6"
+                            alt="Desativar"                            
                           />
                           <span className="hidden xl:inline text-sm font-medium">
                             Desativar
@@ -213,8 +212,7 @@ export function Services() {
                         >
                           <img
                             src={circleCheck}
-                            alt="Reativar"
-                            className="w-6 h-6"
+                            alt="Reativar"                            
                           />
                           <span className="hidden xl:inline text-sm font-medium">
                             Reativar

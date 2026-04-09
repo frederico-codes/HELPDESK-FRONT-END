@@ -13,11 +13,10 @@ export function Select({ legend, error, children, ...rest }: Props) {
       )}
 
       <select
-        className={`
-          w-full h-12 rounded-lg px-4 text-sm bg-transparent outline-none
-          ${error ? "border-2 border-red-500 text-red-500" : "border border-gray-500 text-gray-100"}
+        className="
+          w-full h-12 rounded-lg px-4 text-sm bg-transparent outline-none border border-gray-500 text-gray-100        
           focus:border-blue-600
-        `}
+        "
         {...rest}
       >
         <option value="" disabled hidden>
@@ -27,7 +26,7 @@ export function Select({ legend, error, children, ...rest }: Props) {
       </select>
 
       {error && (
-        <span className="text-red-500 text-xxs mt-1">
+        <span className="text-red-600 text-xs mt-1">
           {error}
         </span>
       )}

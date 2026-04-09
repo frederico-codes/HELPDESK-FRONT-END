@@ -126,7 +126,7 @@ export function Customers() {
 
             <tbody>
               {customers.map((customer) => (
-                <tr key={customer.id} className="border-b last:border-none">
+                <tr key={customer.id} className="border-b border-gray-500 last:border-none">
                   <td className="py-4 xl:px-2 text-sm">
                     <div className="flex items-center gap-2 truncate max-w-[120px] xl:max-w-none">
                       <span className="w-7 h-7 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">

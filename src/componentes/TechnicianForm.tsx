@@ -185,6 +185,7 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
 
       <form
         onSubmit={onSubmit}
+        noValidate
         className="w-full flex flex-col xl:px-14 gap-4 bg-white absolute xl:relative py-24 rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4"
       >
         <div className="w-full h-full flex flex-col px-6">
@@ -246,7 +247,7 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
 
                 <div className="flex flex-col gap-2">
                   <Input
-                    name="nome"
+                    name="name"
                     required
                     legend="NOME"
                     type="text"
@@ -285,7 +286,7 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
                     placeholder={
                       technicianId
                         ? "Digite apenas se quiser alterar"
-                        : "Digite a senha provisória do técnico"
+                        : "Digite senha provisória do técnico"
                     }
                     value={password}
                     error={errors.password}
@@ -296,7 +297,7 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
                   />
                 </div>
 
-                <p className="text-xs text-gray-400 mt-2">
+                <p className="text-xs text-gray-200 mt-2">
                   {technicianId
                     ? "Preencha a senha apenas se quiser alterá-la"
                     : "A senha será definida pelo manager e repassada ao técnico"}

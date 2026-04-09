@@ -227,7 +227,7 @@ export function Calls() {
 
               <tbody>
                 {calls.map((call) => (
-                  <tr key={call.id} className="border-b last:border-none">
+                  <tr key={call.id} className="border-b border-gray-500 last:border-none">
                     <td className="py-4 px-3 xl:px-4 text-xs text-gray-700 ">
                       {call.updatedAt}
                     </td>

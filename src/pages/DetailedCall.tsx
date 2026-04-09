@@ -165,10 +165,11 @@ export function DetailedCall() {
 
   return (
     <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] bg-gray-100 xl:overflow-hidden">
+
       <Sidebar />
 
       <div
-        className="w-full h-screen flex flex-col px-6 xl:px-6 gap-4 bg-white absolute xl:relative py-24 
+        className="w-full h-screen flex flex-col px-6 xl:px-6 gap-4 bg-white absolute xl:relative py-15 
         rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4"
       >
         <div className="w-full px-8 xl:px-10 2xl:px-72">
@@ -180,12 +181,12 @@ export function DetailedCall() {
               ← Voltar
             </Link>
 
-            <div className="flex flex-col xl:flex-row justify-between mb-8">
+            <div className="flex flex-col xl:flex-row justify-between mb-8 mt-4 xl:mt-0 ">
               <h1 className="text-2xl font-bold text-blue-dark">
                 Chamado detalhado
               </h1>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 mt-4 xl:mt-0">
                 <button
                   type="button"
                   disabled={
@@ -348,7 +349,7 @@ export function DetailedCall() {
               </div>
             </div>
 
-            <div className="bg-white border border-gray-500 rounded-lg p-6">
+            <div className="bg-white border border-gray-500 rounded-lg p-6 mb-20">
               <h3 className="text-sm text-gray-400 mb-4">
                 Técnico responsável
               </h3>
@@ -381,7 +382,7 @@ export function DetailedCall() {
                 <span className="font-medium">{formattedAdditionalTotal}</span>
               </div>
 
-              <div className="flex justify-between text-sm font-semibold text-gray-900 border-t pt-4 mt-4">
+              <div className="flex justify-between text-sm font-semibold text-gray-900 border-t pt-4 mt-4 ">
                 <span>Total</span>
                 <span>{formattedTotalPrice}</span>
               </div>

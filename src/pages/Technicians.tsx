@@ -44,6 +44,7 @@ export function Technicians() {
 
   return (
     <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] bg-gray-100 xl:overflow-hidden">
+      
       <Sidebar />
 
       <div
@@ -67,11 +68,11 @@ export function Technicians() {
             Carregando técnicos...
           </div>
         ) : (
-          <div className="w-full h-full bg-white rounded-2xl">
+          <div className="w-full h-full bg-white rounded-2xl max-h-[600px] overflow-y-auto">
             <table className="w-full text-left">
-              <thead className="border-b border-gray-500">
+              <thead className="border-b border-gray-500 sticky top-0 bg-white ">
                 <tr className="text-sm text-gray-400">
-                  <th className="py-4 px-6 font-medium">Nome</th>
+                  <th className="py-4 px-6 font-medium xl:w-[300px]">Nome</th>
                   <th className="py-4 px-6 font-medium hidden xl:table-cell">
                     E-mail
                   </th>
@@ -84,9 +85,9 @@ export function Technicians() {
 
               <tbody>
                 {technicians.map((technician) => (
-                  <tr key={technician.id} className="border-b last:border-none">
+                  <tr key={technician.id} className="border-b border-gray-500 last:border-none">
                     <td className="py-4 xl:px-6 text-sm">
-                      <div className="flex items-center gap-2 truncate max-w-[120px]">
+                      <div className="flex items-center gap-2 max-w-[150px] truncate sm:truncate-none ">
                         <span className="w-7 h-7 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
                           {getInitials(technician.name)}
                         </span>

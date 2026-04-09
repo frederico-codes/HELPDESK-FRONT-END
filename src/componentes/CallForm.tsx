@@ -289,6 +289,7 @@ export function CallForm() {
 
           <form
             onSubmit={handleSubmit}
+            noValidate
             className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_360px]"
           >
             <div className="bg-white rounded-xl border border-gray-500 p-6">
@@ -325,9 +326,7 @@ export function CallForm() {
                   required
                   placeholder="Descreva o que está acontecendo"
                   rows={6}
-                  className={`w-full border py-2 px-4 text-sm text-gray-700 resize-none focus:outline-none focus:border-blue-600 ${
-                    errors.description ? "border-red-500" : "border-gray-500"
-                  }`}
+                  className="w-full border border-gray-500 py-2 px-4 text-sm text-gray-700 resize-none focus:outline-none focus:border-blue-600"
                   value={description}
                   onChange={(e) => {
                     setDescription(e.target.value);
@@ -335,7 +334,7 @@ export function CallForm() {
                   }}
                 />
                 {errors.description && (
-                  <span className="text-red-500 text-xxs mt-1 block">
+                  <span className="text-red-600 text-xs mt-1 block">
                     {errors.description}
                   </span>
                 )}
