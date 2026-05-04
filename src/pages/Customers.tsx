@@ -113,9 +113,9 @@ export function Customers() {
       <div className="w-full h-screen flex flex-col px-6 xl:px-16 gap-4 bg-white absolute xl:relative py-24 rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
         <h1 className="text-2xl font-bold">Clientes</h1>
 
-        <div className="w-full bg-white rounded-2xl shadow-sm overflow-hidden">
+        <div className="w-full bg-white rounded-2xl shadow-sm overflow-hidden overflow-y-auto max-h-[700px]">
           <table className="w-full text-left">
-            <thead className="border-b border-gray-500">
+            <thead className="border-b border-gray-500 sticky top-0 bg-white">
               <tr className="text-sm text-gray-400">
                 <th className="py-4 xl:px-2 font-medium">Nome</th>
                 <th className="py-4 xl:px-2 font-medium">E-mail</th>

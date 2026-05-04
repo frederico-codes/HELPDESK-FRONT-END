@@ -63,6 +63,7 @@ export function SignIn() {
           email?: string[];
           password?: string[];
         };
+        
 
         return {
           errors: {
@@ -101,7 +102,11 @@ export function SignIn() {
       </section>
 
       <div className="w-full h-screen mt-4 flex flex-col items-center justify-center xl:px-50 gap-4 bg-white absolute xl:relative py-24 rounded-3xl xl:rounded-none xl:rounded-tl-2xl">
-        <form action={formAction} noValidate className="lg:w-[470px] max-[470px]">
+        <form
+          action={formAction}
+          noValidate
+          className="lg:w-[470px] max-[470px]"
+        >
           <div className="flex justify-center gap-2 mb-8">
             <img src={LogoIconDark} alt="Logo" />
             <h1 className="text-2xl --color-blue-dark font-bold">HelpDesk</h1>
@@ -121,8 +126,8 @@ export function SignIn() {
                 value={email}
                 error={localErrors.email}
                 onChange={(e) => {
-                  setEmail(e.target.value)
-                  setLocalErrors((prev) => ({ ...prev, email: undefined }))
+                  setEmail(e.target.value);
+                  setLocalErrors((prev) => ({ ...prev, email: undefined }));
                 }}
               />
 
@@ -135,11 +140,14 @@ export function SignIn() {
                 value={password}
                 error={localErrors.password}
                 onChange={(e) => {
-                  setPassword(e.target.value)
-                  setLocalErrors((prev) => ({ ...prev, password: undefined }))
+                  setPassword(e.target.value);
+                  setLocalErrors((prev) => ({ ...prev, password: undefined }));
                 }}
               />
-           
+
+              {state?.message && (
+                <div className="text-red-500 text-sm mt-2">{state.message}</div>
+              )}
             </div>
 
             <Button type="submit" isLoading={isLoading}>
@@ -160,5 +168,5 @@ export function SignIn() {
         </form>
       </div>
     </div>
-  )
+  );
 }

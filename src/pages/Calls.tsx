@@ -111,7 +111,7 @@ function AvatarBadge({
 }) {
   return (
     <div className="flex items-center gap-2 min-w-0">
-      <span className="w-7 h-7 rounded-full bg-blue-700 text-white text-[10px] flex items-center justify-center shrink-0">
+      <span className="w-7 h-7 rounded-full bg-blue-700 text-white text-xs  flex items-center justify-center shrink-0">
         {initials}
       </span>
       <span className="truncate">{name}</span>

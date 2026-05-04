@@ -149,7 +149,7 @@ export function Services() {
         <div className="w-full h-full bg-white rounded-2xl shadow-sm flex flex-col">
           <div className="overflow-y-auto max-h-[700px]">
             <table className="w-full text-left">
-              <thead className="border-b border-gray-500">
+              <thead className="border-b border-gray-500 sticky top-0 bg-white">
                 <tr className="text-sm text-gray-400">
                   <th className="py-4 px-6 font-medium">Título</th>
                   <th className="py-4 px-6 font-medium">Valor</th>
