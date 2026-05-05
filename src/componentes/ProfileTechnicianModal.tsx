@@ -43,7 +43,7 @@ export function ProfileTechnicianModal({
       setPassword("");
       setAvatarFile(null);
     }
-  }, [open, initialName, initialEmail]);
+  }, [open, initialName, initialEmail, initialAvatar]);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -90,7 +90,7 @@ export function ProfileTechnicianModal({
         <div className="px-6 py-5 space-y-6">
           <Upload
             filename={null}
-            initialPreview={initialAvatar || avatarPlaceholder} 
+            initialPreview={initialAvatar ?? avatarPlaceholder}
             onFileChange={setAvatarFile}
           />
 

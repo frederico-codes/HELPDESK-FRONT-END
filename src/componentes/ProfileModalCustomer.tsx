@@ -44,7 +44,7 @@ export function ProfileModalCustomer({
       setPassword("");
       setAvatarFile(null);
     }
-  }, [open, initialName, initialEmail]);
+  }, [open, initialName, initialEmail, initialAvatar]);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -92,7 +92,7 @@ export function ProfileModalCustomer({
           <div className="flex items-center gap-4">
             <Upload
               filename={null}
-              initialPreview={initialAvatar || avatarPlaceholder}
+              initialPreview={initialAvatar ?? avatarPlaceholder}
               onFileChange={setAvatarFile} />
 
               <img 

@@ -44,7 +44,7 @@ export function EditCustomerModal({
     alert("Cliente atualizado com sucesso.");
     onClose();
 
-    // opcional: recarregar lista (ideal é via props)
+   
     window.location.reload();
 
   } catch (error) {
