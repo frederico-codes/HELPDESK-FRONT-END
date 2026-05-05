@@ -76,15 +76,18 @@ npm run preview
 ```
 ## 📁 Estrutura do projeto
 
-assets/
-componentes/
-contexts/
-dtos/
-hooks/
-pages/
-routes/
-services/
-utils/
+```
+src/
+  assets/
+  componentes/
+  contexts/
+  dtos/
+  hooks/
+  pages/
+  routes/
+  services/
+  utils/
+```
 
 ## 🔐 Autenticação
 
