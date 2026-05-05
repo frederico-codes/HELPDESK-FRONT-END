@@ -48,7 +48,7 @@ export function Sidebar() {
             <img src={Logo_IconLight} alt="Logo padrão" />
             <div className="flex flex-col">
               <h1 className="text-gray-600 text-xl">HelpDesk</h1>
-              <span className="text-xxs text-blue-light">{roleLabel}</span>
+              <span className="text-xxs text-blue-light uppercase">{roleLabel}</span>
             </div>
           </div>
           <div className="flex flex-col">
