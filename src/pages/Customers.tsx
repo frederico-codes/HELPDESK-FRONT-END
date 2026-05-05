@@ -80,6 +80,7 @@ export function Customers() {
 
   return (
     <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] relative bg-gray-100 xl:overflow-hidden">
+      
       <Sidebar />
 
       <section className="block xl:hidden w-screen h-screen absolute top-0">

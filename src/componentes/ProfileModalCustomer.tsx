@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Input } from "../componentes/Input";
 import { Upload } from "./Upload";
 import avatarPlaceholder from "../assets/avatar_placeholder.svg";
+import { Tooltip } from "react-tooltip";
 
 interface Props {
   open: boolean;
@@ -93,16 +94,21 @@ export function ProfileModalCustomer({
             <Upload
               filename={null}
               initialPreview={initialAvatar ?? avatarPlaceholder}
-              onFileChange={setAvatarFile} />
+              onFileChange={setAvatarFile}
+            />
 
-              <img 
-              src={trash} 
-              alt="lixeira"  
-              className="cursor-pointer bg-gray-500 w-5 h-5 '"
-               onClick={() => {
-                 onDeleteAccount();
-                }}              
-              />
+            <img
+              src={trash}
+              alt="lixeira"
+              data-tooltip-id="tooltip-info"
+              data-tooltip-content="Excluir Conta (irreversível)"
+              className="cursor-pointer bg-gray-500 w-5 h-5"
+              onClick={() => {
+                onDeleteAccount();
+              }}
+            />
+            <Tooltip id="tooltip-info" />
+            
           </div>
 
           <div>
