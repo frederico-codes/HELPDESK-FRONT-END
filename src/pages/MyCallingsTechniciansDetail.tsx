@@ -2,15 +2,14 @@ import Logo_IconLight from "../assets/icons/Logo_IconLight.svg";
 import list from "../assets/icons/clipboard-list.svg";
 import LogoIconLight from "../assets/Logo_IconLight.png";
 import arrowLeft from "../assets/icons/arrow-left.svg";
-import clock_open from "../assets/icons/clock-open.svg";
+import  circleHelp  from "../assets/icons/circle-help.svg";
 import menu from "../assets/icons/Menu.png";
 import clock from "../assets/icons/clock.svg";
 import clock_2 from "../assets/icons/clock_2.svg";
 import avatar from "../assets/Avatar.svg";
-import closed from "../assets/icons/closed.svg";
 import bin from "../assets/icons/bin.svg";
 import { useLocation, Link, useParams } from "react-router-dom";
-import currently_assisting from "../assets/icons/currently_assisting.svg";
+import clock2 from "../assets/icons/clock-2.svg";
 import { useEffect, useState } from "react";
 import { CloseOptionsModal } from "../componentes/CloseOptionsModal";
 import { useAuth } from "../hooks/useAuth";
@@ -79,13 +78,13 @@ function getStatusMeta(status: ApiCall["status"]) {
     case "open":
       return {
         label: "Aberto",
-        icon: clock_open,
+        icon: circleHelp,
         className: "bg-pink-100 text-pink-700",
       };
     case "in_progress":
       return {
         label: "Em atendimento",
-        icon: currently_assisting,
+        icon: clock2,
         className: "bg-blue-100 text-blue-700",
       };
     case "closed":

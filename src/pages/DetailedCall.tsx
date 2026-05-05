@@ -1,4 +1,4 @@
-import clockOpen from "../assets/icons/clock-open.svg";
+import  circleHelp  from "../assets/icons/circle-help.svg";
 import clock from "../assets/icons/clock.svg";
 import circleCheckBig from "../assets/icons/circle-check-big.svg";
 import trash from "../assets/icons/trash.svg";
@@ -125,7 +125,7 @@ export function DetailedCall() {
         return {
           label: "Aberto",
           class: "bg-red-100 text-red-700",
-          icon: clockOpen,
+          icon: circleHelp,
         };
       case "in_progress":
         return {

@@ -5,11 +5,11 @@ import list from "../assets/icons/clipboard-list.svg";
 import menu from "../assets/icons/Menu.png";
 import LogoIconLight from "../assets/Logo_IconLight.png";
 import avatar from "../assets/Avatar.svg";
-import closed from "../assets/icons/closed.svg";
+import circleGreen from "../assets/icons/circle-green.svg";
 import CircleCheckClose from "../assets/icons/circle-check-big-close.svg";
-import currently_assisting from "../assets/icons/currently_assisting.svg";
+import clock2 from "../assets/icons/clock-2.svg";
 import { useLocation, Link } from "react-router-dom";
-import clock_open from "../assets/icons/clock-open.svg";
+import  circleHelp  from "../assets/icons/circle-help.svg";
 import pen from "../assets/icons/pen-line.svg";
 import { useEffect, useMemo, useState } from "react";
 import { AlterProfileModalTechnicians } from "../componentes/AlterProfileModalTechnicians";
@@ -411,7 +411,7 @@ export function MyCallingsTechnicians() {
             <>
               <div className="mb-5">
                 <span className="inline-flex items-center gap-2 text-sm font-medium text-blue-700 bg-blue-100 px-3 py-1 rounded-full">
-                  <img src={currently_assisting} alt="" />
+                  <img src={clock2} alt="" />
                   Em atendimento
                 </span>
 
@@ -422,7 +422,7 @@ export function MyCallingsTechnicians() {
                       call={call}
                       actionLabel="Encerrar"
                       actionIcon={CircleCheckClose}
-                      statusIcon={currently_assisting}
+                      statusIcon={clock2}
                       onAction={() => handleUpdateStatus(call.id, "closed")}
                       isUpdating={updatingCallId === call.id}
                     />
@@ -432,7 +432,7 @@ export function MyCallingsTechnicians() {
 
               <div className="mb-5">
                 <span className="inline-flex items-center gap-2 text-sm font-medium text-pink-700 bg-pink-100 px-3 py-1 rounded-full">
-                  <img src={clock_open} alt="" />
+                  <img src={circleHelp} alt="" />
                   Aberto
                 </span>
 
@@ -443,7 +443,7 @@ export function MyCallingsTechnicians() {
                       call={call}
                       actionLabel="Iniciar"
                       actionIcon={CircleCheckClose}
-                      statusIcon={clock_open}
+                      statusIcon={circleHelp}
                       onAction={() =>
                         handleUpdateStatus(call.id, "in_progress")
                       }
@@ -455,7 +455,7 @@ export function MyCallingsTechnicians() {
 
               <div className="mb-5">
                 <span className="inline-flex items-center gap-2 text-sm font-medium text-green-700 bg-green-100 px-3 py-1 rounded-full">
-                  <img src={closed} alt="" />
+                  <img src={circleGreen} alt="" />
                   Encerrado
                 </span>
 
@@ -464,7 +464,7 @@ export function MyCallingsTechnicians() {
                     <CallCardItem
                       key={call.id}
                       call={call}
-                      statusIcon={closed}
+                      statusIcon={circleGreen}
                     />
                   ))}
                 </div>

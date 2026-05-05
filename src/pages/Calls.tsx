@@ -1,5 +1,5 @@
-import clockOpen from "../assets/icons/clock-open.svg";
-import currentlyAssisting from "../assets/icons/currently_assisting.svg";
+import  circleHelp  from "../assets/icons/circle-help.svg";
+import clock2 from "../assets/icons/clock-2.svg";
 import closed from "../assets/icons/closed.svg";
 import pen from "../assets/icons/pen-line.svg";
 import { Link } from "react-router-dom";
@@ -81,14 +81,14 @@ function getStatusMeta(status: ApiCall["status"]) {
     case "open":
       return {
         label: "Aberto",
-        icon: clockOpen,
+        icon: circleHelp,
         alt: "Ícone de chamado aberto",
         className: "bg-pink-100 text-pink-600",
       };
     case "in_progress":
       return {
         label: "Em atendimento",
-        icon: currentlyAssisting,
+        icon: clock2,
         alt: "Ícone de chamado em atendimento",
         className: "bg-blue-100 text-blue-600",
       };

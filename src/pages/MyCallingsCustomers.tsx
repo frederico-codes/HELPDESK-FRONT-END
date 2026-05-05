@@ -5,13 +5,13 @@ import closed from "../assets/icons/closed.svg";
 import plus from "../assets/icons/plus.svg";
 import LogoIcon from "../assets/icons/Logo_IconLight.svg";
 import LogoIconMobile from "../assets/Logo_IconLight.png";
-import clockOpen from "../assets/icons/clock-open.svg";
+import  circleHelp  from "../assets/icons/circle-help.svg";
 import avatar from "../assets/Avatar.svg";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import { api } from "../services/api";
-import currentlyAssisting from "../assets/icons/currently_assisting.svg";
+import clock2 from "../assets/icons/clock-2.svg";
 import { ProfileModalCustomer } from "../componentes/ProfileModalCustomer";
 import { AlterProfileModalCustomer } from "../componentes/AlterProfileModalCustomer";
 import { ProfileOptionsModal } from "../componentes/ProfileOptionsModal";
@@ -72,13 +72,13 @@ function getStatusConfig(status: CallStatus) {
     case "aberto":
       return {
         label: "Aberto",
-        icon: clockOpen,
+        icon: circleHelp,
         wrapperClass: "bg-pink-100 text-pink-600",
       };
     case "em_atendimento":
       return {
         label: "Em atendimento",
-        icon: currentlyAssisting,
+        icon: clock2,
         wrapperClass: "bg-blue-100 text-blue-600",
       };
     case "encerrado":

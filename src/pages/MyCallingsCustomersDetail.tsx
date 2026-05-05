@@ -7,8 +7,8 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import { api } from "../services/api";
-import clockOpen from "../assets/icons/clock-open.svg";
-import currentlyAssisting from "../assets/icons/currently_assisting.svg";
+import  circleHelp  from "../assets/icons/circle-help.svg";
+import clock2 from "../assets/icons/clock-2.svg";
 import closed from "../assets/icons/closed.svg";
 import { useUser } from "../hooks/useUser";
 import { useAuth } from "../hooks/useAuth";
@@ -98,13 +98,13 @@ function getStatusConfig(status: CallStatus) {
     case "aberto":
       return {
         label: "Aberto",
-        icon: clockOpen,
+        icon: circleHelp,
         wrapperClass: "bg-pink-100 text-pink-600",
       };
     case "em_atendimento":
       return {
         label: "Em atendimento",
-        icon: currentlyAssisting,
+        icon: clock2,
         wrapperClass: "bg-blue-100 text-blue-600",
       };
     case "encerrado":

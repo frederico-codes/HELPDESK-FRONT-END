@@ -5,7 +5,7 @@ import { ServiceModal } from "../componentes/ServiceModal";
 import { Sidebar } from "../componentes/Sidebar";
 import plus from "../assets/icons/plus.svg";
 import pen from "../assets/icons/pen-line.svg";
-import circleCheckBig from "../assets/icons/circle-check-big.svg";
+import circleGreen from "../assets/icons/circle-green.svg";
 import circleCheck from "../assets/icons/circle-check.svg";
 import disable from "../assets/icons/disable.svg";
 import { Tooltip } from "react-tooltip";
@@ -183,7 +183,7 @@ export function Services() {
                         }`}
                       >
                         {service.active ? (
-                          <img src={circleCheckBig} className="w-4 h-4" />
+                          <img src={circleGreen} className="w-4 h-4" />
                         ) : (
                           <img src={disable} className="w-4 h-4" />
                         )}
