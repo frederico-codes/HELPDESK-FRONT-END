@@ -2,6 +2,7 @@ import { X } from "phosphor-react";
 import { Upload } from "./Upload";
 import { Input } from "./Input";
 import { useEffect, useState } from "react";
+import avatarPlaceholder from "../assets/avatar_placeholder.svg";
 
 interface Props {
   open: boolean;
@@ -14,7 +15,7 @@ interface Props {
   }) => Promise<void> | void;
   initialName?: string;
   initialEmail?: string;
-  initialAvatar?: string | null; // 👈 ADICIONE ISSO
+  initialAvatar?: string | null; 
   isLoading?: boolean;
   availability?: string[];
 }
@@ -26,7 +27,7 @@ export function ProfileTechnicianModal({
   onSave,
   initialName,
   initialEmail,
-  initialAvatar, // 👈 AQUI
+  initialAvatar, 
   isLoading = false,
   availability = [],
 }: Props) {
@@ -89,7 +90,7 @@ export function ProfileTechnicianModal({
         <div className="px-6 py-5 space-y-6">
           <Upload
             filename={null}
-            initialPreview={initialAvatar}
+            initialPreview={initialAvatar || avatarPlaceholder} 
             onFileChange={setAvatarFile}
           />
 
@@ -119,9 +120,10 @@ export function ProfileTechnicianModal({
                 <Input
                   name="password"
                   legend="SENHA"
-                  type="text"
-                  placeholder="Digite sua senha"
+                  type="password"
+                  placeholder="******"
                   value={password}
+                  readOnly
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>

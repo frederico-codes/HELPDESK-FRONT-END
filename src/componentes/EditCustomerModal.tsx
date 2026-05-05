@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { api } from "../services/api";
 import { AxiosError } from "axios";
 
+
+
 interface CustomerModalProps {
   open: boolean;
   onClose: () => void;
@@ -63,7 +65,7 @@ export function EditCustomerModal({
       className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4"
     >
       <div className="bg-white rounded-2xl w-full max-w-md shadow-lg animate-fade">
-        {/* HEADER */}
+       
         <div className="flex justify-between items-center px-6 py-4 border-b border-b-gray-500">
           <h2 className="text-base text-gray-700">Cliente</h2>
 
@@ -72,16 +74,16 @@ export function EditCustomerModal({
           </button>
         </div>
 
-        {/* BODY */}
+       
         <div className="px-6 py-6 flex flex-col gap-6">
-          {/* Avatar + iniciais */}
+          
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-full bg-blue-700 text-white flex items-center justify-center text-lg font-medium">
               {customer.initials}
             </div>
           </div>
 
-          {/* Nome */}
+         
           <Input
             name="nome"
             required
@@ -92,7 +94,7 @@ export function EditCustomerModal({
             onChange={(e) => setName(e.target.value)}
           />
 
-          {/* Email */}
+          
           <Input
             name="email"
             required
@@ -104,7 +106,7 @@ export function EditCustomerModal({
           />
         </div>
 
-        {/* FOOTER */}
+        
         <div className="px-6 py-4 border-t border-t-gray-500">
           <button
             type="submit"

@@ -3,7 +3,7 @@ import trash from "../assets/icons/trash.svg";
 import { useEffect, useState } from "react";
 import { Input } from "../componentes/Input";
 import { Upload } from "./Upload";
-
+import avatarPlaceholder from "../assets/avatar_placeholder.svg";
 
 interface Props {
   open: boolean;
@@ -92,7 +92,7 @@ export function ProfileModalCustomer({
           <div className="flex items-center gap-4">
             <Upload
               filename={null}
-              initialPreview={initialAvatar}
+              initialPreview={initialAvatar || avatarPlaceholder}
               onFileChange={setAvatarFile} />
 
               <img 
@@ -136,7 +136,8 @@ export function ProfileModalCustomer({
                   name="password"
                   legend="Senha"
                   type="password"
-                  placeholder="Digite sua senha"
+                  placeholder="******"
+                  readOnly
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />

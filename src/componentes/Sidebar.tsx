@@ -156,8 +156,8 @@ export function Sidebar() {
               className="flex flex-col cursor-pointer min-w-0"
               onClick={() => setOpen(true)}
             >
-              <span className="text-sm truncate">{name}</span>
-              <span className="text-xs text-gray-400 truncate">{email}</span>
+              <span className="text-sm max-w-[150px] truncate">{name}</span>
+              <span className="text-xs text-gray-400 max-w-[150px] truncate">{email}</span>
             </div>
           </div>
         </div>
