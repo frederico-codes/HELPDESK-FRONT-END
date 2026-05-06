@@ -4,7 +4,6 @@ import { ProfileTechnicianModal } from "../componentes/ProfileTechnicianModal";
 import list from "../assets/icons/clipboard-list.svg";
 import menu from "../assets/icons/Menu.png";
 import LogoIconLight from "../assets/Logo_IconLight.png";
-import avatar from "../assets/Avatar.svg";
 import circleGreen from "../assets/icons/circle-green.svg";
 import CircleCheckClose from "../assets/icons/circle-check-big-close.svg";
 import clock2 from "../assets/icons/clock-2.svg";
@@ -380,18 +379,16 @@ export function MyCallingsTechnicians() {
           </div>
 
           <div>
-            <img
-              src={avatar}
-              alt="avatar"
-              className="absolute top-8 right-10"
-            />
+            <span className="w-13 h-13 rounded-full bg-blue-700 text-white  flex items-center justify-center absolute top-8 right-10">
+              {userInitials}
+            </span>
           </div>
         </div>
       </section>
 
       <div className="w-full h-screen px-6 xl:px-6 gap-4 bg-white absolute xl:relative rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4 overflow-y-auto">
         <div className="w-full max-w-6xl px-4 pt-3">
-          <h1 className="text-2xl font-semibold text-gray-800 mb-6">
+          <h1 className="text-2xl font-semibold text-gray-800 mt-8 mb-6">
             Meus chamados
           </h1>
 

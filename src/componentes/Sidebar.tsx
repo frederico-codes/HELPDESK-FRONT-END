@@ -5,7 +5,6 @@ import wrench from "../assets/icons/wrench.svg";
 import list from "../assets/icons/clipboard-list.svg";
 import menu from "../assets/icons/Menu.png";
 import LogoIconLight from "../assets/Logo_IconLight.png";
-import avatar from "../assets/Avatar.svg";
 import { useLocation } from "react-router-dom";
 import { CloseOptionsModal } from "./CloseOptionsModal";
 import { Link } from "react-router-dom";
@@ -181,12 +180,10 @@ export function Sidebar() {
             </div>
           </div>
           {/* GRUPO DIREITA */}
-          <div>
-            <img
-              src={avatar}
-              alt="avatar"
-              className="absolute top-8 right-10"
-            />
+         <div>
+            <span className="w-13 h-13 rounded-full bg-blue-700 text-white  flex items-center justify-center absolute top-8 right-10">
+              {initials}
+            </span>
           </div>
         </div>
       </section>

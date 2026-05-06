@@ -169,7 +169,7 @@ export function DetailedCall() {
       <Sidebar />
 
       <div
-        className="w-full h-screen flex flex-col px-6 xl:px-6 gap-4 bg-white absolute xl:relative py-15 
+        className="w-full h-screen flex flex-col px-2 xl:px-6 gap-4 bg-white absolute xl:relative py-15 
         rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4"
       >
         <div className="w-full px-8 xl:px-10 2xl:px-72">
