@@ -1,6 +1,5 @@
 import menu from "../assets/icons/Menu.png";
 import LogoIconLight from "../assets/Logo_IconLight.png";
-import avatar from "../assets/Avatar.svg";
 import pen from "../assets/icons/pen-line.svg";
 import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
@@ -80,7 +79,6 @@ export function Customers() {
 
   return (
     <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] relative bg-gray-100 xl:overflow-hidden">
-      
       <Sidebar />
 
       <section className="block xl:hidden w-screen h-screen absolute top-0">
@@ -99,27 +97,20 @@ export function Customers() {
                 <span className="text-xxs text-blue-light">Admin</span>
               </div>
             </div>
-          </div>
-
-          <div>
-            <img
-              src={avatar}
-              alt="avatar"
-              className="absolute top-8 right-10"
-            />
-          </div>
+          </div>    
+          
         </div>
       </section>
 
-      <div className="w-full h-screen flex flex-col px-6 xl:px-16 gap-4 bg-white absolute xl:relative py-24 rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
+      <div className="w-full h-screen flex flex-col px-6 xl:px-16 gap-4 bg-white absolute xl:relative py-14 rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
         <h1 className="text-2xl font-bold">Clientes</h1>
 
-        <div className="w-full bg-white rounded-2xl shadow-sm overflow-hidden overflow-y-auto max-h-[700px]">
-          <table className="w-full text-left">
-            <thead className="border-b border-gray-500 sticky top-0 bg-white">
-              <tr className="text-sm text-gray-400">
-                <th className="py-4 xl:px-2 font-medium">Nome</th>
-                <th className="py-4 xl:px-2 font-medium">E-mail</th>
+        <div className="w-full bg-white  rounded-2xl shadow-sm  xl:overflow-y-auto xl:max-h-[700px] ">
+          <table className="w-full text-left ">
+            <thead className="border border-gray-500  xl:sticky xl:top-0 bg-white">
+              <tr className="text-sm text-gray-400 ">
+                <th className="py-4 xl:px-2 font-medium px-2 ">Nome</th>
+                <th className="py-4 xl:px-2 font-medium px-2">E-mail</th>
                 <th className="py-4 px-2 font-medium"></th>
                 <th className="py-4 px-2 font-medium"></th>
               </tr>
@@ -128,7 +119,7 @@ export function Customers() {
             <tbody>
               {customers.map((customer) => (
                 <tr key={customer.id} className="border-b border-gray-500 last:border-none">
-                  <td className="py-4 xl:px-2 text-sm">
+                  <td className="py-4 xl:px-2 px-2 text-sm">
                     <div className="flex items-center gap-2 truncate max-w-[120px] xl:max-w-none">
                       <span className="w-7 h-7 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
                         {getInitials(customer.name)}
@@ -140,7 +131,7 @@ export function Customers() {
                     </div>
                   </td>
 
-                  <td className="py-4 xl:px-2">
+                  <td className="py-4 xl:px-2 px-2">
                     <div className="text-sm text-gray-400 truncate max-w-[120px] xl:truncate-none xl:max-w-full">
                       {customer.email}
                     </div>

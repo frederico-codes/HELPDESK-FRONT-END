@@ -19,9 +19,9 @@ export function Sidebar() {
   const role = session?.user?.role;
 
   const roleLabel = {
-    manager: "Admin",
-    technical: "Técnico",
-    customer: "Cliente",
+    manager: "ADMIN",
+    technical: "TÉCNICO",
+    customer: "CLIENTE",
   }[role ?? "customer"];
   
   const name = session?.user?.name ?? "";
@@ -175,7 +175,7 @@ export function Sidebar() {
               />
               <div>
                 <h1 className="text-xl text-gray-600 ">HelpDesk</h1>
-                <span className="text-xxs text-blue-light ">Admin</span>
+                <span className="text-xxs text-blue-light ">ADMIN</span>
               </div>
             </div>
           </div>

@@ -151,7 +151,6 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
 
   return (
     <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] bg-gray-100 xl:overflow-hidden">
-
       <Sidebar />
 
       <section className="block xl:hidden w-screen h-screen absolute">
@@ -276,7 +275,34 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
                       setErrors((prev) => ({ ...prev, email: undefined }));
                     }}
                   />
-                </div>            
+                </div>
+
+                              <div className="flex flex-col gap-2 mt-4">
+                  <Input
+                    name="password"
+                    required={!technicianId}
+                    legend="SENHA"
+                    type="password"
+                    placeholder={
+                      technicianId
+                        ? "Digite apenas se quiser alterar"
+                        : "Digite senha provisória do técnico"
+                    }
+                    value={password}
+                    error={errors.password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      setErrors((prev) => ({ ...prev, password: undefined }));
+                    }}
+                  />
+                </div>
+
+                <p className="text-xs text-gray-200 mt-2">
+                  {technicianId
+                    ? "Preencha a senha apenas se quiser alterá-la"
+                    : "A senha será definida pelo manager e repassada ao técnico"}
+                </p>
+
               </div>
 
               <div className="border border-gray-500 rounded-xl p-6 bg-white">
@@ -284,7 +310,8 @@ export function TechnicianForm({ technicianId }: TechnicianFormProps) {
                   Horários de atendimento
                 </h2>
                 <p className="text-xs mb-6">
-                  Selecione os horários de disponibilidade do técnico para atendimento
+                  Selecione os horários de disponibilidade do técnico para
+                  atendimento
                 </p>
 
                 <h3 className="text-xs font-bold mb-2">MANHÃ</h3>

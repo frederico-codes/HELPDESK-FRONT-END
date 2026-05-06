@@ -128,10 +128,11 @@ export function Services() {
   }
   return (
     <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] bg-gray-100 xl:overflow-hidden">
+      
       <Sidebar />
 
       <div
-        className="w-full h-screen flex flex-col px-6 xl:px-6 gap-4 bg-white absolute xl:relative py-24 
+        className="w-full h-screen flex flex-col px-6 xl:px-6 gap-4 bg-white absolute xl:relative py-15 
         rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4"
       >
         <div className="flex justify-between items-center">
@@ -146,22 +147,22 @@ export function Services() {
           </button>
         </div>
 
-        <div className="w-full h-full bg-white rounded-2xl shadow-sm flex flex-col">
-          <div className="overflow-y-auto max-h-[700px]">
+        <div className="w-full h-full bg-white rounded-2xl flex flex-col">
+          <div className="xl:overflow-y-auto xl:max-h-[700px]">
             <table className="w-full text-left">
-              <thead className="border-b border-gray-500 sticky top-0 bg-white">
+              <thead className="border-b border-gray-500 xl:sticky xl:top-0 bg-white">
                 <tr className="text-sm text-gray-400">
-                  <th className="py-4 px-6 font-medium">Título</th>
-                  <th className="py-4 px-6 font-medium">Valor</th>
-                  <th className="py-4 px-6 font-medium">Status</th>
-                  <th className="py-4 px-6 font-medium"></th>
-                  <th className="py-4 px-6 font-medium"></th>
+                  <th className="py-4 px-4 font-medium">Título</th>
+                  <th className="py-4 px-4 font-medium">Valor</th>
+                  <th className="py-4 px-4 font-medium">Status</th>
+                  <th className="py-4 px-4 font-medium"></th>
+                  <th className="py-4 px-4 font-medium"></th>
                 </tr>
               </thead>
               <tbody>
                 {services.map((service) => (
                   <tr key={service.id} className="border-b border-gray-500 last:border-none">
-                    <td className="truncate   max-w-[100px] xl:max-w-[400px]  py-4 px-6 font-bold text-sm text-gray-800">
+                    <td className="truncate max-w-[100px] xl:max-w-[400px]  py-4 px-6 font-bold text-sm text-gray-800">
                       {service.name}
                     </td>
                     <td className="py-4 px-6 text-sm text-gray-400">
