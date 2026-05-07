@@ -543,7 +543,7 @@ async function handleSaveProfile(data: {
         initialEmail={displayEmail}
         initialAvatar={
           displayAvatar
-            ? `http://localhost:3001/uploads/${displayAvatar}`
+            ? `${import.meta.env.VITE_API_URL}/uploads/${displayAvatar}`
             : undefined
         }
         isLoading={isSavingProfile}
