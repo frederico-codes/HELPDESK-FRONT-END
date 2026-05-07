@@ -57,12 +57,12 @@ VITE_API_URL=http://localhost:3000
 
 ## 🌍 Deploy
 
-```
+
   [acesse aqui](benevolente-pixie-0eb846.netlify.app)
   
 
 
-```
+
 
 ## 📜 Scripts
 
