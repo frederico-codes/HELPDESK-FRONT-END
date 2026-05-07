@@ -15,8 +15,6 @@ Interface web do sistema **HelpDesk**, desenvolvida para gerenciamento de chamad
   <img src="./src/assets/Cover%20(12).svg" width="900" />
 </p>
 
-
-
 ---
 
 ## 🚀 Tecnologias utilizadas
@@ -58,11 +56,10 @@ VITE_API_URL=http://localhost:3000
 
 ## 🌍 Deploy
 
-<p align="center">
-  <a href="https://seu-link-deploy.com" target="_blank">
-    <img src="https://img.shields.io/badge/Acessar%20Projeto-online-green?style=for-the-badge" />
-  </a>
-</p>
+```
+  [acesse aqui](benevolente-pixie-0eb846.netlify.app)
+  
+
 
 ```
 
@@ -74,6 +71,7 @@ npm run build
 npm run preview
 
 ```
+
 ## 📁 Estrutura do projeto
 
 ```
