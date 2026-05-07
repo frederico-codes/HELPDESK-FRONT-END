@@ -1,6 +1,5 @@
-import { Route, Routes } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 import { MyCallingsCustomers } from "../pages/MyCallingsCustomers";
-import { NotFound } from "../pages/NotFound";
 import { CallForm } from "../componentes/CallForm";
 import { MyCallingsCustomersDetail } from "../pages/MyCallingsCustomersDetail";
 
@@ -14,7 +13,7 @@ export function CustomerRoutes(){
         <Route path="/chamados/:id/edit" element={<CallForm />} />
 
 
-        <Route path="*" element={<NotFound/>}/>
+        <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }

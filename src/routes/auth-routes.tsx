@@ -1,7 +1,7 @@
-import { Route, Routes } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 import { SignIn } from "../pages/SignIn";
 import { SignUp } from "../pages/SignUp";
-import { NotFound } from "../pages/NotFound";
+
 
 export function AuthRoutes(){
   return(
@@ -9,7 +9,7 @@ export function AuthRoutes(){
       <Route path="/" element= {<SignIn/>}/> 
       <Route path="/signup" element= {<SignUp/>}/>
 
-      <Route path="*" element={<NotFound/>}/>     
+      <Route path="*" element={<Navigate to="/" replace />} />    
     </Routes>
   )
 }

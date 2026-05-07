@@ -41,9 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem(`${LOCAL_STORAGE_KEY}:user`);
     localStorage.removeItem(`${LOCAL_STORAGE_KEY}:token`);
 
-    delete api.defaults.headers.common["Authorization"];
-
-    window.location.assign("/");
+    delete api.defaults.headers.common["Authorization"];    
   }
 
   function loadUser() {

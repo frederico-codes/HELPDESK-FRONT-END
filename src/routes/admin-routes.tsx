@@ -1,11 +1,10 @@
-import { Route, Routes } from "react-router";
 import { Calls } from "../pages/Calls";
 import { Customers } from "../pages/Customers";
 import { Services } from "../pages/Services";
 import { Technicians } from "../pages/Technicians";
 import { DetailedCall } from "../pages/DetailedCall"
 import { DetailedTechnicians } from "../pages/DetailedTechnicians";
-import { NotFound } from "../pages/NotFound";
+import { Navigate, Route, Routes } from "react-router";
 
 export function AdminRoutes() {
   return (
@@ -18,7 +17,7 @@ export function AdminRoutes() {
       <Route path="/technicians/new" element={<DetailedTechnicians />} />
       <Route path="/technicians/:id/edit" element={<DetailedTechnicians />} />
 
-      <Route path="*" element={<NotFound />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
