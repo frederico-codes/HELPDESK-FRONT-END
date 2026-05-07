@@ -55,13 +55,15 @@ Crie um arquivo `.env` na raiz do projeto:
 VITE_API_URL=http://localhost:3000
 ```
 
-## 🌍 Deploy
+## 🔖 Layout
+
+Você pode visualizar o layout do projeto através [DESSE LINK](https://www.figma.com/design/HIFjZqN7GXpXPLIuuREWSd/Plataforma-de-Chamados--Community-?node-id=0-1&p=f&m=dev). É necessário ter conta no [Figma](https://figma.com) para acessá-lo.
 
 
-  [acesse aqui](benevolente-pixie-0eb846.netlify.app)
+## 🌍 Deploy  
   
 
-
+Você pode acessar o aplicativo completo (end to end) através [DESSE LINK](https://benevolent-pixie-0eb846.netlify.app/)
 
 
 ## 📜 Scripts
@@ -93,3 +95,10 @@ src/
 A aplicação utiliza JWT para autenticação.
 
 O token é armazenado no front-end e enviado automaticamente nas requisições para a API.
+
+
+## :memo: Licença
+
+Esse projeto está sob a licença MIT.
+
+---
