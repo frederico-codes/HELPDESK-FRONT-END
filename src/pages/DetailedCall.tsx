@@ -305,7 +305,7 @@ export function DetailedCall() {
                     Nenhum serviço adicional cadastrado.
                   </div>
                 ) : (
-                  <div className="divide-y divide-gray-500">
+                  <div className="divide-y divide-gray-500 xl:overflow-y-auto xl:max-h-[100px]">
                     {call.additionalServices.map((item) => (
                       <div
                         key={item.id}

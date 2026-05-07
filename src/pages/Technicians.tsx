@@ -44,7 +44,7 @@ export function Technicians() {
 
   return (
     <div className="w-screen h-screen xl:grid xl:grid-cols-[280px_1fr] bg-gray-100 xl:overflow-hidden">
-      
+
       <Sidebar />
 
       <div
@@ -112,20 +112,6 @@ export function Technicians() {
 
                     <td className="py-6 px-6">
                       <div className="flex gap-2 flex-wrap">
-                        {technician.availability?.slice(0, 1).map((hour) => (
-                          <span
-                            key={`mobile-${technician.id}-${hour}`}
-                            className="px-3 py-1 bg-gray-50 text-gray-200 text-xs rounded-full border border-gray-500 xl:hidden"
-                          >
-                            {hour}
-                          </span>
-                        ))}
-
-                        {technician.availability?.length > 1 && (
-                          <span className="px-3 py-1 bg-gray-50 text-gray-200 text-xs rounded-full border border-gray-500 xl:hidden">
-                            +{technician.availability.length - 1}
-                          </span>
-                        )}
 
                         {technician.availability?.slice(0, 3).map((hour) => (
                           <span
@@ -134,13 +120,27 @@ export function Technicians() {
                           >
                             {hour}
                           </span>
-                        ))}
-
+                        ))}                        
                         {technician.availability?.length > 3 && (
                           <span className="hidden xl:inline-flex px-3 py-1 bg-gray-50 text-gray-200 text-xs rounded-full border border-gray-500">
                             +{technician.availability.length - 3}
                           </span>
                         )}
+
+                        {technician.availability?.slice(0, 1).map((hour) => (
+                          <span
+                            key={`mobile-${technician.id}-${hour}`}
+                            className="px-3 py-1 bg-gray-50 text-gray-200 text-xs rounded-full border border-gray-500 xl:hidden"
+                          >
+                            {hour}
+                          </span>
+                        ))}
+                        {technician.availability?.length > 1 && (
+                          <span className="px-3 py-1 bg-gray-50 text-gray-200 text-xs rounded-full border border-gray-500 xl:hidden">
+                            +{technician.availability.length - 1}
+                          </span>
+                        )}
+
                       </div>
                     </td>
 

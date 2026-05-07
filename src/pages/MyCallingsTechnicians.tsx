@@ -353,7 +353,7 @@ export function MyCallingsTechnicians() {
 
           <div className="flex flex-col min-w-0">
             <span className="text-sm truncate">{displayName}</span>
-            <span className="text-xs text-gray-400 truncate">
+            <span className="text-xs text-gray-400 max-w-[150px] truncate">
               {displayEmail}
             </span>
           </div>
