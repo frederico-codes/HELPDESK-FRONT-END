@@ -68,7 +68,7 @@ export function Technicians() {
             Carregando técnicos...
           </div>
         ) : (
-          <div className="w-full h-full bg-white rounded-2xl  overflow-y-auto max-h-[700px]">
+          <div className="w-full h-full bg-white rounded-2xl  overflow-y-auto max-h-[700px] border border-gray-500 overflow-hidden">
             <table className="w-full text-left">
               <thead className="border-b border-gray-500 sticky top-0 bg-white ">
                 <tr className="text-sm text-gray-400 ">
@@ -76,26 +76,27 @@ export function Technicians() {
                   <th className="py-4 px-6 font-medium hidden xl:table-cell">
                     E-mail
                   </th>
-                  <th className="py-4 px-6 font-medium">
-                    Disponibilidade
-                  </th>
+                  <th className="py-4 px-6 font-medium">Disponibilidade</th>
                   <th className="py-4 px-6 font-medium"></th>
                 </tr>
               </thead>
 
               <tbody>
                 {technicians.map((technician) => (
-                  <tr key={technician.id} className="border-b border-gray-500 last:border-none ">
-                    <td className="py-4 xl:px-6 text-sm">
+                  <tr
+                    key={technician.id}
+                    className="border-b border-gray-500 last:border-none "
+                  >
+                    <td className="py-4 px-6 text-sm">
                       <div className="flex items-center gap-2 max-w-[150px] truncate sm:truncate-none ">
                         <span className="w-7 h-7 rounded-full bg-blue-700 text-white text-xs flex items-center justify-center">
                           {getInitials(technician.name)}
                         </span>
 
-                        <span 
-                        className="font-bold truncate max-w-[50px] xl:max-w-full cursor-pointer"
-                        data-tooltip-id="tooltip-info"
-                        data-tooltip-content={technician.name}
+                        <span
+                          className="font-bold truncate max-w-[50px] xl:max-w-full cursor-pointer"
+                          data-tooltip-id="tooltip-info"
+                          data-tooltip-content={technician.name}
                         >
                           {technician.name}
                         </span>
@@ -126,7 +127,7 @@ export function Technicians() {
                           </span>
                         )}
 
-                        {technician.availability?.map((hour) => (
+                        {technician.availability?.slice(0, 3).map((hour) => (
                           <span
                             key={`desktop-${technician.id}-${hour}`}
                             className="hidden xl:inline-flex px-3 py-1 bg-gray-50 text-gray-200 text-xs rounded-full border border-gray-500"
@@ -134,14 +135,21 @@ export function Technicians() {
                             {hour}
                           </span>
                         ))}
+
+                        {technician.availability?.length > 3 && (
+                          <span className="hidden xl:inline-flex px-3 py-1 bg-gray-50 text-gray-200 text-xs rounded-full border border-gray-500">
+                            +{technician.availability.length - 3}
+                          </span>
+                        )}
                       </div>
                     </td>
 
                     <td className="py-4 px-1 w-4">
-                      <div 
-                      className="h-9 w-9 bg-gray-500 hover:bg-gray-600 flex justify-center items-center rounded-sm cursor-pointer transition ease-linear"
-                      data-tooltip-id="tooltip-info"
-                      data-tooltip-content="Editar técnico">
+                      <div
+                        className="h-9 w-9 bg-gray-500 hover:bg-gray-600 flex justify-center items-center rounded-sm cursor-pointer transition ease-linear"
+                        data-tooltip-id="tooltip-info"
+                        data-tooltip-content="Editar técnico"
+                      >
                         <Link
                           to={`/technicians/${technician.id}/edit`}
                           className="rounded-lg"

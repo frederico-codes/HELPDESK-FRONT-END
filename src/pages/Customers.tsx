@@ -102,12 +102,13 @@ export function Customers() {
         </div>
       </section>
 
-      <div className="w-full h-screen flex flex-col px-6 xl:px-16 gap-4 bg-white absolute xl:relative py-14 rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
+      <div className="w-full h-screen flex flex-col px-6 xl:px-6 gap-4 bg-white absolute xl:relative py-15 
+        rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
         <h1 className="text-2xl font-bold">Clientes</h1>
 
-        <div className="w-full bg-white  rounded-2xl shadow-sm  xl:overflow-y-auto xl:max-h-[700px] ">
+        <div className="w-full bg-white  rounded-2xl shadow-sm  xl:overflow-y-auto xl:max-h-[700px] border border-gray-500 overflow-hidden ">
           <table className="w-full text-left ">
-            <thead className="border border-gray-500  xl:sticky xl:top-0 bg-white">
+            <thead className="xl:sticky xl:top-0 bg-white">
               <tr className="text-sm text-gray-400 ">
                 <th className="py-4 xl:px-2 font-medium px-2 ">Nome</th>
                 <th className="py-4 xl:px-2 font-medium px-2">E-mail</th>
