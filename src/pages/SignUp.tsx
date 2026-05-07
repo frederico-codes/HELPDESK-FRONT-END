@@ -82,7 +82,7 @@ export function SignUp() {
       </section>
 
       <div className="w-full h-screen mt-4 flex flex-col items-center justify-center xl:px-50 gap-4 bg-white absolute xl:relative py-24 rounded-3xl xl:rounded-none xl:rounded-tl-2xl">
-        <form onSubmit={onSubmit} noValidate className="lg:w-[470px] max-[470px]">
+        <form onSubmit={onSubmit} noValidate className="w-[88%] sm:w-[470px]">
           <div className="flex justify-center gap-2 mb-8">
             <img src={Logo_IconDark} alt="Logo" />
             <h1 className="text-2xl --color-blue-dark font-bold">HelpDesk</h1>
