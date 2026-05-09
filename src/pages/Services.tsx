@@ -8,6 +8,7 @@ import pen from "../assets/icons/pen-line.svg";
 import circleGreen from "../assets/icons/circle-green.svg";
 import circleCheck from "../assets/icons/circle-check.svg";
 import disable from "../assets/icons/disable.svg";
+import TagStatus from "../assets/icons/TagStatus.svg"
 import { Tooltip } from "react-tooltip";
 
 type Service = {
@@ -180,13 +181,13 @@ export function Services() {
                       </span>
                       <span
                         className={`w-8 h-8 flex items-center justify-center rounded-full xl:hidden ${
-                          service.active ? "bg-green-100" : "bg-pink-100"
+                          service.active ? "bg-green-100" : ""
                         }`}
                       >
                         {service.active ? (
                           <img src={circleGreen} className="w-4 h-4" />
                         ) : (
-                          <img src={disable} className="w-4 h-4" />
+                          <img src={TagStatus} />
                         )}
                       </span>
                     </td>
