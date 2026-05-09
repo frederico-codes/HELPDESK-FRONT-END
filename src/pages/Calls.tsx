@@ -1,6 +1,5 @@
 import  circleHelp  from "../assets/icons/circle-help.svg";
 import clock2 from "../assets/icons/clock-2.svg";
-import closed from "../assets/icons/closed.svg";
 import pen from "../assets/icons/pen-line.svg";
 import circleGreen from "../assets/icons/circle-green.svg";
 import { Link } from "react-router-dom";
