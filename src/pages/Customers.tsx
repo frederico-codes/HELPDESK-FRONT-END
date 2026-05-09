@@ -98,8 +98,7 @@ export function Customers() {
                 <span className="text-xxs text-blue-light">Admin</span>
               </div>
             </div>
-          </div>    
-          
+          </div>          
         </div>
       </section>
 
@@ -107,7 +106,7 @@ export function Customers() {
         rounded-3xl xl:rounded-none xl:rounded-tl-2xl mt-28 xl:mt-4">
         <h1 className="text-2xl font-bold">Clientes</h1>
 
-        <div className="w-full bg-white  rounded-2xl shadow-sm  xl:overflow-y-auto xl:max-h-[700px] border border-gray-500 overflow-hidden">
+        <div className="w-full bg-white  rounded-xl shadow-sm  xl:overflow-y-auto xl:max-h-[650px] border border-gray-500 overflow-hidden">
           <table className="w-full text-left ">
             <thead className="xl:sticky xl:top-0 bg-white">
               <tr className="text-sm text-gray-400 ">

@@ -59,6 +59,11 @@ VITE_API_URL=http://localhost:3000
 
 Você pode visualizar o layout do projeto através [DESSE LINK](https://www.figma.com/design/HIFjZqN7GXpXPLIuuREWSd/Plataforma-de-Chamados--Community-?node-id=0-1&p=f&m=dev). É necessário ter conta no [Figma](https://figma.com) para acessá-lo.
 
+##  Acesso a REPOSITÓRIO DA API  
+  
+
+Você pode acessar o REPOSITÓRIO DA API através [DESSE LINK](https://github.com/frederico-codes/HELPDESK-API)
+
 
 ## 🌍 Deploy  
   

@@ -148,7 +148,7 @@ export function Services() {
         </div>
 
         <div className="w-full h-full bg-white rounded-2xl flex flex-col">
-          <div className="xl:overflow-y-auto xl:max-h-[700px] w-full bg-white rounded-2xl border border-gray-500 overflow-hidden">
+          <div className="xl:overflow-y-auto xl:max-h-[650px] w-full bg-white rounded-xl border border-gray-500 overflow-hidden">
             <table className="w-full text-left">
               <thead className="border-b border-gray-500 xl:sticky xl:top-0 bg-white">
                 <tr className="text-sm text-gray-400">
