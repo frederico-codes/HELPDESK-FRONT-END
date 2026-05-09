@@ -2,12 +2,14 @@ import  circleHelp  from "../assets/icons/circle-help.svg";
 import clock2 from "../assets/icons/clock-2.svg";
 import closed from "../assets/icons/closed.svg";
 import pen from "../assets/icons/pen-line.svg";
+import circleGreen from "../assets/icons/circle-green.svg";
 import { Link } from "react-router-dom";
 import { Sidebar } from "../componentes/Sidebar";
 import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import { api } from "../services/api";
 import { Tooltip } from "react-tooltip";
+
 
 type ApiCall = {
   id: string;
@@ -95,7 +97,7 @@ function getStatusMeta(status: ApiCall["status"]) {
     case "closed":
       return {
         label: "Encerrado",
-        icon: closed,
+        icon: circleGreen,
         alt: "Ícone de chamado encerrado",
         className: "bg-green-100 text-green-700",
       };
@@ -221,7 +223,7 @@ export function Calls() {
                   <th className="py-4 px-3 xl:px-4 font-medium hidden xl:table-cell w-[140px]">
                     Técnico
                   </th>
-                  <th className="py-4 px-3 xl:px-4 font-medium w-20">Status</th>
+                  <th className="py-4 px-3 xl:px-4 w-[50px]  font-medium  xl:w-[150px]">Status</th>
                   <th className="py-4 px-3 xl:px-4 font-medium w-14"></th>
                 </tr>
               </thead>
@@ -274,7 +276,7 @@ export function Calls() {
                       />
                     </td>
 
-                    <td className="py-4 px-3 w-[300px] xl:px-4 ">
+                    <td className="py-4 px-3 w-[50px]  xl:w-[150px] xl:px-4 ">
                       <StatusBadge
                         label={call.status}
                         icon={call.statusIcon}
