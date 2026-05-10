@@ -9,6 +9,8 @@ export type ServiceModalProps = {
   data?: { title: string; value: number };
 };
 
+
+
 export function ServiceModal({
   isOpen,
   onClose,

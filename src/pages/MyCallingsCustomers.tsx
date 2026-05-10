@@ -1,7 +1,7 @@
 import eye from "../assets/icons/eye-icon.svg";
 import menu from "../assets/icons/Menu.png";
 import list from "../assets/icons/clipboard-list.svg";
-import closed from "../assets/icons/closed.svg";
+import circleGreen from "../assets/icons/circle-green.svg";
 import plus from "../assets/icons/plus.svg";
 import LogoIcon from "../assets/icons/Logo_IconLight.svg";
 import LogoIconMobile from "../assets/Logo_IconLight.png";
@@ -84,7 +84,7 @@ function getStatusConfig(status: CallStatus) {
     case "encerrado":
       return {
         label: "Encerrado",
-        icon: closed,
+        icon: circleGreen,
         wrapperClass: "bg-green-100 text-green-700",
       };
   }
@@ -133,7 +133,7 @@ function StatusBadge({ status }: { status: CallStatus }) {
       className={`
         inline-flex items-center justify-center
         h-8 w-8 rounded-full
-        xl:h-auto xl:w-auto xl:px-3 xl:py-1 xl:gap-1
+        xl:h-auto  xl:px-3 xl:py-2 xl:gap-1 xl:w-[140px]
         ${config.wrapperClass}
       `}
     >
@@ -373,7 +373,7 @@ async function handleSaveProfile(data: {
           </span>
           <div className="flex flex-col">
             <span className="text-sm">{displayName}</span>
-            <span className="text-xs text-gray-400">{displayEmail}</span>
+            <span className="text-xs text-gray-400 truncate w-[150px]">{displayEmail}</span>
           </div>
         </div>
       </section>
@@ -447,7 +447,7 @@ async function handleSaveProfile(data: {
                       key={call.id}
                       className="cursor-pointer hover:bg-gray-50 transition"
                     >
-                      <td className="flex gap-3 items-center px-4 py-6 text-gray-700">
+                      <td className="flex flex-wrap gap-3 items-center px-4 py-6 text-gray-700">
                         <div>{date}</div>
                         <div>{time}</div>
                       </td>
@@ -457,13 +457,13 @@ async function handleSaveProfile(data: {
                       </td>
 
                       <td
-                        className="px-4 py-4 font-medium text-gray-900 truncate max-w-[100px]  xl:truncate-none xl:max-w-none"
+                        className="px-4 py-4 font-medium text-gray-900 truncate max-w-[200px] "
                         data-tooltip-id="global-tooltip"
                         data-tooltip-content={`Excluir ${call.title}`}
                       >
-                        {call.title}
-                        <Tooltip id="global-tooltip" place="top" />
+                        {call.title}                                                
                       </td>
+                      <Tooltip id="global-tooltip" place="top" />
 
                       <td className="hidden px-4 py-4 xl:table-cell">
                         <div className="max-w-[150px] truncate 2xl:truncate-none 2xl:max-w-none">
@@ -487,7 +487,7 @@ async function handleSaveProfile(data: {
                       </td>
 
                       <td
-                        className="px-4 py-4"
+                        className="px-2 py-4"
                         data-tooltip-id="tooltip-detail"
                         data-tooltip-content="Ver detalhes do chamado"
                       >

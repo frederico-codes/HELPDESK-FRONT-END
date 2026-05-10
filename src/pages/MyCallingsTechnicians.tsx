@@ -128,7 +128,11 @@ function CallCardItem({
       </div>
 
       <h2 className="font-semibold text-gray-900 mt-2">{call.title}</h2>
-      <p className="text-gray-400 text-sm -mt-1">{call.service}</p>
+      <p className="text-gray-400 text-sm -mt-1 truncate w-[250px] cursor-pointer"
+      data-tooltip-id="tooltip-info"
+      data-tooltip-content={call.service}
+      >{call.service}</p>
+      <Tooltip id="global-tooltip" place="top" />
 
       <div className="mt-4 flex justify-between items-center">
         <span className="text-gray-700 text-sm">{call.updatedAt}</span>

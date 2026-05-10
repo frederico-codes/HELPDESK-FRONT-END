@@ -244,17 +244,17 @@ export function Calls() {
                         data-tooltip-id="global-tooltip"
                         data-tooltip-content={call.title}
                       >
-                        {call.title}
-                        <Tooltip id="global-tooltip" place="top" />
+                        {call.title}                        
                       </div>
+                      <Tooltip id="global-tooltip" place="top" />
                       <div
                         className="block w-full text-gray-400 text-xs truncate max-w-[100px]  xl:truncate-none xl:max-w-none cursor-pointer"
                         data-tooltip-id="global-tooltip"
                         data-tooltip-content={call.service}
                       >
-                        {call.service}
-                        <Tooltip id="global-tooltip" place="top" />
+                        {call.service}                        
                       </div>
+                      <Tooltip id="global-tooltip" place="top" />
                     </td>
 
                     <td className="py-4 px-3 xl:px-4 text-sm text-gray-700 hidden xl:table-cell">

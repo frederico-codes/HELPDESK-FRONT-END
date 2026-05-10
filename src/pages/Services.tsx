@@ -44,21 +44,22 @@ export function Services() {
 
   function handleOpenCreateModal() {
     setModalMode("create");
+    setIsModalOpen(true);
     setSelectedService(null);
-    setIsModalOpen(true);
   }
-
-  function handleOpenEditModal(service: Service) {
-    setModalMode("edit");
-    setSelectedService(service);
-    setIsModalOpen(true);
-  }
-
+  
   function handleCloseModal() {
+    setModalMode("create");
     setIsModalOpen(false);
     setSelectedService(null);
-    setModalMode("create");
   }
+  
+  function handleOpenEditModal(service: Service) {
+    setModalMode("edit");
+    setIsModalOpen(true);
+    setSelectedService(service);
+  }
+
 
   async function handleCreateService(data: ServiceModalData) {
     try {

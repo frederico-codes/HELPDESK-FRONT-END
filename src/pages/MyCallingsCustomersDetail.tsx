@@ -9,7 +9,7 @@ import { AxiosError } from "axios";
 import { api } from "../services/api";
 import  circleHelp  from "../assets/icons/circle-help.svg";
 import clock2 from "../assets/icons/clock-2.svg";
-import closed from "../assets/icons/closed.svg";
+import circleGreen from "../assets/icons/circle-green.svg";
 import { useUser } from "../hooks/useUser";
 import { useAuth } from "../hooks/useAuth";
 
@@ -110,7 +110,7 @@ function getStatusConfig(status: CallStatus) {
     case "encerrado":
       return {
         label: "Encerrado",
-        icon: closed,
+        icon: circleGreen,
         wrapperClass: "bg-green-100 text-green-700",
       };
   }
