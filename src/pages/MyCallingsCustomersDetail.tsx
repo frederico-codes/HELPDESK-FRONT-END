@@ -12,6 +12,8 @@ import clock2 from "../assets/icons/clock-2.svg";
 import circleGreen from "../assets/icons/circle-green.svg";
 import { useUser } from "../hooks/useUser";
 import { useAuth } from "../hooks/useAuth";
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
 type CallStatus = "aberto" | "em_atendimento" | "encerrado";
 
@@ -239,7 +241,12 @@ export function MyCallingsCustomersDetail() {
           </span>
           <div className="flex flex-col min-w-0">
             <span className="text-sm truncate">{displayName}</span>
-            <span className="text-xs text-gray-400 truncate">{displayEmail}</span>
+            <span className="text-xs text-gray-400 truncate xl:w-40 cursor-pointer"  
+            data-tooltip-id="tooltip-detail"
+            data-tooltip-content={displayEmail}>
+              {displayEmail}
+            </span>
+            <Tooltip id="tooltip-detail" place="top" />
           </div>
         </div>
       </section>
